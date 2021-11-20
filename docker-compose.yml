@@ -13,9 +13,9 @@ services:
     environment:
       - CLUSTER_NAME=test
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     networks:
-      - hdrs
+      - docker-hdrs_default
 
   datanode:
     image: dslab/hadoop-datanode
@@ -26,9 +26,9 @@ services:
     environment:
       SERVICE_PRECONDITION: "namenode:9870"
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     networks:
-      - hdrs
+      - docker-hdrs_default
 
   resourcemanager:
     image: dslab/hadoop-resourcemanager
@@ -39,9 +39,9 @@ services:
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     networks:
-      - hdrs
+      - docker-hdrs_default
 
   nodemanager1:
     image: dslab/hadoop-nodemanager
@@ -52,9 +52,9 @@ services:
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     networks:
-      - hdrs
+      - docker-hdrs_default
 
   historyserver:
     image: dslab/hadoop-historyserver
@@ -65,9 +65,44 @@ services:
     volumes:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     networks:
-      - hdrs
+      - docker-hdrs_default
+
+  hbase-master:
+    image: dslab/hbase-hmaster
+    container_name: hbase-master
+    restart: always
+    hostname: hbase-master
+    env_file:
+      - ./hbase/hbase.env
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_ADMINSERVER_ENABLED: 'false'
+      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver:2888:3888;2181
+      SERVICE_PRECONDITION: "namenode:9000 datanode:9864"
+    ports:
+      - 16010:16010
+    networks:
+      - docker-hdrs_default
+
+  hbase-regionserver:
+    image: dslab/hbase-hregionserver
+    container_name: hbase-regionserver
+    restart: always
+    hostname: hbase-regionserver
+    env_file:
+      - ./hbase/hbase.env
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_ADMINSERVER_ENABLED: 'false'
+      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver:2888:3888;2181
+      HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver
+      SERVICE_PRECONDITION: "namenode:9000 datanode:9864 hbase-master:16010"
+    ports:
+      - 16030:16030
+    networks:
+      - docker-hdrs_default
 
 volumes:
   hadoop_namenode:
@@ -75,6 +110,6 @@ volumes:
   hadoop_historyserver:
 
 networks:
-  hdrs:
+  docker-hdrs_default:
     external:
-      name: hdrs
+      name: docker-hdrs_default

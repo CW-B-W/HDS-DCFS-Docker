@@ -4,13 +4,13 @@ services:
   namenode:
     image: dslab/hadoop-namenode
     networks:
-      - hdrs
+      - docker-hdrs_default
     volumes:
       - namenode:/hadoop/dfs/name
     environment:
       - CLUSTER_NAME=test
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     deploy:
       mode: replicated
       replicas: 1
@@ -23,11 +23,11 @@ services:
   datanode:
     image: dslab/hadoop-datanode
     networks:
-      - hdrs
+      - docker-hdrs_default
     volumes:
       - datanode:/hadoop/dfs/data
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     environment:
       SERVICE_PRECONDITION: "namenode:50070"
     deploy:
@@ -38,11 +38,11 @@ services:
   resourcemanager:
     image: dslab/hadoop-resourcemanager
     networks:
-      - hdrs
+      - docker-hdrs_default
     environment:
       SERVICE_PRECONDITION: "namenode:50070 datanode:50075"
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     deploy:
       mode: replicated
       replicas: 1
@@ -56,11 +56,11 @@ services:
   nodemanager:
     image: dslab/hadoop-nodemanager
     networks:
-      - hdrs
+      - docker-hdrs_default
     environment:
       SERVICE_PRECONDITION: "namenode:50070 datanode:50075 resourcemanager:8088"
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     deploy:
       mode: global
       restart_policy:
@@ -71,13 +71,13 @@ services:
   historyserver:
     image: dslab/hadoop-historyserver
     networks:
-      - hdrs
+      - docker-hdrs_default
     volumes:
       - hadoop_historyserver:/hadoop/yarn/timeline
     environment:
       SERVICE_PRECONDITION: "namenode:50070 datanode:50075 resourcemanager:8088"
     env_file:
-      - ./hadoop.env
+      - ./hadoop/hadoop.env
     deploy:
       mode: replicated
       replicas: 1
@@ -88,6 +88,6 @@ volumes:
   hadoop_historyserver:
 
 networks:
-  hdrs:
+  docker-hdrs_default:
     external:
-      name: hdrs
+      name: docker-hdrs_default

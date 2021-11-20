@@ -41,10 +41,8 @@ ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH $HADOOP_HOME/bin/:$PATH
 
-ADD entrypoint.sh /entrypoint.sh
+ADD entrypoint.sh /entrypoint-hadoop.sh
 
-RUN chmod a+x /entrypoint.sh
+RUN chmod a+x /entrypoint-hadoop.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
-
-ADD dcfs /dcfs
+ENTRYPOINT ["/entrypoint-hadoop.sh"]
