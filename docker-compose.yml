@@ -79,29 +79,54 @@ services:
     environment:
       ZOO_MY_ID: 1
       ZOO_ADMINSERVER_ENABLED: 'false'
-      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver:2888:3888;2181
+      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
+      HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
       SERVICE_PRECONDITION: "namenode:9000 datanode:9864"
     ports:
       - 16010:16010
+    volumes:
+      - hbase_hmaster:/opt/hbase-2.3.5/tmp
     networks:
       - docker-hdrs_default
 
-  hbase-regionserver:
+  hbase-regionserver1:
     image: dslab/hbase-hregionserver
-    container_name: hbase-regionserver
+    container_name: hbase-regionserver1
     restart: always
-    hostname: hbase-regionserver
+    hostname: hbase-regionserver1
     env_file:
       - ./hbase/hbase.env
     environment:
       ZOO_MY_ID: 2
       ZOO_ADMINSERVER_ENABLED: 'false'
-      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver:2888:3888;2181
-      HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver
+      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
+      HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
+      HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver1
       SERVICE_PRECONDITION: "namenode:9000 datanode:9864 hbase-master:16010"
+      HDS_CONF_hds_httpserver_port: 8000
     ports:
       - 16030:16030
       - 8000:8000
+    networks:
+      - docker-hdrs_default
+
+  hbase-regionserver2:
+    image: dslab/hbase-hregionserver
+    container_name: hbase-regionserver2
+    restart: always
+    hostname: hbase-regionserver2
+    env_file:
+      - ./hbase/hbase.env
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_ADMINSERVER_ENABLED: 'false'
+      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
+      HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
+      HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver2
+      SERVICE_PRECONDITION: "namenode:9000 datanode:9864 hbase-master:16010"
+      HDS_CONF_hds_httpserver_port: 8001
+    ports:
+      - 8001:8001
     networks:
       - docker-hdrs_default
 
@@ -109,6 +134,7 @@ volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
+  hbase_hmaster:
 
 networks:
   docker-hdrs_default:

@@ -1,4 +1,5 @@
 FROM ubuntu:18.04
+# FROM dslab/hadoop-base
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       openjdk-8-jdk \
