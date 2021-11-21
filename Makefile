@@ -1,6 +1,3 @@
-DOCKER_NETWORK = docker-hdrs_default
-ENV_FILE = hadoop.env
-
 .PHONY: build
 build: build-hadoop build-zk build-hbase
 
@@ -23,15 +20,6 @@ build-hbase:
 	docker build -t dslab/hbase-base ./hbase/base
 	docker build -t dslab/hbase-hmaster ./hbase/hmaster
 	docker build -t dslab/hbase-hregionserver ./hbase/hregionserver
-
-.PHONY: network
-network:
-	docker network create --attachable ${DOCKER_NETWORK}
-#docker network create -d overlay --attachable hdrs
-
-.PHONY: network-rm
-network-rm:
-	docker network rm ${DOCKER_NETWORK}
 
 .PHONY: up
 up:

@@ -2,18 +2,8 @@
 
 # How to
 **set your configuration in `docker-compose.yml`**
-## First to start a network
-#### To start network
-```
-sudo make network
-```
-#### To remove network
-```
-sudo make network-rm
-```
 
 ## Start the cluster
-**MUST start the network first**
 ```
 sudo make up
 ```
