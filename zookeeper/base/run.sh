@@ -1,0 +1,1 @@
+exec zkServer.sh start-foreground

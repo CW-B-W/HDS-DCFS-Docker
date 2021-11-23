@@ -1,6 +1,15 @@
-FROM dslab/zookeeper
+FROM ubuntu:18.04
 
-WORKDIR /
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      openjdk-8-jdk \
+      net-tools \
+      curl \
+      netcat \
+      gnupg \
+      libsnappy-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
 ENV HBASE_VERSION 2.3.5
 ENV HBASE_URL https://archive.apache.org/dist/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz

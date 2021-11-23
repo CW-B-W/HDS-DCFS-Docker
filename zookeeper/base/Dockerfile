@@ -95,3 +95,6 @@ ADD entrypoint-zk.sh /entrypoint-zk.sh
 RUN chmod a+x /entrypoint-zk.sh
 
 ENTRYPOINT ["/entrypoint-zk.sh"]
+ADD run.sh /run.sh
+RUN chmod a+x /run.sh
+CMD ["/run.sh"]

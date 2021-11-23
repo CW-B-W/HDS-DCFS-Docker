@@ -14,9 +14,6 @@ services:
       - CLUSTER_NAME=test
     env_file:
       - ./hadoop/hadoop.env
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.2
     stop_signal: SIGINT
 
   datanode:
@@ -29,9 +26,6 @@ services:
       - hadoop_datanode:/hadoop/dfs/data
     env_file:
       - ./hadoop/hadoop.env
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.3
     stop_signal: SIGINT
 
   resourcemanager:
@@ -45,9 +39,6 @@ services:
       - 8088:8088
     env_file:
       - ./hadoop/hadoop.env
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.4
     stop_signal: SIGINT
 
   nodemanager1:
@@ -60,9 +51,6 @@ services:
       - 8042:8042
     env_file:
       - ./hadoop/hadoop.env
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.5
     stop_signal: SIGINT
 
   historyserver:
@@ -75,9 +63,36 @@ services:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
       - ./hadoop/hadoop.env
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.6
+    stop_signal: SIGINT
+
+  zoo1:
+    image: dslab/zookeeper
+    container_name: zoo1
+    restart: always
+    hostname: zoo1
+    env_file:
+      - ./zookeeper/zookeeper.env
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_ADMINSERVER_ENABLED: 'false'
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181
+    volumes:
+      - zoo1_data:/zookeeper/data
+    stop_signal: SIGINT
+
+  zoo2:
+    image: dslab/zookeeper
+    container_name: zoo2
+    restart: always
+    hostname: zoo2
+    env_file:
+      - ./zookeeper/zookeeper.env
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_ADMINSERVER_ENABLED: 'false'
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181
+    volumes:
+      - zoo2_data:/zookeeper/data
     stop_signal: SIGINT
 
   hbase-master:
@@ -88,22 +103,14 @@ services:
     depends_on:
       - "namenode"
       - "datanode"
+      - "zoo1"
+      - "zoo2"
     env_file:
-      # - ./hadoop/hadoop.env
-      - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
-      ZOO_MY_ID: 1
-      ZOO_ADMINSERVER_ENABLED: 'false'
-      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
-      HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
+      HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
     ports:
       - 16010:16010
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.7
-    volumes:
-      - hbase_master_zk:/zookeeper/data
     stop_signal: SIGINT
 
   hbase-regionserver1:
@@ -114,24 +121,14 @@ services:
     depends_on:
       - "hbase-master"
     env_file:
-      # - ./hadoop/hadoop.env
-      - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
-      ZOO_MY_ID: 2
-      ZOO_ADMINSERVER_ENABLED: 'false'
-      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
-      HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
+      HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
       HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver1
       HDS_CONF_hds_httpserver_port: 8000
     ports:
       - 16030:16030
       - 8000:8000
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.8
-    volumes:
-      - hbase_regionserver1_zk:/zookeeper/data
     stop_signal: SIGINT
 
   hbase-regionserver2:
@@ -142,32 +139,21 @@ services:
     depends_on:
       - "hbase-master"
     env_file:
-      # - ./hadoop/hadoop.env
-      - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
-      ZOO_MY_ID: 3
-      ZOO_ADMINSERVER_ENABLED: 'false'
-      ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
-      HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
+      HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
       HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver2
       HDS_CONF_hds_httpserver_port: 8001
     ports:
       - 8001:8001
-    networks:
-      hdrs_network:
-        ipv4_address: 172.22.0.9
-    volumes:
-      - hbase_regionserver2_zk:/zookeeper/data
     stop_signal: SIGINT
 
 volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
-  hbase_master_zk:
-  hbase_regionserver1_zk:
-  hbase_regionserver2_zk:
+  zoo1_data:
+  zoo2_data:
 
 networks:
   hdrs_network:
