@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 
 services:
   namenode:
@@ -17,6 +17,7 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.2
+    stop_signal: SIGINT
 
   datanode:
     image: dslab/hadoop-datanode
@@ -31,6 +32,7 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.3
+    stop_signal: SIGINT
 
   resourcemanager:
     image: dslab/hadoop-resourcemanager
@@ -46,6 +48,7 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.4
+    stop_signal: SIGINT
 
   nodemanager1:
     image: dslab/hadoop-nodemanager
@@ -60,6 +63,7 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.5
+    stop_signal: SIGINT
 
   historyserver:
     image: dslab/hadoop-historyserver
@@ -74,6 +78,7 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.6
+    stop_signal: SIGINT
 
   hbase-master:
     image: dslab/hbase-hmaster
@@ -84,7 +89,7 @@ services:
       - "namenode"
       - "datanode"
     env_file:
-      - ./hadoop/hadoop.env
+      # - ./hadoop/hadoop.env
       - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
@@ -97,6 +102,9 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.7
+    volumes:
+      - hbase_master_zk:/zookeeper/data
+    stop_signal: SIGINT
 
   hbase-regionserver1:
     image: dslab/hbase-hregionserver
@@ -106,7 +114,7 @@ services:
     depends_on:
       - "hbase-master"
     env_file:
-      - ./hadoop/hadoop.env
+      # - ./hadoop/hadoop.env
       - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
@@ -122,6 +130,9 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.8
+    volumes:
+      - hbase_regionserver1_zk:/zookeeper/data
+    stop_signal: SIGINT
 
   hbase-regionserver2:
     image: dslab/hbase-hregionserver
@@ -131,7 +142,7 @@ services:
     depends_on:
       - "hbase-master"
     env_file:
-      - ./hadoop/hadoop.env
+      # - ./hadoop/hadoop.env
       - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
@@ -146,11 +157,17 @@ services:
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.9
+    volumes:
+      - hbase_regionserver2_zk:/zookeeper/data
+    stop_signal: SIGINT
 
 volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
+  hbase_master_zk:
+  hbase_regionserver1_zk:
+  hbase_regionserver2_zk:
 
 networks:
   hdrs_network:

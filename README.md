@@ -7,6 +7,7 @@
 ```
 sudo make up
 ```
+
 ## Stop the cluster
 ```
 sudo make down
@@ -15,6 +16,11 @@ sudo make down
 ## Restart the cluster
 ```
 sudo make restart
+```
+
+## Enter container's bash
+```
+sudo make bash name=...
 ```
 
 ## build all docker images

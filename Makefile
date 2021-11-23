@@ -25,6 +25,10 @@ build-hbase:
 up:
 	docker-compose up -d
 
+.PHONY: stop
+stop:
+	docker-compose stop
+
 .PHONY: down
 down:
 	docker-compose down
@@ -35,3 +39,7 @@ restart: down up
 .PHONY: logs
 logs:
 	docker-compose logs | grep $(name)
+
+.PHONY: logs
+bash:
+	docker exec -t -i $(name) /bin/bash

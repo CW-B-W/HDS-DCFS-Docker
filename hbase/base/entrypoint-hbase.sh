@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # configure hadoop
-/entrypoint-hadoop.sh
+# /entrypoint-hadoop.sh
 # configure zk
 /entrypoint-zk.sh
 
