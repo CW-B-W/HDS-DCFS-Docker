@@ -26,8 +26,6 @@ services:
       - "namenode"
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870"
     env_file:
       - ./hadoop/hadoop.env
     networks:
@@ -38,10 +36,11 @@ services:
     image: dslab/hadoop-resourcemanager
     container_name: resourcemanager
     restart: always
+    depends_on:
+      - "namenode"
+      - "datanode"
     ports:
       - 8088:8088
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
     env_file:
       - ./hadoop/hadoop.env
     networks:
@@ -56,8 +55,6 @@ services:
       - "resourcemanager"
     ports:
       - 8042:8042
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
     env_file:
       - ./hadoop/hadoop.env
     networks:
@@ -68,8 +65,8 @@ services:
     image: dslab/hadoop-historyserver
     container_name: historyserver
     restart: always
-    environment:
-      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    depends_on:
+      - "resourcemanager"
     volumes:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
@@ -87,17 +84,16 @@ services:
       - "namenode"
       - "datanode"
     env_file:
+      - ./hadoop/hadoop.env
+      - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
       ZOO_MY_ID: 1
       ZOO_ADMINSERVER_ENABLED: 'false'
       ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
       HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
-      SERVICE_PRECONDITION: "namenode:9000 datanode:9864"
     ports:
       - 16010:16010
-    volumes:
-      - hbase_hmaster:/opt/hbase-2.3.5/tmp
     networks:
       hdrs_network:
         ipv4_address: 172.22.0.7
@@ -110,6 +106,8 @@ services:
     depends_on:
       - "hbase-master"
     env_file:
+      - ./hadoop/hadoop.env
+      - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
       ZOO_MY_ID: 2
@@ -117,7 +115,6 @@ services:
       ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
       HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
       HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver1
-      SERVICE_PRECONDITION: "namenode:9000 datanode:9864 hbase-master:16010"
       HDS_CONF_hds_httpserver_port: 8000
     ports:
       - 16030:16030
@@ -134,6 +131,8 @@ services:
     depends_on:
       - "hbase-master"
     env_file:
+      - ./hadoop/hadoop.env
+      - ./zookeeper/zookeeper.env
       - ./hbase/hbase.env
     environment:
       ZOO_MY_ID: 3
@@ -141,7 +140,6 @@ services:
       ZOO_SERVERS: server.1=hbase-master:2888:3888;2181 server.2=hbase-regionserver1:2888:3888;2181 server.3=hbase-regionserver2:2888:3888;2181
       HBASE_CONF_hbase_zookeeper_quorum: hbase-master,hbase-regionserver1,hbase-regionserver2
       HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver2
-      SERVICE_PRECONDITION: "namenode:9000 datanode:9864 hbase-master:16010"
       HDS_CONF_hds_httpserver_port: 8001
     ports:
       - 8001:8001
@@ -153,7 +151,6 @@ volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
-  hbase_hmaster:
 
 networks:
   hdrs_network:

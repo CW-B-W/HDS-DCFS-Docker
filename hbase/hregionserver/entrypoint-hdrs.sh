@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# configure hbase(including zk, hadoop)
+/entrypoint-hbase.sh
+
 function addProperty() {
   local path=$1
   local name=$2

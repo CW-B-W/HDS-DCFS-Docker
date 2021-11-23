@@ -19,7 +19,7 @@ ENV HBASE_CONF_DIR=/etc/hbase
 ENV USER=root
 ENV PATH $HBASE_PREFIX/bin/:$PATH
 
-ADD entrypoint.sh /entrypoint-hbase.sh
+ADD entrypoint-hbase.sh /entrypoint-hbase.sh
 RUN chmod a+x /entrypoint-hbase.sh
 
 ENTRYPOINT ["/entrypoint-hbase.sh"]

@@ -74,10 +74,10 @@ RUN set -eux; \
     ddist "$DISTRO_NAME.tar.gz" "zookeeper/$SHORT_DISTRO_NAME/$DISTRO_NAME.tar.gz"; \
     ddist "$DISTRO_NAME.tar.gz.asc" "zookeeper/$SHORT_DISTRO_NAME/$DISTRO_NAME.tar.gz.asc"; \
     export GNUPGHOME="$(mktemp -d)"; \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-key "$GPG_KEY" || \
-    gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEY" || \
-    gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEY"; \
-    gpg --batch --verify "$DISTRO_NAME.tar.gz.asc" "$DISTRO_NAME.tar.gz"; \
+    # gpg --keyserver ha.pool.sks-keyservers.net --recv-key "$GPG_KEY" || \
+    # gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEY" || \
+    # gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEY"; \
+    # gpg --batch --verify "$DISTRO_NAME.tar.gz.asc" "$DISTRO_NAME.tar.gz"; \
     tar -zxf "$DISTRO_NAME.tar.gz"; \
     mv "$DISTRO_NAME/conf/"* "$ZOO_CONF_DIR"; \
     rm -rf "$GNUPGHOME" "$DISTRO_NAME.tar.gz" "$DISTRO_NAME.tar.gz.asc"; \
@@ -91,7 +91,7 @@ EXPOSE 2181 2888 3888 8080
 ENV PATH=$PATH:/$DISTRO_NAME/bin \
     ZOOCFGDIR=$ZOO_CONF_DIR
 
-ADD entrypoint.sh /entrypoint-zk.sh
+ADD entrypoint-zk.sh /entrypoint-zk.sh
 RUN chmod a+x /entrypoint-zk.sh
 
 ENTRYPOINT ["/entrypoint-zk.sh"]

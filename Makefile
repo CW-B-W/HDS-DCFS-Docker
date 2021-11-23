@@ -29,6 +29,9 @@ up:
 down:
 	docker-compose down
 
+.PHONY: restart
+restart: down up
+
 .PHONY: logs
 logs:
 	docker-compose logs | grep $(name)

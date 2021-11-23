@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# configure hadoop
+/entrypoint-hadoop.sh
+# configure zk
+/entrypoint-zk.sh
+
 function addProperty() {
   local path=$1
   local name=$2

@@ -12,6 +12,11 @@ sudo make up
 sudo make down
 ```
 
+## Restart the cluster
+```
+sudo make restart
+```
+
 ## build all docker images
 ```
 sudo make build
