@@ -21,6 +21,14 @@ build-hbase:
 	docker build -t dslab/hbase-hmaster ./hbase/hmaster
 	docker build -t dslab/hbase-hregionserver ./hbase/hregionserver
 
+.PHONY: build-flask
+build-flask:
+	docker build -t dslab/flask ./web/flask
+
+.PHONY: run-flask
+run-flask:
+	docker run -d -p 5000:5000 --name flask --env-file ./web/flask/flask.env dslab/flask
+
 .PHONY: up
 up:
 	docker-compose up -d

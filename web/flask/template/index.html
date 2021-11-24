@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src='{{ url_for('static', filename="js/btn.js") }}'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    body {
+      padding-top: 6%;
+      padding-left: 6%;
+    }
+  </style>
+</head>
+
+<body>
+  <ul id="myTab" class="nav nav-tabs w-100 mb-3">
+    <li class="nav-item ml-5"><a href="#new_task_page" data-toggle="tab">New Task</a></li>
+    <li class="nav-item ml-5"><a href="#task_status_page" data-toggle="tab">Task Status</a></li>
+    <li class="nav-item ml-5"><a href="#hds_page" data-toggle="tab">HDS</a></li>
+  </ul>
+  <div id="myTabContent" class="tab-content w-100 mt-3">
+    <div class="container tab-pane fade h-100" id="mssql_page">
+      <div class="row">
+        <div class="col">
+          <form>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="mssql_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:1433">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="email" class="form-control" id="mssql_username" placeholder="Enter Username" value="SA">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="mssql_password" placeholder="Password" value="00000000Xx">
+            </div>
+            <button id="conn_mssql" type="button" class="btn btn-primary w-100">Connect MsSQL</button>
+            <label id="conn_mssql_status"></label>
+          </form>
+          <br><br>
+          <select id="mssql_db_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="mssql_table_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="mssql_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="container tab-pane fade h-100" id="oracle_page">
+      <div class="row">
+        <div class="col">
+          <form>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="oracle_server" placeholder="Enter ServerIP:Port" value="192.168.103.60:1521">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="email" class="form-control" id="oracle_username" placeholder="Enter Username" value="brad">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="oracle_password" placeholder="Password" value="00000000">
+            </div>
+            <button id="conn_oracle" type="button" class="btn btn-primary w-100">Connect oracle</button>
+            <label id="conn_oracle_status"></label>
+          </form>
+          <br><br>
+          <select id="oracle_db_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="oracle_table_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="oracle_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="container tab-pane fade active show h-100" id="new_task_page">
+      <div class="row">
+        <div class="col">
+          <form>
+            <label id = "text1">Database</label>
+            <select id="db1_list" class="form-select w-100">
+              <option>MySQL</option>
+              <option>MsSQL</option>
+              <option>MongoDB</option>
+              <option>Oracle</option>
+            </select>
+            <br><br>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="mysql_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:3306">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="email" class="form-control" id="mysql_username" placeholder="Enter Username" value="brad">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="mysql_password" placeholder="Password" value="00000000">
+            </div>
+            <button id="conn_mysql" type="button" class="btn btn-primary w-100">Connect MySQL</button>
+            <label id="conn_mysql_status"></label>
+          </form>
+          <select id="mysql_db_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="mysql_table_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="mysql_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+
+        <div class="col">
+          <form>
+            <label>Database</label>
+            <select id="db2_list" class="form-select w-100">
+              <option>MySQL</option>
+              <option>MsSQL</option>
+              <option>MongoDB</option>
+              <option>Oracle</option>
+            </select>
+            <br><br>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="mongodb_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:3306">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" class="form-control" id="mongodb_username" placeholder="Enter Username" value="brad">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="mongodb_password" placeholder="Password" value="00000000">
+            </div>
+            <button id="conn_mongodb" type="button" class="btn btn-primary w-100">Connect MySQL</button>
+            <label id="conn_mongodb_status"></label>
+          </form>
+          
+          <select id="mongodb_db_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="mongodb_collection_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="mongodb_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="create_req" type="button" class="btn btn-info w-100">Create Task</button>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <label>HDS Table Name</label>
+        <textarea class="form-control" id="hds_table_name" rows="3"></textarea>
+      </div>
+
+      <div class="container" id="col_opt_list">
+        <div class="row" id="col_opt_template" style="visibility: hidden;">
+          <div class="col">
+            <label>Type1</label>
+          </div>
+          <div class="col">
+            <select class="form-select w-100">
+              <option>INTEGER</option>
+              <option>BIGINT</option>
+              <option>FLOAT</option>
+              <option>DOUBLE</option>
+              <option>DECIMAL</option>
+              <option>BOOLEAN</option>
+              <option>TIME</option>
+              <option>DATE</option>
+              <option>TIMESTAMP</option>
+              <option>VARCHAR</option>
+            </select>
+          </div>
+          <div class="col">
+            <label>IsPrimaryKey</label><br>
+          </div>
+          <div class="col">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="0">
+            <label>Type1</label>
+          </div>
+        </div>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <div class="col">
+          <label>SQL generator 1</label>
+          <textarea class="form-control" id="mysql_genres" rows="3" readonly></textarea>
+        </div>
+        <div class="col">
+          <label>SQL generator 2</label>
+          <textarea class="form-control" id="mongodb_genres" rows="3" readonly></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>SQL Join generator</label>
+          <textarea class="form-control" id="join_genres" rows="3" readonly></textarea>
+        </div>
+        <div class="col">
+          <label>HDS Create table generator</label>
+          <textarea class="form-control" id="hds_genres" rows="3" readonly></textarea>
+        </div>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <label>Task Infomation</label>
+        <textarea class="form-control" id="task_info" rows="3" readonly>{}</textarea>
+      </div>
+      <br>
+      <div class="row">
+        <label id="sent_task_id">task_id = </label>
+        <button id="send_req" type="button" class="btn btn-success w-100">Send Request</button>
+      </div>
+    </div>
+
+    <div class="container tab-pane fade" id="task_status_page">
+      <div class="alert alert-info" role="alert">Task List</div>
+      <!-- <textarea class="form-control" id="task_ids" rows="3"></textarea>
+      <button id="send_task_status" type="button" class="btn btn-success w-100">Send Request</button> -->
+      
+      <!-- <br><br> -->
+      <div class="container overflow-auto" id="task_status_res" style="height: 500px;">
+        <div id="task_res_template" class="row" style="visibility: hidden;">
+          <div class="col">
+            <label>Task ID</label>
+            <p>Task ID</p>
+          </div>
+          <div class="col">
+            <label>Status</label>
+            <p>Task ID</p>
+          </div>
+          <div class="col">
+            <label>Message</label>
+            <p>Task ID</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container tab-pane fade h-100" id="hds_page">
+      <div class="row">
+        <div class="col">
+          <form>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="192.168.103.53:8000">
+            </div>
+            <!-- <div class="form-group">
+              <label>Username</label>
+              <input type="email" class="form-control" id="hds_username" placeholder="Enter Username" value="brad">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="hds_password" placeholder="Password" value="00000000">
+            </div> -->
+            <button id="conn_hds" type="button" class="btn btn-primary w-100">Connect HDS</button>
+          </form>
+          <br><br>
+          <select id="hds_table_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="hds_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+      </div>
+  
+      <div class="row">
+        <button id="send_hds_req" type="button" class="btn btn-success w-100">Send Request</button>
+      </div>
+    </div>
+
+    
+  </div>
+</body>
+</html>
