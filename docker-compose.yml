@@ -148,6 +148,28 @@ services:
       - 8001:8001
     stop_signal: SIGINT
 
+  flask:
+    image: dslab/flask
+    container_name: flask
+    restart: always
+    hostname: flask
+    env_file:
+      - ./web/flask/flask.env
+    ports:
+      - 5000:5000
+    stop_signal: SIGINT
+
+  rabbitmq:
+    image: rabbitmq:3.9.10-management
+    container_name: rabbitmq
+    restart: always
+    hostname: rabbitmq
+    ports:
+      - 15672:15672
+    stop_signal: SIGINT
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
 volumes:
   hadoop_namenode:
   hadoop_datanode:

@@ -29,6 +29,10 @@ build-flask:
 run-flask:
 	docker run -d -p 5000:5000 --name flask --env-file ./web/flask/flask.env dslab/flask
 
+.PHONY: run-mq
+run-mq:
+	docker run -d -p 15672:15672 --name rabbitmq -v $(shell pwd)/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf rabbitmq:3.9.10-management
+
 .PHONY: up
 up:
 	docker-compose up -d
