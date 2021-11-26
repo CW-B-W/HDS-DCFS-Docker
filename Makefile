@@ -1,5 +1,5 @@
 .PHONY: build
-build: build-hadoop build-zk build-hbase
+build: build-hadoop build-zk build-hbase build-dcfs build-flask
 
 .PHONY: build-hadoop
 build-hadoop:
@@ -21,13 +21,18 @@ build-hbase:
 	docker build -t dslab/hbase-hmaster ./hbase/hmaster
 	docker build -t dslab/hbase-hregionserver ./hbase/hregionserver
 
+.PHONY: build-dcfs
+build-dcfs:
+	docker build -t dslab/dcfs-master ./dcfs/master
+	docker build -t dslab/dcfs-worker ./dcfs/worker
+
 .PHONY: build-flask
 build-flask:
 	docker build -t dslab/flask ./web/flask
 
 .PHONY: run-flask
 run-flask:
-	docker run -d -p 5000:5000 --name flask --env-file ./web/flask/flask.env dslab/flask
+	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask_share:/flask-share --env-file ./web/flask/flask.env dslab/flask
 
 .PHONY: run-mq
 run-mq:

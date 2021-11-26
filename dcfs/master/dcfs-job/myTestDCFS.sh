@@ -1,0 +1,1 @@
+/dcfs-job/dcfsJob watch file:///dcfs-share/dcfs-watch python3 /dcfs-share/dcfs-run/sleep.py dcfsInput

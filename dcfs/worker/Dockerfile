@@ -1,14 +1,8 @@
-FROM ubuntu:18.04
+FROM dslab/hadoop-nodemanager
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-install-recommends \
       build-essential \
       libkrb5-dev \
-      net-tools \
-      curl \
-      netcat \
-      gnupg \
-      libsnappy-dev \
-      iputils-ping \
       wget \
     && rm -rf /var/lib/apt/lists/*
 
@@ -29,13 +23,7 @@ RUN pip3 install setuptools wheel
 ADD requirements.txt /requirements.txt
 RUN pip3 install -r requirements.txt
 
-ADD hello.py /hello.py
-ADD static /static
-ADD template /template
-
-ADD entrypoint-flask.sh /entrypoint-flask.sh
-RUN chmod a+x /entrypoint-flask.sh
-# ENTRYPOINT ["/entrypoint-flask.sh"]
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
+
 CMD ["/run.sh"]

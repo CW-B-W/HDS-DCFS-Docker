@@ -28,43 +28,6 @@ services:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
 
-  resourcemanager:
-    image: dslab/hadoop-resourcemanager
-    container_name: resourcemanager
-    restart: always
-    depends_on:
-      - "namenode"
-      - "datanode"
-    ports:
-      - 8088:8088
-    env_file:
-      - ./hadoop/hadoop.env
-    stop_signal: SIGINT
-
-  nodemanager1:
-    image: dslab/hadoop-nodemanager
-    container_name: nodemanager
-    restart: always
-    depends_on:
-      - "resourcemanager"
-    ports:
-      - 8042:8042
-    env_file:
-      - ./hadoop/hadoop.env
-    stop_signal: SIGINT
-
-  historyserver:
-    image: dslab/hadoop-historyserver
-    container_name: historyserver
-    restart: always
-    depends_on:
-      - "resourcemanager"
-    volumes:
-      - hadoop_historyserver:/hadoop/yarn/timeline
-    env_file:
-      - ./hadoop/hadoop.env
-    stop_signal: SIGINT
-
   zoo1:
     image: dslab/zookeeper
     container_name: zoo1
@@ -148,6 +111,103 @@ services:
       - 8001:8001
     stop_signal: SIGINT
 
+  # resourcemanager:
+  #   image: dslab/hadoop-resourcemanager
+  #   container_name: resourcemanager
+  #   restart: always
+  #   depends_on:
+  #     - "namenode"
+  #     - "datanode"
+  #   ports:
+  #     - 8088:8088
+  #   env_file:
+  #     - ./hadoop/hadoop.env
+  #   stop_signal: SIGINT
+
+  # nodemanager1:
+  #   image: dslab/hadoop-nodemanager
+  #   container_name: nodemanager
+  #   restart: always
+  #   depends_on:
+  #     - "resourcemanager"
+  #   ports:
+  #     - 8042:8042
+  #   env_file:
+  #     - ./hadoop/hadoop.env
+  #   stop_signal: SIGINT
+
+  # historyserver:
+  #   image: dslab/hadoop-historyserver
+  #   container_name: historyserver
+  #   restart: always
+  #   depends_on:
+  #     - "dcfs-master"
+  #   volumes:
+  #     - hadoop_historyserver:/hadoop/yarn/timeline
+  #   env_file:
+  #     - ./hadoop/hadoop.env
+  #   stop_signal: SIGINT
+
+  dcfs-master:
+    image: dslab/dcfs-master
+    container_name: dcfs-master
+    restart: always
+    depends_on:
+      - "namenode"
+      - "datanode"
+    ports:
+      - 8088:8088
+    env_file:
+      - ./hadoop/hadoop.env
+    environment:
+      - YARN_CONF_yarn_resourcemanager_hostname=dcfs-master
+      - YARN_CONF_yarn_resourcemanager_address=dcfs-master:8032
+      - YARN_CONF_yarn_resourcemanager_scheduler_address=dcfs-master:8030
+      - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
+    stop_signal: SIGINT
+    volumes:
+      - ./dcfs/dcfs_share:/dcfs-share
+
+  dcfs-worker1:
+    image: dslab/dcfs-worker
+    container_name: dcfs-worker1
+    restart: always
+    depends_on:
+      - "dcfs-master"
+    ports:
+      - 8042:8042
+    env_file:
+      - ./hadoop/hadoop.env
+    environment:
+      - 'YARN_CONF_yarn_nodemanager_webapp_address=$${yarn.nodemanager.hostname}:8042'
+      - YARN_CONF_yarn_resourcemanager_hostname=dcfs-master
+      - YARN_CONF_yarn_resourcemanager_address=dcfs-master:8032
+      - YARN_CONF_yarn_resourcemanager_scheduler_address=dcfs-master:8030
+      - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
+    stop_signal: SIGINT
+    volumes:
+      - ./dcfs/dcfs_share:/dcfs-share
+
+  dcfs-worker2:
+    image: dslab/dcfs-worker
+    container_name: dcfs-worker2
+    restart: always
+    depends_on:
+      - "dcfs-master"
+    ports:
+      - 8043:8043
+    env_file:
+      - ./hadoop/hadoop.env
+    environment:
+      - 'YARN_CONF_yarn_nodemanager_webapp_address=$${yarn.nodemanager.hostname}:8043'
+      - YARN_CONF_yarn_resourcemanager_hostname=dcfs-master
+      - YARN_CONF_yarn_resourcemanager_address=dcfs-master:8032
+      - YARN_CONF_yarn_resourcemanager_scheduler_address=dcfs-master:8030
+      - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
+    stop_signal: SIGINT
+    volumes:
+      - ./dcfs/dcfs_share:/dcfs-share
+  
   flask:
     image: dslab/flask
     container_name: flask
@@ -158,6 +218,8 @@ services:
     ports:
       - 5000:5000
     stop_signal: SIGINT
+    volumes:
+      - ./web/flask/flask_share:/flask-share
 
   rabbitmq:
     image: rabbitmq:3.9.10-management
@@ -173,14 +235,14 @@ services:
 volumes:
   hadoop_namenode:
   hadoop_datanode:
-  hadoop_historyserver:
+  # hadoop_historyserver:
   zoo1_data:
   zoo2_data:
 
-networks:
-  hdrs_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.22.0.0/16
+# networks:
+#   hdrs_network:
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: 172.22.0.0/16
