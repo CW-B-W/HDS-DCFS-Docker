@@ -148,6 +148,17 @@ services:
   #     - ./hadoop/hadoop.env
   #   stop_signal: SIGINT
 
+  rabbitmq:
+    image: rabbitmq:3.9.10-management
+    container_name: rabbitmq
+    restart: always
+    hostname: rabbitmq
+    ports:
+      - 15672:15672
+    stop_signal: SIGINT
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
   dcfs-master:
     image: dslab/dcfs-master
     container_name: dcfs-master
@@ -155,6 +166,7 @@ services:
     depends_on:
       - "namenode"
       - "datanode"
+      - "rabbitmq"
     ports:
       - 8088:8088
     env_file:
@@ -166,7 +178,7 @@ services:
       - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
     stop_signal: SIGINT
     volumes:
-      - ./dcfs/dcfs_share:/dcfs-share
+      - ./dcfs/dcfs-share:/dcfs-share
 
   dcfs-worker1:
     image: dslab/dcfs-worker
@@ -186,7 +198,7 @@ services:
       - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
     stop_signal: SIGINT
     volumes:
-      - ./dcfs/dcfs_share:/dcfs-share
+      - ./dcfs/dcfs-share:/dcfs-share
 
   dcfs-worker2:
     image: dslab/dcfs-worker
@@ -206,12 +218,15 @@ services:
       - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
     stop_signal: SIGINT
     volumes:
-      - ./dcfs/dcfs_share:/dcfs-share
+      - ./dcfs/dcfs-share:/dcfs-share
   
   flask:
     image: dslab/flask
     container_name: flask
     restart: always
+    depends_on:
+      - "rabbitmq"
+      - "dcfs-master"
     hostname: flask
     env_file:
       - ./web/flask/flask.env
@@ -219,18 +234,7 @@ services:
       - 5000:5000
     stop_signal: SIGINT
     volumes:
-      - ./web/flask/flask_share:/flask-share
-
-  rabbitmq:
-    image: rabbitmq:3.9.10-management
-    container_name: rabbitmq
-    restart: always
-    hostname: rabbitmq
-    ports:
-      - 15672:15672
-    stop_signal: SIGINT
-    volumes:
-      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./web/flask/flask-share:/flask-share
 
 volumes:
   hadoop_namenode:

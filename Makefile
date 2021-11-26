@@ -32,7 +32,7 @@ build-flask:
 
 .PHONY: run-flask
 run-flask:
-	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask_share:/flask-share --env-file ./web/flask/flask.env dslab/flask
+	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask-share:/flask-share --env-file ./web/flask/flask.env dslab/flask
 
 .PHONY: run-mq
 run-mq:

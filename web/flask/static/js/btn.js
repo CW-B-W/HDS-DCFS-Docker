@@ -65,7 +65,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": 'http://192.168.103.120:5000/' +database+ '/listdbs?' + args,
+                "url": 'http://192.168.103.62:5000/' +database+ '/listdbs?' + args,
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -95,7 +95,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": 'http://192.168.103.120:5000/mongo/listdbs',
+                "url": 'http://192.168.103.62:5000/mongo/listdbs',
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -144,7 +144,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/' +database+ '/listtables?' + args,
+                    "url": 'http://192.168.103.62:5000/' +database+ '/listtables?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -182,7 +182,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/mongo/listcollections?db_name=' + db_name,
+                    "url": 'http://192.168.103.62:5000/mongo/listcollections?db_name=' + db_name,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -238,7 +238,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/' +database+ '/listkeys?' + args,
+                    "url": 'http://192.168.103.62:5000/' +database+ '/listkeys?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -275,7 +275,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/mongo/listkeys?db_name=' + db_name + '&collection_name=' + tbl_name,
+                    "url": 'http://192.168.103.62:5000/mongo/listkeys?db_name=' + db_name + '&collection_name=' + tbl_name,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -324,7 +324,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": 'http://192.168.103.120:5000/' +database+ '/listdbs?' + args,
+                "url": 'http://192.168.103.62:5000/' +database+ '/listdbs?' + args,
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -354,7 +354,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": 'http://192.168.103.120:5000/mongo/listdbs',
+                "url": 'http://192.168.103.62:5000/mongo/listdbs',
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -402,7 +402,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/' +database+ '/listtables?' + args,
+                    "url": 'http://192.168.103.62:5000/' +database+ '/listtables?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -440,7 +440,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/mongo/listcollections?db_name=' + db_name,
+                    "url": 'http://192.168.103.62:5000/mongo/listcollections?db_name=' + db_name,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -496,7 +496,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/' +database+ '/listkeys?' + args,
+                    "url": 'http://192.168.103.62:5000/' +database+ '/listkeys?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -533,7 +533,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": 'http://192.168.103.120:5000/mongo/listkeys?db_name=' + db_name + '&collection_name=' + tbl_name,
+                    "url": 'http://192.168.103.62:5000/mongo/listkeys?db_name=' + db_name + '&collection_name=' + tbl_name,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -1039,7 +1039,7 @@ $(document).ready(function() {
             },
             "dataType": "json",
             "contentType": "application/json",
-            "url": "http://192.168.103.52:15672/api/exchanges/%2F/amq.default/publish", 
+            "url": "http://192.168.103.62:15672/api/exchanges/%2F/amq.default/publish", 
             "data": '{"vhost":"/","name":"amq.default","properties":{"delivery_mode":1,"headers":{}},"routing_key":"'+queue+'","delivery_mode":"1","payload":"'+msg+'","headers":{},"props":{},"payload_encoding":"string"}',
             success: function(result) {
                 alert("Message sent");
@@ -1064,7 +1064,7 @@ $(document).ready(function() {
             "type": "GET",
             "dataType": "json",
             "contentType": "application/json",
-            "url": 'http://192.168.103.120:5000/taskstatus' + args,
+            "url": 'http://192.168.103.62:5000/taskstatus' + args,
             "timeout": 30000,
             success: function(result) {
                 children = $('#task_status_res').children();

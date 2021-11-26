@@ -3,7 +3,7 @@
 import json
 
 ''' ========== TaskStatus ========== '''
-import pika, sys, os, threading
+import pika, sys, os, threading, time
 
 lastest_message = "" # remember to declare `global` in functions
 task_status_dict = {}
@@ -17,9 +17,19 @@ TASKSTATUS_UNKNOWN    = 6
 def listen_task_status_queue():
     global lastest_message
     lastest_message = "consuming"
-    credentials = pika.PlainCredentials('brad', '00000000')
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.103.52', credentials=credentials))
-    channel = connection.channel()
+    
+    try_times = 10
+    while try_times > 0:
+        try:
+            credentials = pika.PlainCredentials('guest', 'guest')
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', credentials=credentials))
+            channel = connection.channel()
+            break
+        except:
+            try_times -= 1
+            if try_times >= 1:
+                print("Connection failed. Retry in 3 seconds")
+                time.sleep(3)
 
     channel.queue_declare(queue='task_status')
 
