@@ -1,2 +1,3 @@
-dcfs/dcfs-share/dcfs-watch
+dcfs/dcfs-share/dcfs-watch/*
+!dcfs/dcfs-share/dcfs-watch/example.json
 docker-build.log
