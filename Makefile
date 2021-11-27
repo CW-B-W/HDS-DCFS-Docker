@@ -64,7 +64,7 @@ restart: down up
 
 .PHONY: logs
 logs:
-	docker-compose logs | grep $(name)
+	docker logs $(name) -f
 
 .PHONY: logs
 bash:
