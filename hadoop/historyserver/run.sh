@@ -4,4 +4,6 @@ trap '$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon stop historyserve
 
 $HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start historyserver
 
-tail -F $HADOOP_HOME/logs/hadoop-$USER-historyserver-$(hostname).log
+tail -F $HADOOP_HOME/logs/hadoop-$USER-historyserver-$(hostname).log &
+child=$! 
+wait "$child"

@@ -10,4 +10,6 @@ trap '$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon stop datanode' EX
 
 $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon start datanode
 
-tail -F $HADOOP_HOME/logs/hadoop-$USER-datanode-$(hostname).log
+tail -F $HADOOP_HOME/logs/hadoop-$USER-datanode-$(hostname).log &
+child=$! 
+wait "$child"

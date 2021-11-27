@@ -4,4 +4,6 @@ trap '$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon stop nodemanager'
 
 $HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start nodemanager
 
-tail -F $HADOOP_HOME/logs/hadoop-$USER-nodemanager-$(hostname).log
+tail -F $HADOOP_HOME/logs/hadoop-$USER-nodemanager-$(hostname).log &
+child=$! 
+wait "$child"

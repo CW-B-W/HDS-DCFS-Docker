@@ -23,4 +23,6 @@ trap '$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon stop namenode' EX
 
 $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon start namenode
 
-tail -F $HADOOP_HOME/logs/hadoop-$USER-namenode-$(hostname).log
+tail -F $HADOOP_HOME/logs/hadoop-$USER-namenode-$(hostname).log &
+child=$! 
+wait "$child"

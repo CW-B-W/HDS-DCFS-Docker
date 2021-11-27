@@ -18,4 +18,6 @@ done
 
 sh /dcfs-job/demoDCFS.sh
 
-tail -F $HADOOP_HOME/logs/hadoop-$USER-resourcemanager-$(hostname).log
+tail -F $HADOOP_HOME/logs/hadoop-$USER-resourcemanager-$(hostname).log &
+child=$! 
+wait "$child"

@@ -4,4 +4,6 @@ trap '$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon stop resourcemana
 
 $HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start resourcemanager
 
-tail -F $HADOOP_HOME/logs/hadoop-$USER-resourcemanager-$(hostname).log
+tail -F $HADOOP_HOME/logs/hadoop-$USER-resourcemanager-$(hostname).log &
+child=$! 
+wait "$child"
