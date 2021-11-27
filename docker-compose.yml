@@ -156,7 +156,7 @@ services:
       - 8001:8001
     stop_signal: SIGINT
     volumes:
-      - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
+      - hbase-regionserver2_tmp:/opt/hbase-2.3.5/tmp
 
   # resourcemanager:
   #   image: dslab/hadoop-resourcemanager
