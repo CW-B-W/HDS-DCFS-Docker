@@ -1,5 +1,7 @@
 #!/bin/bash
 
-$HADOOP_HOME/bin/yarn --daemon start --config $HADOOP_CONF_DIR nodemanager
+trap '$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon stop nodemanager' EXIT INT TERM
 
-tail -F /dev/null
+$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start nodemanager
+
+tail -F $HADOOP_HOME/logs/hadoop-$USER-nodemanager-$(hostname).log

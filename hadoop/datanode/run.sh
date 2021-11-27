@@ -6,4 +6,8 @@ if [ ! -d $datadir ]; then
   exit 2
 fi
 
-exec $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR datanode
+trap '$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon stop datanode' EXIT INT TERM
+
+$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon start datanode
+
+tail -F $HADOOP_HOME/logs/hadoop-$USER-datanode-$(hostname).log

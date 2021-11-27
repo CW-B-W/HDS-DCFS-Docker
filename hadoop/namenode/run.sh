@@ -19,4 +19,8 @@ if [ "`ls -A $namedir`" == "" ]; then
   $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode -format $CLUSTER_NAME
 fi
 
-exec $HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR namenode
+trap '$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon stop namenode' EXIT INT TERM
+
+$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR --daemon start namenode
+
+tail -F $HADOOP_HOME/logs/hadoop-$USER-namenode-$(hostname).log

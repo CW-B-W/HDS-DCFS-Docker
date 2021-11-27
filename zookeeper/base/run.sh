@@ -1,2 +1,7 @@
 #!/bin/bash
-exec zkServer.sh start-foreground
+
+trap 'zkServer.sh stop' EXIT INT TERM
+
+zkServer.sh start
+
+tail -F /dev/null

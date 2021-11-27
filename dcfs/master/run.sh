@@ -1,6 +1,8 @@
 #!/bin/bash
 
-$HADOOP_HOME/bin/yarn --daemon start --config $HADOOP_CONF_DIR resourcemanager
+trap '$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon stop resourcemanager' EXIT INT TERM
+
+$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start resourcemanager
 
 nohup python3 /dcfs-share/dcfs-run/task_consumer.py &
 
@@ -16,4 +18,4 @@ done
 
 sh /dcfs-job/demoDCFS.sh
 
-tail -F /dev/null
+tail -F $HADOOP_HOME/logs/hadoop-$USER-resourcemanager-$(hostname).log
