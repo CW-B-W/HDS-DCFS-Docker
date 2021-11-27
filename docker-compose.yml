@@ -5,7 +5,7 @@ services:
     image: dslab/hadoop-namenode
     container_name: namenode
     hostname: namenode
-    restart: always
+    # restart: always
     ports:
       - 9870:9870
       - 9000:9000
@@ -17,15 +17,28 @@ services:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
 
-  datanode:
+  datanode1:
     image: dslab/hadoop-datanode
-    container_name: datanode
-    hostname: datanode
-    restart: always
+    container_name: datanode1
+    hostname: datanode1
+    # restart: always
     depends_on:
       - "namenode"
     volumes:
-      - hadoop_datanode:/hadoop/dfs/data
+      - hadoop_datanode1:/hadoop/dfs/data
+    env_file:
+      - ./hadoop/hadoop.env
+    stop_signal: SIGINT
+
+  datanode2:
+    image: dslab/hadoop-datanode
+    container_name: datanode2
+    hostname: datanode2
+    # restart: always
+    depends_on:
+      - "namenode"
+    volumes:
+      - hadoop_datanode2:/hadoop/dfs/data
     env_file:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
@@ -33,7 +46,7 @@ services:
   zoo1:
     image: dslab/zookeeper
     container_name: zoo1
-    restart: always
+    # restart: always
     hostname: zoo1
     env_file:
       - ./zookeeper/zookeeper.env
@@ -48,7 +61,7 @@ services:
   zoo2:
     image: dslab/zookeeper
     container_name: zoo2
-    restart: always
+    # restart: always
     hostname: zoo2
     env_file:
       - ./zookeeper/zookeeper.env
@@ -64,10 +77,11 @@ services:
     image: dslab/hbase-hmaster
     container_name: hbase-master
     hostname: hbase-master
-    restart: always
+    # restart: always
     depends_on:
       - "namenode"
-      - "datanode"
+      - "datanode1"
+      - "datanode2"
       - "zoo1"
       - "zoo2"
     env_file:
@@ -78,12 +92,14 @@ services:
     ports:
       - 16010:16010
     stop_signal: SIGINT
+    volumes:
+      - hbase-master_tmp:/opt/hbase-2.3.5/tmp
 
   hbase-regionserver1:
     image: dslab/hbase-hregionserver
     container_name: hbase-regionserver1
     hostname: hbase-regionserver1
-    restart: always
+    # restart: always
     depends_on:
       - "hbase-master"
     env_file:
@@ -96,12 +112,14 @@ services:
       - 16030:16030
       - 8000:8000
     stop_signal: SIGINT
+    volumes:
+      - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
 
   hbase-regionserver2:
     image: dslab/hbase-hregionserver
     container_name: hbase-regionserver2
     hostname: hbase-regionserver2
-    restart: always
+    # restart: always
     depends_on:
       - "hbase-master"
     env_file:
@@ -113,6 +131,8 @@ services:
     ports:
       - 8001:8001
     stop_signal: SIGINT
+    volumes:
+      - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
 
   # resourcemanager:
   #   image: dslab/hadoop-resourcemanager
@@ -120,7 +140,8 @@ services:
   #   restart: always
   #   depends_on:
   #     - "namenode"
-  #     - "datanode"
+  #     - "datanode1"
+  #     - "datanode2"
   #   ports:
   #     - 8088:8088
   #   env_file:
@@ -154,7 +175,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.9.10-management
     container_name: rabbitmq
-    restart: always
+    # restart: always
     hostname: rabbitmq
     ports:
       - 15672:15672
@@ -165,10 +186,11 @@ services:
   dcfs-master:
     image: dslab/dcfs-master
     container_name: dcfs-master
-    restart: always
+    # restart: always
     depends_on:
       - "namenode"
-      - "datanode"
+      - "datanode1"
+      - "datanode2"
       - "rabbitmq"
     ports:
       - 8088:8088
@@ -186,7 +208,7 @@ services:
   dcfs-worker1:
     image: dslab/dcfs-worker
     container_name: dcfs-worker1
-    restart: always
+    # restart: always
     depends_on:
       - "dcfs-master"
     ports:
@@ -206,7 +228,7 @@ services:
   dcfs-worker2:
     image: dslab/dcfs-worker
     container_name: dcfs-worker2
-    restart: always
+    # restart: always
     depends_on:
       - "dcfs-master"
     ports:
@@ -226,7 +248,7 @@ services:
   flask:
     image: dslab/flask
     container_name: flask
-    restart: always
+    # restart: always
     depends_on:
       - "rabbitmq"
       - "dcfs-master"
@@ -241,10 +263,14 @@ services:
 
 volumes:
   hadoop_namenode:
-  hadoop_datanode:
+  hadoop_datanode1:
+  hadoop_datanode2:
   # hadoop_historyserver:
   zoo1_data:
   zoo2_data:
+  hbase-master_tmp:
+  hbase-regionserver1_tmp:
+  hbase-regionserver2_tmp:
 
 # networks:
 #   hdrs_network:
