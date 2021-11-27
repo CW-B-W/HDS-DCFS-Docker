@@ -1,5 +1,22 @@
 # Docker for HDRS
 
+# Quick Start
+1. Build docker images
+```
+sudo make build-bg     # build docker in background
+sudo make build-bg-log # view logs, can use ctrl-c to exit
+```
+
+2. Start the cluster
+```
+sudo make up
+```
+
+3. Stop the cluster
+```
+sudo make stop
+```
+
 # How to
 **set your configuration in `docker-compose.yml`**
 
