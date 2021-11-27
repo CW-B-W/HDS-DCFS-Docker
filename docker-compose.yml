@@ -295,7 +295,6 @@ services:
     depends_on:
       - "rabbitmq"
       - "dcfs-master"
-    hostname: flask
     env_file:
       - ./web/flask/flask.env
     ports:
