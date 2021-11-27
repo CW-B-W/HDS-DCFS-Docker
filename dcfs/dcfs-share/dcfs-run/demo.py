@@ -203,7 +203,7 @@ phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
 if 'ip' in task_info['hds']:
     hds_ip = task_info['hds']['ip']
 else:
-    hds_ip = 'hbase-regionserver1'
+    hds_ip = 'zoo1'
 cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
 process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 stdout, stderr = process.communicate()
