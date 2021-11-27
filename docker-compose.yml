@@ -4,6 +4,7 @@ services:
   namenode:
     image: dslab/hadoop-namenode
     container_name: namenode
+    hostname: namenode
     restart: always
     ports:
       - 9870:9870
@@ -19,6 +20,7 @@ services:
   datanode:
     image: dslab/hadoop-datanode
     container_name: datanode
+    hostname: datanode
     restart: always
     depends_on:
       - "namenode"
@@ -61,8 +63,8 @@ services:
   hbase-master:
     image: dslab/hbase-hmaster
     container_name: hbase-master
-    restart: always
     hostname: hbase-master
+    restart: always
     depends_on:
       - "namenode"
       - "datanode"
@@ -70,6 +72,7 @@ services:
       - "zoo2"
     env_file:
       - ./hbase/hbase.env
+      - ./zookeeper/zookeeper.env
     environment:
       HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
     ports:
@@ -79,8 +82,8 @@ services:
   hbase-regionserver1:
     image: dslab/hbase-hregionserver
     container_name: hbase-regionserver1
-    restart: always
     hostname: hbase-regionserver1
+    restart: always
     depends_on:
       - "hbase-master"
     env_file:
@@ -97,8 +100,8 @@ services:
   hbase-regionserver2:
     image: dslab/hbase-hregionserver
     container_name: hbase-regionserver2
-    restart: always
     hostname: hbase-regionserver2
+    restart: always
     depends_on:
       - "hbase-master"
     env_file:
