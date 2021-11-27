@@ -1,6 +1,15 @@
 .PHONY: build
 build: build-hadoop build-zk build-hbase build-dcfs build-flask
 
+.PHONY: build-bg
+build-bg:
+	nohup make build > $(shell pwd)/docker-build.log 2>&1 &
+	chmod a+r $(shell pwd)/docker-build.log
+
+.PHONY: build-bg-log
+build-bg-log:
+	tail -f docker-build.log
+
 .PHONY: build-hadoop
 build-hadoop:
 	docker build -t dslab/hadoop-base ./hadoop/base
