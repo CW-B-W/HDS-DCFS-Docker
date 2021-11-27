@@ -34,6 +34,7 @@ function configure() {
 }
 
 configure /etc/hbase/hbase-site.xml hbase HBASE_CONF
+cp $HBASE_CONF_DIR/hbase-site.xml $PHOENIX_HOME/bin
 
 function wait_for_it()
 {

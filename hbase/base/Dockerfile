@@ -34,17 +34,17 @@ RUN mkdir /opt/hbase-$HBASE_VERSION/logs
 ENV HBASE_HOME=/opt/hbase-$HBASE_VERSION
 ENV HBASE_CONF_DIR=/etc/hbase
 
-ENV USER=root
-ENV PATH $HBASE_HOME/bin/:$PATH
-
 RUN wget -O /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz https://dlcdn.apache.org/phoenix/phoenix-5.1.2/phoenix-hbase-2.3-5.1.2-bin.tar.gz
 RUN tar -xvf /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz -C /opt/ \
     && rm /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz
+
 ENV PHOENIX_HOME=/opt/phoenix-hbase-2.3-5.1.2-bin
-ENV PHOENIX_CLASSPATH=$PHOENIX_HOME
 ENV PATH $PHOENIX_HOME/bin/:$PATH
 RUN cp $PHOENIX_HOME/phoenix-server-hbase-2.3-5.1.2.jar $HBASE_HOME/lib
 
+ENV USER=root
+ENV PATH $HBASE_HOME/bin/:$PATH
+ENV PHOENIX_CLASSPATH=$PHOENIX_HOME
 
 ADD entrypoint-hbase.sh /entrypoint-hbase.sh
 RUN chmod a+x /entrypoint-hbase.sh
