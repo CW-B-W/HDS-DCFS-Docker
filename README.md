@@ -23,24 +23,29 @@ sudo make restart
 sudo make bash name=...
 ```
 
-## build all docker images
+## build all docker images in background
+```
+sudo make build-bg
+
+# to view build-log
+make build-bg-log
+```
+
+## build all docker images in foreground
 ```
 sudo make build
 ```
-### build only hadoop images
+
+## enter the bash of a container
 ```
-sudo make build-hadoop
+sudo make bash name=...
 ```
-### build only zookeeper images
+e.g.
 ```
-sudo make build-zk
-```
-### build only hbase images
-```
-sudo make build-hbase
+sudo make bash name=hbase-regionserver
 ```
 
-### view logs of a container
+## view logs of a container
 ```
 sudo make logs name=...
 ```
@@ -50,7 +55,7 @@ sudo make logs name=hbase-regionserver
 ```
 
 # Acknowledgements
-This project referenced the following repos
-[big-data-europe/docker-hadoop](https://github.com/big-data-europe/docker-hadoop)
-[big-data-europe/docker-hbase](https://github.com/big-data-europe/docker-hbase/tree/master/distributed)
+This project referenced the following repos  
+[big-data-europe/docker-hadoop](https://github.com/big-data-europe/docker-hadoop)  
+[big-data-europe/docker-hbase](https://github.com/big-data-europe/docker-hbase/tree/master/distributed)  
 [31z4/zookeeper-docker](https://github.com/31z4/zookeeper-docker/issues)
