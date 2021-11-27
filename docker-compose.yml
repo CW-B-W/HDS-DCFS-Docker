@@ -303,6 +303,9 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./web/flask/flask-share:/flask-share
+      - ./web/flask/hello.py:/hello.py
+      - ./web/flask/static:/static
+      - ./web/flask/template:/template
 
 volumes:
   hadoop_namenode:

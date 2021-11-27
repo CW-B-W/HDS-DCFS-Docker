@@ -29,9 +29,9 @@ RUN pip3 install setuptools wheel
 ADD requirements.txt /requirements.txt
 RUN pip3 install -r requirements.txt
 
-ADD hello.py /hello.py
-ADD static /static
-ADD template /template
+# ADD hello.py /hello.py
+# ADD static /static
+# ADD template /template
 
 ADD entrypoint-flask.sh /entrypoint-flask.sh
 RUN chmod a+x /entrypoint-flask.sh
