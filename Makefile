@@ -53,14 +53,15 @@ up:
 
 .PHONY: stop
 stop:
-	docker-compose stop
+	docker-compose stop -t 60
 
 .PHONY: down
 down:
+	docker-compose stop -t 60
 	docker-compose down
 
 .PHONY: restart
-restart: down up
+restart: stop up
 
 .PHONY: logs
 logs:

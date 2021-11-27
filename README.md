@@ -10,12 +10,17 @@ sudo make up
 
 ## Stop the cluster
 ```
-sudo make down
+sudo make stop
 ```
 
 ## Restart the cluster
 ```
 sudo make restart
+```
+
+## Stop & Remove the cluster
+```
+sudo make down
 ```
 
 ## Enter container's bash
