@@ -12,36 +12,36 @@ build-bg-log:
 
 .PHONY: build-hadoop
 build-hadoop:
-	docker build -t dslab/hadoop-base ./hadoop/base
-	docker build -t dslab/hadoop-namenode ./hadoop/namenode
-	docker build -t dslab/hadoop-datanode ./hadoop/datanode
-	docker build -t dslab/hadoop-resourcemanager ./hadoop/resourcemanager
-	docker build -t dslab/hadoop-nodemanager ./hadoop/nodemanager
-	docker build -t dslab/hadoop-historyserver ./hadoop/historyserver
-	docker build -t dslab/hadoop-submit ./hadoop/submit
+	docker build -t cwbw/hadoop-base ./hadoop/base
+	docker build -t cwbw/hadoop-namenode ./hadoop/namenode
+	docker build -t cwbw/hadoop-datanode ./hadoop/datanode
+	docker build -t cwbw/hadoop-resourcemanager ./hadoop/resourcemanager
+	docker build -t cwbw/hadoop-nodemanager ./hadoop/nodemanager
+	docker build -t cwbw/hadoop-historyserver ./hadoop/historyserver
+	docker build -t cwbw/hadoop-submit ./hadoop/submit
 
 .PHONY: build-zk
 build-zk:
-	docker build -t dslab/zookeeper ./zookeeper/base
+	docker build -t cwbw/zookeeper ./zookeeper/base
 
 .PHONY: build-hbase
 build-hbase:
-	docker build -t dslab/hbase-base ./hbase/base
-	docker build -t dslab/hbase-hmaster ./hbase/hmaster
-	docker build -t dslab/hbase-hregionserver ./hbase/hregionserver
+	docker build -t cwbw/hbase-base ./hbase/base
+	docker build -t cwbw/hbase-hmaster ./hbase/hmaster
+	docker build -t cwbw/hbase-hregionserver ./hbase/hregionserver
 
 .PHONY: build-dcfs
 build-dcfs:
-	docker build -t dslab/dcfs-master ./dcfs/master
-	docker build -t dslab/dcfs-worker ./dcfs/worker
+	docker build -t cwbw/dcfs-master ./dcfs/master
+	docker build -t cwbw/dcfs-worker ./dcfs/worker
 
 .PHONY: build-flask
 build-flask:
-	docker build -t dslab/flask ./web/flask
+	docker build -t cwbw/flask ./web/flask
 
 .PHONY: run-flask
 run-flask:
-	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask-share:/flask-share -v $(shell pwd)/web/flask/hello.py:/hello.py -v $(shell pwd)/web/flask/template:/template -v $(shell pwd)/web/flask/static:/static --env-file ./web/flask/flask.env dslab/flask
+	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask-share:/flask-share -v $(shell pwd)/web/flask/hello.py:/hello.py -v $(shell pwd)/web/flask/template:/template -v $(shell pwd)/web/flask/static:/static --env-file ./web/flask/flask.env cwbw/flask
 
 .PHONY: run-mq
 run-mq:

@@ -1,4 +1,4 @@
-FROM dslab/hadoop-base
+FROM cwbw/hadoop-base
 
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
 
