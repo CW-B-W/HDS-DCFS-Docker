@@ -73,20 +73,27 @@ import pandas as pd
 from pymongo import MongoClient
 from bson import Code
 
-mongo_client = MongoClient('192.168.103.52')
-
-def mongodb_list_all_dbs():
-    global mongo_client
+def mongodb_list_all_dbs(username, password, ip, port):
+    if username != '':
+        mongo_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
+    else:
+        mongo_client = MongoClient(f'mongodb://{ip}:{port}/')
     return mongo_client.list_database_names()
 
-def mongodb_list_all_tables(db_name):
-    global mongo_client
+def mongodb_list_all_tables(username, password, ip, port, db_name):
+    if username != '':
+        mongo_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
+    else:
+        mongo_client = MongoClient(f'mongodb://{ip}:{port}/')
     db = mongo_client[db_name]
     return db.list_collection_names()
 
 
-def mongodb_list_all_keys(db_name, table_name):
-    global mongo_client
+def mongodb_list_all_keys(username, password, ip, port, db_name, table_name):
+    if username != '':
+        mongo_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
+    else:
+        mongo_client = MongoClient(f'mongodb://{ip}:{port}/')
     db = mongo_client[db_name]
     map = Code("function() { for (var key in this) { emit(key, null); } }")
     reduce = Code("function(key, stuff) { return null; }")
@@ -301,25 +308,37 @@ def value():
 ''' ----- MongoDB ----- '''
 @app.route('/mongodb/listdbs', methods=['GET'])
 def mongodb_dbs():
+    username = request.args.get('username')
+    password = request.args.get('password')
+    ip       = request.args.get('ip')
+    port     = request.args.get('port')
     ret_dict = {
-        'db_list': mongodb_list_all_dbs()
+        'db_list': mongodb_list_all_dbs(username, password, ip, port)
     }
     return ret_dict 
 
 @app.route('/mongodb/listtables', methods=['GET'])
 def mongodb_tables():
+    username = request.args.get('username')
+    password = request.args.get('password')
+    ip       = request.args.get('ip')
+    port     = request.args.get('port')
     db_name = request.args.get('db_name')
     ret_dict = {
-        'table_list': mongodb_list_all_tables(db_name)
+        'table_list': mongodb_list_all_tables(username, password, ip, port, db_name)
     }
     return ret_dict 
 
 @app.route('/mongodb/listkeys', methods=['GET'])
 def mongodb_keys():
+    username = request.args.get('username')
+    password = request.args.get('password')
+    ip       = request.args.get('ip')
+    port     = request.args.get('port')
     db_name = request.args.get('db_name')
     table_name = request.args.get('table_name')
     ret_dict = {
-        'key_list': mongodb_list_all_keys(db_name, table_name)
+        'key_list': mongodb_list_all_keys(username, password, ip, port, db_name, table_name)
     }
     return ret_dict 
 

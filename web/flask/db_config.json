@@ -14,8 +14,8 @@
     "MongoDB": {
         "ip": "192.168.103.52",
         "port": "27017",
-        "username": "brad",
-        "password": "00000000"
+        "username": "",
+        "password": ""
     },
     "Oracle": {
         "ip": "192.168.103.60",

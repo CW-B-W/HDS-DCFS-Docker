@@ -172,9 +172,12 @@ for i, d in enumerate(task_info['db']):
             port     = d['port']
             db_name  = d['db']
             tbl_name = d['collection']
-            mongodb_client = MongoClient(ip, int(port))
-            mongodb_db     = mongodb_client[db_name]
-            filterj      = d['filter']
+            if username != '':
+                mongodb_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
+            else:
+                mongodb_client = MongoClient(f'mongodb://{ip}:{port}/')
+            mongodb_db = mongodb_client[db_name]
+            filterj    = d['filter']
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB")
             if do_sleep:
                 time.sleep(5)
