@@ -1,0 +1,38 @@
+{
+    "MySQL": {
+        "ip": "192.168.103.52",
+        "port": "3306",
+        "username": "brad",
+        "password": "00000000"
+    },
+    "MSSQL": {
+        "ip": "192.168.103.52",
+        "port": "1433",
+        "username": "SA",
+        "password": "00000000Xx"
+    },
+    "MongoDB": {
+        "ip": "192.168.103.52",
+        "port": "27017",
+        "username": "brad",
+        "password": "00000000"
+    },
+    "Oracle": {
+        "ip": "192.168.103.60",
+        "port": "1521",
+        "username": "brad",
+        "password": "00000000"
+    },
+    "Cassandra": {
+        "ip": "192.168.103.125",
+        "port": "9042",
+        "username": "brad",
+        "password": "00000000"
+    },
+    "Elasticsearch": {
+        "ip": "192.168.103.125",
+        "port": "9200",
+        "username": "brad",
+        "password": "00000000"
+    }
+}

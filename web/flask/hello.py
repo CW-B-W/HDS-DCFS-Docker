@@ -79,18 +79,18 @@ def mongodb_list_all_dbs():
     global mongo_client
     return mongo_client.list_database_names()
 
-def mongodb_list_all_collections(db_name):
+def mongodb_list_all_tables(db_name):
     global mongo_client
     db = mongo_client[db_name]
     return db.list_collection_names()
 
 
-def mongodb_list_all_keys(db_name, collection_name):
+def mongodb_list_all_keys(db_name, table_name):
     global mongo_client
     db = mongo_client[db_name]
     map = Code("function() { for (var key in this) { emit(key, null); } }")
     reduce = Code("function(key, stuff) { return null; }")
-    result = db[collection_name].map_reduce(map, reduce, "myresults")
+    result = db[table_name].map_reduce(map, reduce, "myresults")
     return result.distinct('_id')
 ''' =============== MongoDB =============== '''
 
@@ -299,27 +299,27 @@ def value():
     return str(val)
 
 ''' ----- MongoDB ----- '''
-@app.route('/mongo/listdbs', methods=['GET'])
-def mongo_dbs():
+@app.route('/mongodb/listdbs', methods=['GET'])
+def mongodb_dbs():
     ret_dict = {
         'db_list': mongodb_list_all_dbs()
     }
     return ret_dict 
 
-@app.route('/mongo/listcollections', methods=['GET'])
-def mongo_collections():
+@app.route('/mongodb/listtables', methods=['GET'])
+def mongodb_tables():
     db_name = request.args.get('db_name')
     ret_dict = {
-        'collection_list': mongodb_list_all_collections(db_name)
+        'table_list': mongodb_list_all_tables(db_name)
     }
     return ret_dict 
 
-@app.route('/mongo/listkeys', methods=['GET'])
-def mongo_keys():
+@app.route('/mongodb/listkeys', methods=['GET'])
+def mongodb_keys():
     db_name = request.args.get('db_name')
-    collection_name = request.args.get('collection_name')
+    table_name = request.args.get('table_name')
     ret_dict = {
-        'key_list': mongodb_list_all_keys(db_name, collection_name)
+        'key_list': mongodb_list_all_keys(db_name, table_name)
     }
     return ret_dict 
 
@@ -665,6 +665,10 @@ def hds_downloadable():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    with open('./flask_config.json', 'r') as rf:
+        flask_config = json.load(rf)
+    with open('./db_config.json', 'r') as rf:
+        db_config = json.load(rf)
+    return render_template('index.html', flask_config = flask_config, db_config = db_config)
 
 ''' ================ Flask ================ '''
