@@ -146,14 +146,14 @@ for i, d in enumerate(task_info['db']):
             port     = d['port']
             db_name  = d['db']
             tbl_name = d['collection']
-            mongo_client = MongoClient(ip, int(port))
-            mongo_db     = mongo_client[db_name]
+            mongodb_client = MongoClient(ip, int(port))
+            mongodb_db     = mongodb_client[db_name]
             filterj      = d['filter']
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB")
             if do_sleep:
                 time.sleep(5)
-            mongo_cursor = mongo_db[tbl_name].find({}, filterj)
-            locals()['df%d'%i] = pd.DataFrame(list(mongo_cursor))
+            mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)
+            locals()['df%d'%i] = pd.DataFrame(list(mongodb_cursor))
         except Exception as e:
             print(str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MongoDB: " + str(e))
