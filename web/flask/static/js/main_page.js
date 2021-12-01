@@ -400,7 +400,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": flask_http_url +database+ '/listdbs?' + args,
+                "url": flask_http_url+"/" +database+ '/listdbs?' + args,
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -430,7 +430,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": flask_http_url+'mongodb/listdbs',
+                "url": flask_http_url+"/"+'mongodb/listdbs',
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -479,7 +479,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": flask_http_url +database+ '/listtables?' + args,
+                    "url": flask_http_url+"/" +database+ '/listtables?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -517,7 +517,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": flask_http_url+'mongodb/listtables?db_name=' + db_name,
+                    "url": flask_http_url+"/"+'mongodb/listtables?db_name=' + db_name,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -573,7 +573,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": flask_http_url +database+ '/listkeys?' + args,
+                    "url": flask_http_url+"/" +database+ '/listkeys?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -610,7 +610,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": flask_http_url+'mongodb/listkeys?db_name=' + db_name + '&table_name=' + tbl_name,
+                    "url": flask_http_url+"/"+'mongodb/listkeys?db_name=' + db_name + '&table_name=' + tbl_name,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options

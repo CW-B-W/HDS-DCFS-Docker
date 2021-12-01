@@ -34,7 +34,7 @@ $(document).ready(function() {
                 "type": "GET",
                 "dataType": "json",
                 "contentType": "application/json",
-                "url": flask_http_url + database + '/listdbs?' + args,
+                "url": flask_http_url+"/" + database + '/listdbs?' + args,
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
@@ -79,7 +79,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": flask_http_url + database + '/listtables?' + args,
+                    "url": flask_http_url+"/" + database + '/listtables?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -132,7 +132,7 @@ $(document).ready(function() {
                     "type": "GET",
                     "dataType": "json",
                     "contentType": "application/json",
-                    "url": flask_http_url + database + '/listkeys?' + args,
+                    "url": flask_http_url+"/" + database + '/listkeys?' + args,
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
@@ -236,7 +236,7 @@ $(document).ready(function() {
             },
             "dataType": "json",
             "contentType": "application/json",
-            "url": "http://" + flask_ip + ":15672" + "/api/exchanges/%2F/amq.default/publish",
+            "url": rabbitmq_http_url + "/api/exchanges/%2F/amq.default/publish",
             "data": '{"vhost":"/","name":"amq.default","properties":{"delivery_mode":1,"headers":{}},"routing_key":"' + queue + '","delivery_mode":"1","payload":"' + msg + '","headers":{},"props":{},"payload_encoding":"string"}',
             success: function(result) {
                 alert("Message sent");

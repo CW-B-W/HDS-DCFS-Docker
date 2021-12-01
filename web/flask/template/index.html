@@ -2,6 +2,11 @@
 <html>
 <head>
   <script>
+    /* These variables can be seen by js */
+    flask_config = {{flask_config | tojson}}
+    db_config    = {{db_config | tojson}}
+  </script>
+  <script>
     flask_host = location.host;
     if (flask_host.indexOf(':') != -1) {
       flask_ip   = flask_host.substring(0, flask_host.indexOf(':'));
@@ -12,11 +17,12 @@
       flask_port = '80';
     }
     flask_http_url = 'http://' + flask_host + '/';
-  </script>
-  <script>
-    /* These variables can be seen by js */
-    flask_config = {{flask_config | tojson}}
-    db_config    = {{db_config | tojson}}
+    if (flask_config.hasOwnProperty('rabbitmq_http_url') && flask_config['rabbitmq_http_url'] != '') {
+      rabbitmq_http_url = flask_config['rabbitmq_http_url'];
+    }
+    else {
+      rabbitmq_http_url = "http://" + flask_ip + ":15672";
+    }
   </script>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

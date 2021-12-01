@@ -12,7 +12,7 @@ function send_task_status_req() {
         "type": "GET",
         "dataType": "json",
         "contentType": "application/json",
-        "url": flask_http_url+'taskstatus' + args,
+        "url": flask_http_url+"/"+'taskstatus' + args,
         "timeout": 30000,
         success: function(result) {
             children = $('#task_status_res').children();
