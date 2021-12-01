@@ -19,6 +19,7 @@
     <li class="nav-item ml-5"><a href="#new_task_page" data-toggle="tab">New Task</a></li>
     <li class="nav-item ml-5"><a href="#task_status_page" data-toggle="tab">Task Status</a></li>
     <li class="nav-item ml-5"><a href="#hds_page" data-toggle="tab">HDS</a></li>
+    <li class="nav-item ml-5"><a href="#import_page" data-toggle="tab">Data Import</a></li>
   </ul>
   <div id="myTabContent" class="tab-content w-100 mt-3">
     <div class="container tab-pane fade h-100" id="mssql_page">
@@ -99,6 +100,8 @@
               <option>MsSQL</option>
               <option>MongoDB</option>
               <option>Oracle</option>
+              <option>Cassandra</option>
+              <option>Elasticsearch</option>
             </select>
             <br><br>
             <div class="form-group">
@@ -137,6 +140,8 @@
               <option>MsSQL</option>
               <option>MongoDB</option>
               <option>Oracle</option>
+              <option>Cassandra</option>
+              <option>Elasticsearch</option>
             </select>
             <br><br>
             <div class="form-group">
@@ -275,16 +280,8 @@
           <form>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="192.168.103.53:8000">
+              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="192.168.103.151:8000">
             </div>
-            <!-- <div class="form-group">
-              <label>Username</label>
-              <input type="email" class="form-control" id="hds_username" placeholder="Enter Username" value="brad">
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" class="form-control" id="hds_password" placeholder="Password" value="00000000">
-            </div> -->
             <button id="conn_hds" type="button" class="btn btn-primary w-100">Connect HDS</button>
           </form>
           <br><br>
@@ -293,16 +290,155 @@
           </select>
           <br><br>
           <select id="hds_key_list" class="form-select w-100" style="height: 300px;" multiple>
-            
           </select>
+          <label>File name</label>
+          <input type="text" class="form-control" id="download_file_name" placeholder="Enter ServerIP:Port" value="result">
         </div>
       </div>
-  
+      
       <div class="row">
         <button id="send_hds_req" type="button" class="btn btn-success w-100">Send Request</button>
       </div>
+
+      <div class="container overflow-auto" id="hds_page_task_status" style="height: 1000px;">
+        
+        <div class="row">
+          <div class="col">
+            <label>Task ID</label>
+            <textarea class="form-control" id="hds_page_task_id" rows="5" readonly></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>HDS REST API</label>
+            <textarea class="form-control" id="hds_rest_api" rows="3" readonly></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Download REST API</label>
+            <textarea class="form-control" id="download_rest_api" rows="3" readonly></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Watch REST API</label>
+            <textarea class="form-control" id="watch_rest_api" rows="3" readonly></textarea>
+          </div>
+        </div>
+      </div>
     </div>
 
+     <!-- import page -->
+    <div class="container tab-pane fade h-100" id="import_page">
+      <div class="row">
+        <div class="col">
+          <form>
+            <label id = "import_text1">Database</label>
+            <select id="dblist" class="form-select w-100">
+              <option>MySQL</option>
+              <option>MsSQL</option>
+              <option>MongoDB</option>
+              <option>Oracle</option>
+              <option>Cassandra</option>
+              <option>Elasticsearch</option>
+            </select>
+            <br><br>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="server" placeholder="Enter ServerIP:Port" value="192.168.103.125:9042">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="email" class="form-control" id="username" placeholder="Enter Username" value="brad">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Password" value="00000000">
+            </div>
+            <button id="connect" type="button" class="btn btn-primary w-100">Connect MySQL</button>
+            <label id="import_status"></label>
+          </form>
+          <select id="import_db_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="import_table_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="import_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+        
+      </div>
+      <div class="row">
+        <button id="import_create_req" type="button" class="btn btn-info w-100">Create Task</button>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <label>HDS Table Name</label>
+        <textarea class="form-control" id="import_hds_table_name" rows="3"></textarea>
+      </div>
+
+      <div class="container" id="import_col_opt_list">
+        <div class="row" id="import_col_opt_template" style="visibility: hidden;">
+          <div class="col">
+            <label>Type1</label>
+          </div>
+          <div class="col">
+            <select class="form-select w-100">
+              <option>INTEGER</option>
+              <option>BIGINT</option>
+              <option>FLOAT</option>
+              <option>DOUBLE</option>
+              <option>DECIMAL</option>
+              <option>BOOLEAN</option>
+              <option>TIME</option>
+              <option>DATE</option>
+              <option>TIMESTAMP</option>
+              <option>VARCHAR</option>
+            </select>
+          </div>
+          <div class="col">
+            <label>IsPrimaryKey</label><br>
+          </div>
+          <div class="col">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="import_flexRadioDefault1" value="0">
+            <label>Type1</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>SQL generator 1</label>
+          <textarea class="form-control" id="import_genres" rows="3" readonly></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>HDS Create table generator</label>
+          <textarea class="form-control" id="import_hds_genres" rows="3" readonly></textarea>
+        </div>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <label>Task Infomation</label>
+        <textarea class="form-control" id="import_task_info" rows="3" readonly>{}</textarea>
+      </div>
+      <br>
+      <div class="row">
+        <label id="import_sent_task_id">task_id = </label>
+        <button id="import_send_req" type="button" class="btn btn-success w-100">Send Request</button>
+      </div>
+    </div>
+    </div>
     
   </div>
 </body>

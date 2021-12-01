@@ -17,7 +17,7 @@ TASKSTATUS_UNKNOWN    = 6
 def listen_task_status_queue():
     global lastest_message
     lastest_message = "consuming"
-    
+
     try_times = 10
     while try_times > 0:
         try:
@@ -194,6 +194,74 @@ def phoenix_list_all_keys(table_name, ip, port='1521'):
 ''' ================ Phoenix ================ '''
 
 
+''' ================ Elasticsearch ================ '''
+from elasticsearch import Elasticsearch
+#elasticsearch lib
+import json
+import pandas as pd
+import numpy as np
+from pandas.io.json import json_normalize
+from elasticsearch_dsl import Search
+
+def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
+    test=['test']
+    return test
+
+def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
+    es=Elasticsearch(hosts=ip, port=9200)
+    idx_list = [x for x in es.indices.get_alias("*").keys() ]
+    return idx_list
+
+def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port='9200'):
+    es=Elasticsearch(hosts=ip, port=9200)
+    result = es.indices.get_mapping(index = table_name)
+    df=json_normalize(result[table_name])
+    df1 = []
+    for txt in df :
+        data = txt.split(".")
+        df1.append(data[2])
+    return df1
+    #print(df)
+''' ================ Elasticsearch ================ '''
+''' ================ cassandra ================ '''
+import pandas as pd
+from cassandra.cluster import Cluster
+
+
+
+def cassandra_list_all_dbs(username, password, ip, port='9042'):
+    #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=XEPDB1" % (username, password, ip, port))
+    #df1 = pd.read_sql("select * from global_name", con=db1_engine)
+    cluster = Cluster([ip],port=9042)
+    session = cluster.connect()
+    rows = session.execute("DESCRIBE keyspaces;")
+    df1 = pd.DataFrame(rows)
+    return df1["keyspace_name"].tolist()
+
+def cassandra_list_all_tables(db_name, username, password, ip, port='9042'):
+    #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
+    #df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
+    #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
+    #df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
+    cluster = Cluster([ip],port=9042)
+    session = cluster.connect()
+    rows = session.execute("SELECT * FROM system_schema.tables WHERE keyspace_name = '%s'" % (db_name))
+    df1 = pd.DataFrame(rows)
+    return df1["table_name"].tolist()
+
+def cassandra_list_all_keys(db_name, table_name, username, password, ip, port='9042'):
+    #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
+    #df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE table_name = '%s'" % table_name, con=db1_engine);
+    cluster = Cluster([ip],port=9042)
+    session = cluster.connect()
+    rows = session.execute("SELECT * FROM system_schema.columns WHERE keyspace_name = '%s'AND table_name = '%s'" % (db_name, table_name))
+    df1 = pd.DataFrame(rows)
+    return df1["column_name"].tolist()
+    #return df1.iloc[:,0].tolist()
+
+
+
+''' ================ cassandra ================ '''
 
 ''' ================ Flask ================ '''
 from flask import Flask, request, render_template
@@ -236,7 +304,7 @@ def mongo_dbs():
     ret_dict = {
         'db_list': mongodb_list_all_dbs()
     }
-    return ret_dict
+    return ret_dict 
 
 @app.route('/mongo/listcollections', methods=['GET'])
 def mongo_collections():
@@ -244,7 +312,7 @@ def mongo_collections():
     ret_dict = {
         'collection_list': mongodb_list_all_collections(db_name)
     }
-    return ret_dict
+    return ret_dict 
 
 @app.route('/mongo/listkeys', methods=['GET'])
 def mongo_keys():
@@ -253,7 +321,7 @@ def mongo_keys():
     ret_dict = {
         'key_list': mongodb_list_all_keys(db_name, collection_name)
     }
-    return ret_dict
+    return ret_dict 
 
 ''' ----- MySQL ----- '''
 @app.route('/mysql/listdbs', methods=['GET'])
@@ -266,7 +334,7 @@ def mysql_dbs():
         ret_dict = {
             'db_list': mysql_list_all_dbs(username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to MySQL server", 403
 
@@ -281,7 +349,7 @@ def mysql_tables():
         ret_dict = {
             'table_list': mysql_list_all_tables(db_name, username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to MySQL server", 403
 
@@ -297,7 +365,7 @@ def mysql_keys():
         ret_dict = {
             'key_list': mysql_list_all_keys(db_name, table_name, username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to MySQL server", 403
 
@@ -312,7 +380,7 @@ def mssql_dbs():
         ret_dict = {
             'db_list': mssql_list_all_dbs(username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to MSSQL server", 403
 
@@ -327,7 +395,7 @@ def mssql_tables():
         ret_dict = {
             'table_list': mssql_list_all_tables(db_name, username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to MSSQL server", 403
 
@@ -343,7 +411,7 @@ def mssql_keys():
         ret_dict = {
             'key_list': mssql_list_all_keys(db_name, table_name, username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to MSSQL server", 403
 
@@ -358,7 +426,7 @@ def oracle_dbs():
         ret_dict = {
             'db_list': oracle_list_all_dbs(username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to Oracle server", 403
 
@@ -373,7 +441,7 @@ def oracle_tables():
         ret_dict = {
             'table_list': oracle_list_all_tables(db_name, username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to Oracle server", 403
 
@@ -389,10 +457,103 @@ def oracle_keys():
         ret_dict = {
             'key_list': oracle_list_all_keys(db_name, table_name, username, password, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to Oracle server", 403
 
+''' ----- Cassandra ----- '''
+@app.route('/cassandra/listdbs', methods=['GET'])
+def cassandra_dbs():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        ret_dict = {
+            'db_list': cassandra_list_all_dbs(username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to Cassandra server", 403
+
+@app.route('/cassandra/listtables', methods=['GET'])
+def cassandra_tables():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        db_name = request.args.get('db_name')
+        ret_dict = {
+            'table_list': cassandra_list_all_tables(db_name, username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to Cassandra server", 403
+
+
+@app.route('/cassandra/listkeys', methods=['GET'])
+def cassandra_keys():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        db_name  = request.args.get('db_name')
+        table_name = request.args.get('table_name')
+        ret_dict = {
+            'key_list': cassandra_list_all_keys(db_name, table_name, username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to Cassandra server", 403
+
+''' ----- elasticsearch ----- '''
+@app.route('/elasticsearch/listdbs', methods=['GET'])
+def elasticsearch_dbs():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        ret_dict = {
+            'db_list': elasticsearch_list_all_dbs(username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to elasticsearch server", 403
+
+@app.route('/elasticsearch/listtables', methods=['GET'])
+def elasticsearch_tables():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        db_name = request.args.get('db_name')
+        ret_dict = {
+            'table_list': elasticsearch_list_all_tables(db_name, username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to elasticsearch server", 403
+
+
+@app.route('/elasticsearch/listkeys', methods=['GET'])
+def elasticsearch_keys():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        db_name  = request.args.get('db_name')
+        table_name = request.args.get('table_name')
+        ret_dict = {
+            'key_list': elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to elasticsearch server", 403
 ''' ----- Phoenix ----- '''
 @app.route('/phoenix/listtables', methods=['GET'])
 def phoenix_tables():
@@ -402,7 +563,7 @@ def phoenix_tables():
         ret_dict = {
             'table_list': phoenix_list_all_tables(ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to Phoenix server", 403
 
@@ -415,7 +576,7 @@ def phoenix_keys():
         ret_dict = {
             'key_list': phoenix_list_all_keys(table_name, ip, port)
         }
-        return ret_dict
+        return ret_dict 
     except:
         return "Error connecting to Phoenix server", 403
 
@@ -431,7 +592,7 @@ def task_status():
     except Exception as e:
         print(e)
         return "Task not found", 400
-
+        
 ''' ----- HDS Download ----- '''
 import requests
 import uuid
@@ -447,7 +608,7 @@ def hds_task():
     r = requests.get(hds_url)
     if r.status_code == 200:
         hds_task_id = r.json()['task']['id']
-
+        
         # HDS local protocol will not have redirection
         if r.history:
             for resp in r.history:
@@ -471,7 +632,7 @@ def hds_watch():
     my_task_list = session.get('task_list')
     if my_task_list is None:
         return {}
-
+    
     hds_url = f'http://{hds_ip}:{hds_port}/dataservice/v1/watch?history=false'
     r = requests.get(hds_url)
     if r.status_code == 200:
@@ -486,8 +647,8 @@ def hds_watch():
         session['downloadable'] = []
     for t in my_finished_task_list:
         flask_task_id = session['task_list'][t]
-        session['downloadable'].append(flask_task_id)
-
+        session['downloadable'].append(flask_task_id) 
+    
     print(my_runnung_task_list)
     return r.json()
 
