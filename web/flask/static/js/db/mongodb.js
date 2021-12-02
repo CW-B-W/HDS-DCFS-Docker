@@ -20,7 +20,7 @@ function gen_db_info_mongodb(ip, port, username, password, dbname, tblname, keyl
         'password': password,
         'db': dbname,
         'collection': tblname,
-        'filter': mongodb_gen_filter(keylist)
+        'sql': mongodb_gen_filter(keylist)
     };
 
     return db;

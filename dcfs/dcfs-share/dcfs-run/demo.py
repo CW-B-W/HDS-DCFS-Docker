@@ -177,7 +177,7 @@ for i, d in enumerate(task_info['db']):
             else:
                 mongodb_client = MongoClient(f'mongodb://{ip}:{port}/')
             mongodb_db = mongodb_client[db_name]
-            filterj    = d['filter']
+            filterj    = d['sql']
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB")
             if do_sleep:
                 time.sleep(5)
