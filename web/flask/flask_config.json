@@ -1,3 +1,9 @@
 {
-    "rabbitmq_http_url": ""
+    "rabbitmq_http_url": "",
+    "HDS": {
+        "ip": "",
+        "port": "8000",
+        "zoo_ip": "zoo1",
+        "zoo_port": "2181"
+    }
 }

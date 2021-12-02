@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
   <script>
     /* These variables can be seen by js */
     flask_config = {{flask_config | tojson}}
@@ -16,19 +21,44 @@
       flask_ip   = flask_host;
       flask_port = '80';
     }
-    flask_http_url = 'http://' + flask_host + '/';
+    flask_http_url = 'http://' + flask_host;
     if (flask_config.hasOwnProperty('rabbitmq_http_url') && flask_config['rabbitmq_http_url'] != '') {
       rabbitmq_http_url = flask_config['rabbitmq_http_url'];
     }
     else {
       rabbitmq_http_url = "http://" + flask_ip + ":15672";
     }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('ip') && flask_config['HDS']['ip'] != '') {
+      hds_ip = flask_config['HDS']['ip'];
+    }
+    else {
+      hds_ip = flask_ip;
+    }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('port') && flask_config['HDS']['port'] != '') {
+      hds_port = flask_config['HDS']['port'];
+    }
+    else {
+      hds_port = 8000;
+    }
+    flask_config['HDS']['ip']   = hds_ip;
+    flask_config['HDS']['port'] = hds_port;
+    hds_http_url = 'http://' + hds_ip + ':' + hds_port;
+    $(document).ready(function() {
+      $('#hds_server').val(hds_ip + ':' + hds_port);
+    });
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('zoo_ip') && flask_config['HDS']['zoo_ip'] != '') {
+      hds_zoo_ip = flask_config['HDS']['zoo_ip'];
+    }
+    else {
+      hds_zoo_ip = 'zoo1';
+    }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('zoo_port') && flask_config['HDS']['zoo_port'] != '') {
+      hds_zoo_port = flask_config['HDS']['zoo_port'];
+    }
+    else {
+      hds_zoo_port = '2181';
+    }
   </script>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <script src='{{ url_for('static', filename="js/utils.js") }}'></script>
   <script src='{{ url_for('static', filename="js/join_task.js") }}'></script>
@@ -75,7 +105,7 @@
             <br><br>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="db1_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:3306">
+              <input type="text" class="form-control" id="db1_server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
             </div>
             <div class="form-group">
               <label>Username</label>
@@ -112,7 +142,7 @@
             <br><br>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="db2_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:3306">
+              <input type="text" class="form-control" id="db2_server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
             </div>
             <div class="form-group">
               <label>Username</label>
@@ -244,7 +274,7 @@
           <form>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="192.168.103.151:8000">
+              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="{{flask_config['HDS']['ip']}}:{{flask_config['HDS']['port']}}">
             </div>
             <button id="conn_hds" type="button" class="btn btn-primary w-100">Connect HDS</button>
           </form>
@@ -309,7 +339,7 @@
             <br><br>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="server" placeholder="Enter ServerIP:Port" value="192.168.103.125:9042">
+              <input type="text" class="form-control" id="server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
             </div>
             <div class="form-group">
               <label>Username</label>
