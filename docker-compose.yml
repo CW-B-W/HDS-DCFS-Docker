@@ -303,6 +303,8 @@ services:
     volumes:
       - ./web/flask/flask-share:/flask-share
       - ./web/flask/hello.py:/hello.py
+      - ./web/flask/flask_config.json:/flask_config.json
+      - ./web/flask/db_config.json:/db_config.json
       - ./web/flask/static:/static
       - ./web/flask/template:/template
 

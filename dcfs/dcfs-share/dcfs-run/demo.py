@@ -16,7 +16,10 @@ from sqlalchemy import create_engine
 import json
 from pymongo import MongoClient
 from cassandra.cluster import Cluster
-
+from elasticsearch import Elasticsearch
+#elasticsearch lib
+from pandas.io.json import json_normalize
+from elasticsearch_dsl import Search
 
 ''' ========== RabbitMQ ========== '''
 import pika, sys
@@ -124,7 +127,7 @@ for i, d in enumerate(task_info['db']):
             ip       = d['ip']
             port     = d['port']
             db_name  = d['db']
-            cluster = Cluster([ip],port=9042)
+            cluster = Cluster([ip],port=port)
             session = cluster.connect()
             rows = session.execute(d['sql'])
 #            local()['df%d'%i] = df1
@@ -138,6 +141,29 @@ for i, d in enumerate(task_info['db']):
             print(str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Cassandra: " + str(e))
             exit(1)
+    elif db_type == 'elasticsearch':
+        try:
+            username = d['username']
+            password = d['password']
+            ip       = d['ip']
+            port     = d['port']
+            db_name  = d['db']
+
+            es=Elasticsearch(hosts=ip, port=port)
+            result=es.sql.query(body={'query': d['sql']})
+            col = []
+            l = len(result['columns'])
+            for x in range(l):
+                col.append(result['columns'][x]['name'])
+            #df = pd.DataFrame(result['rows'],columns =col)
+            send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch")
+            if do_sleep:
+                time.sleep(5)
+            locals()['df%d'%i] = pd.DataFrame(result['rows'],columns =col)
+        except Exception as e:
+            print(str(e))
+            send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Elasticsearch: " + str(e))
+            exit(1)
     elif db_type == 'mongodb':
         try:
             username = d['username']
@@ -146,14 +172,17 @@ for i, d in enumerate(task_info['db']):
             port     = d['port']
             db_name  = d['db']
             tbl_name = d['collection']
-            mongo_client = MongoClient(ip, int(port))
-            mongo_db     = mongo_client[db_name]
-            filterj      = d['filter']
+            if username != '':
+                mongodb_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
+            else:
+                mongodb_client = MongoClient(f'mongodb://{ip}:{port}/')
+            mongodb_db = mongodb_client[db_name]
+            filterj    = d['filter']
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB")
             if do_sleep:
                 time.sleep(5)
-            mongo_cursor = mongo_db[tbl_name].find({}, filterj)
-            locals()['df%d'%i] = pd.DataFrame(list(mongo_cursor))
+            mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)
+            locals()['df%d'%i] = pd.DataFrame(list(mongodb_cursor))
         except Exception as e:
             print(str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MongoDB: " + str(e))
@@ -163,6 +192,8 @@ for i, d in enumerate(task_info['db']):
         send_task_status(task_id, TASKSTATUS_FAILED, "Unsupported DB type " + db_type)
         exit(1)
 
+    # make all column names uppercase
+    locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
     print(locals()['df%d'%i])
 
 if len(task_info['db']) < 2:
@@ -175,12 +206,12 @@ else:
         if do_sleep:
             time.sleep(10)
         df_joined = pysqldf(task_info['join_sql'])
-        columns_order = task_info['hds']['columns']
-        df_joined = df_joined.reindex(columns_order, axis=1)
     except Exception as e:
         print(str(e))
         send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables: " + str(e))
         exit(1)
+columns_order = task_info['hds']['columns']
+df_joined = df_joined.reindex(columns_order, axis=1)
 print(df_joined)
 
 
@@ -208,13 +239,22 @@ cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper
 process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 stdout, stderr = process.communicate()
 exit_code = process.wait()
+stdout = stdout.decode('utf-8')
+stderr = stderr.decode('utf-8')
+print("Phoenix stdout")
+print(stdout)
+print("Phoenix stderr")
+print(stderr)
+print(f"Phoenix exit code: {exit_code}")
 if exit_code != 0:
-    print(stderr.decode('utf-8'))
-    send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr.decode('utf-8'))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr)
     exit(1)
 else:
     send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully import table into HDS")
 ''' ========== Phoenix ========== '''
 
-send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished")
+if stderr.find("ERROR") == -1:
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished")
+else:
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr)
 exit()

@@ -2,10 +2,77 @@
 <html>
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src='{{ url_for('static', filename="js/btn.js") }}'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script>
+    /* These variables can be seen by js */
+    flask_config = {{flask_config | tojson}}
+    db_config    = {{db_config | tojson}}
+  </script>
+  <script>
+    flask_host = location.host;
+    if (flask_host.indexOf(':') != -1) {
+      flask_ip   = flask_host.substring(0, flask_host.indexOf(':'));
+      flask_port = flask_host.substring(flask_host.indexOf(':')+1);
+    }
+    else {
+      flask_ip   = flask_host;
+      flask_port = '80';
+    }
+    flask_http_url = 'http://' + flask_host;
+    if (flask_config.hasOwnProperty('rabbitmq_http_url') && flask_config['rabbitmq_http_url'] != '') {
+      rabbitmq_http_url = flask_config['rabbitmq_http_url'];
+    }
+    else {
+      rabbitmq_http_url = "http://" + flask_ip + ":15672";
+    }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('ip') && flask_config['HDS']['ip'] != '') {
+      hds_ip = flask_config['HDS']['ip'];
+    }
+    else {
+      hds_ip = flask_ip;
+    }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('port') && flask_config['HDS']['port'] != '') {
+      hds_port = flask_config['HDS']['port'];
+    }
+    else {
+      hds_port = 8000;
+    }
+    flask_config['HDS']['ip']   = hds_ip;
+    flask_config['HDS']['port'] = hds_port;
+    hds_http_url = 'http://' + hds_ip + ':' + hds_port;
+    $(document).ready(function() {
+      $('#hds_server').val(hds_ip + ':' + hds_port);
+    });
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('zoo_ip') && flask_config['HDS']['zoo_ip'] != '') {
+      hds_zoo_ip = flask_config['HDS']['zoo_ip'];
+    }
+    else {
+      hds_zoo_ip = 'zoo1';
+    }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('zoo_port') && flask_config['HDS']['zoo_port'] != '') {
+      hds_zoo_port = flask_config['HDS']['zoo_port'];
+    }
+    else {
+      hds_zoo_port = '2181';
+    }
+  </script>
+
+  <script src='{{ url_for('static', filename="js/utils.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/join_task.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/new_task_page.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/task_status_page.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/hds_page.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/import_page.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/mysql.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/mssql.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/oracle.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/mongodb.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/cassandra.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/elasticsearch.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/hds.js") }}'></script>
   <style>
     body {
       padding-top: 6%;
@@ -15,116 +82,51 @@
 </head>
 
 <body>
+  <!-- Tabs -->
   <ul id="myTab" class="nav nav-tabs w-100 mb-3">
     <li class="nav-item ml-5"><a href="#new_task_page" data-toggle="tab">New Task</a></li>
     <li class="nav-item ml-5"><a href="#task_status_page" data-toggle="tab">Task Status</a></li>
     <li class="nav-item ml-5"><a href="#hds_page" data-toggle="tab">HDS</a></li>
+    <li class="nav-item ml-5"><a href="#import_page" data-toggle="tab">Data Import</a></li>
   </ul>
+
   <div id="myTabContent" class="tab-content w-100 mt-3">
-    <div class="container tab-pane fade h-100" id="mssql_page">
-      <div class="row">
-        <div class="col">
-          <form>
-            <div class="form-group">
-              <label>Server</label>
-              <input type="text" class="form-control" id="mssql_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:1433">
-            </div>
-            <div class="form-group">
-              <label>Username</label>
-              <input type="email" class="form-control" id="mssql_username" placeholder="Enter Username" value="SA">
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" class="form-control" id="mssql_password" placeholder="Password" value="00000000Xx">
-            </div>
-            <button id="conn_mssql" type="button" class="btn btn-primary w-100">Connect MsSQL</button>
-            <label id="conn_mssql_status"></label>
-          </form>
-          <br><br>
-          <select id="mssql_db_list" class="form-select w-100">
-            <option selected>None</option>
-          </select>
-          <br><br>
-          <select id="mssql_table_list" class="form-select w-100">
-            <option selected>None</option>
-          </select>
-          <br><br>
-          <select id="mssql_key_list" class="form-select w-100" style="height: 300px;" multiple>
-            
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="container tab-pane fade h-100" id="oracle_page">
-      <div class="row">
-        <div class="col">
-          <form>
-            <div class="form-group">
-              <label>Server</label>
-              <input type="text" class="form-control" id="oracle_server" placeholder="Enter ServerIP:Port" value="192.168.103.60:1521">
-            </div>
-            <div class="form-group">
-              <label>Username</label>
-              <input type="email" class="form-control" id="oracle_username" placeholder="Enter Username" value="brad">
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" class="form-control" id="oracle_password" placeholder="Password" value="00000000">
-            </div>
-            <button id="conn_oracle" type="button" class="btn btn-primary w-100">Connect oracle</button>
-            <label id="conn_oracle_status"></label>
-          </form>
-          <br><br>
-          <select id="oracle_db_list" class="form-select w-100">
-            <option selected>None</option>
-          </select>
-          <br><br>
-          <select id="oracle_table_list" class="form-select w-100">
-            <option selected>None</option>
-          </select>
-          <br><br>
-          <select id="oracle_key_list" class="form-select w-100" style="height: 300px;" multiple>
-            
-          </select>
-        </div>
-      </div>
-    </div>
+    <!-- new_task_page -->
     <div class="container tab-pane fade active show h-100" id="new_task_page">
       <div class="row">
         <div class="col">
           <form>
             <label id = "text1">Database</label>
             <select id="db1_list" class="form-select w-100">
-              <option>MySQL</option>
-              <option>MsSQL</option>
-              <option>MongoDB</option>
-              <option>Oracle</option>
+            {% for db_type in db_config %}
+              <option>{{db_type}}</option>
+            {% endfor %}
             </select>
             <br><br>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="mysql_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:3306">
+              <input type="text" class="form-control" id="db1_server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
             </div>
             <div class="form-group">
               <label>Username</label>
-              <input type="email" class="form-control" id="mysql_username" placeholder="Enter Username" value="brad">
+              <input type="email" class="form-control" id="db1_username" placeholder="Enter Username" value="brad">
             </div>
             <div class="form-group">
               <label>Password</label>
-              <input type="password" class="form-control" id="mysql_password" placeholder="Password" value="00000000">
+              <input type="password" class="form-control" id="db1_password" placeholder="Password" value="00000000">
             </div>
-            <button id="conn_mysql" type="button" class="btn btn-primary w-100">Connect MySQL</button>
-            <label id="conn_mysql_status"></label>
+            <button id="conn_db1" type="button" class="btn btn-primary w-100">Connect MySQL</button>
+            <label id="conn_db1_status"></label>
           </form>
-          <select id="mysql_db_list" class="form-select w-100">
+          <select id="db1_db_list" class="form-select w-100">
             <option selected>None</option>
           </select>
           <br><br>
-          <select id="mysql_table_list" class="form-select w-100">
+          <select id="db1_table_list" class="form-select w-100">
             <option selected>None</option>
           </select>
           <br><br>
-          <select id="mysql_key_list" class="form-select w-100" style="height: 300px;" multiple>
+          <select id="db1_key_list" class="form-select w-100" style="height: 300px;" multiple>
             
           </select>
         </div>
@@ -133,37 +135,36 @@
           <form>
             <label>Database</label>
             <select id="db2_list" class="form-select w-100">
-              <option>MySQL</option>
-              <option>MsSQL</option>
-              <option>MongoDB</option>
-              <option>Oracle</option>
+            {% for db_type in db_config %}
+              <option>{{db_type}}</option>
+            {% endfor %}
             </select>
             <br><br>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="mongodb_server" placeholder="Enter ServerIP:Port" value="192.168.103.52:3306">
+              <input type="text" class="form-control" id="db2_server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
             </div>
             <div class="form-group">
               <label>Username</label>
-              <input type="text" class="form-control" id="mongodb_username" placeholder="Enter Username" value="brad">
+              <input type="text" class="form-control" id="db2_username" placeholder="Enter Username" value="brad">
             </div>
             <div class="form-group">
               <label>Password</label>
-              <input type="password" class="form-control" id="mongodb_password" placeholder="Password" value="00000000">
+              <input type="password" class="form-control" id="db2_password" placeholder="Password" value="00000000">
             </div>
-            <button id="conn_mongodb" type="button" class="btn btn-primary w-100">Connect MySQL</button>
-            <label id="conn_mongodb_status"></label>
+            <button id="conn_db2" type="button" class="btn btn-primary w-100">Connect MySQL</button>
+            <label id="conn_db2_status"></label>
           </form>
           
-          <select id="mongodb_db_list" class="form-select w-100">
+          <select id="db2_db_list" class="form-select w-100">
             <option selected>None</option>
           </select>
           <br><br>
-          <select id="mongodb_collection_list" class="form-select w-100">
+          <select id="db2_table_list" class="form-select w-100">
             <option selected>None</option>
           </select>
           <br><br>
-          <select id="mongodb_key_list" class="form-select w-100" style="height: 300px;" multiple>
+          <select id="db2_key_list" class="form-select w-100" style="height: 300px;" multiple>
             
           </select>
         </div>
@@ -214,11 +215,11 @@
       <div class="row">
         <div class="col">
           <label>SQL generator 1</label>
-          <textarea class="form-control" id="mysql_genres" rows="3" readonly></textarea>
+          <textarea class="form-control" id="db1_genres" rows="3" readonly></textarea>
         </div>
         <div class="col">
           <label>SQL generator 2</label>
-          <textarea class="form-control" id="mongodb_genres" rows="3" readonly></textarea>
+          <textarea class="form-control" id="db2_genres" rows="3" readonly></textarea>
         </div>
       </div>
       <div class="row">
@@ -245,12 +246,9 @@
       </div>
     </div>
 
+    <!-- task_status_page -->
     <div class="container tab-pane fade" id="task_status_page">
       <div class="alert alert-info" role="alert">Task List</div>
-      <!-- <textarea class="form-control" id="task_ids" rows="3"></textarea>
-      <button id="send_task_status" type="button" class="btn btn-success w-100">Send Request</button> -->
-      
-      <!-- <br><br> -->
       <div class="container overflow-auto" id="task_status_res" style="height: 500px;">
         <div id="task_res_template" class="row" style="visibility: hidden;">
           <div class="col">
@@ -269,22 +267,15 @@
       </div>
     </div>
 
+    <!-- hds_page -->
     <div class="container tab-pane fade h-100" id="hds_page">
       <div class="row">
         <div class="col">
           <form>
             <div class="form-group">
               <label>Server</label>
-              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="192.168.103.53:8000">
+              <input type="text" class="form-control" id="hds_server" placeholder="Enter ServerIP:Port" value="{{flask_config['HDS']['ip']}}:{{flask_config['HDS']['port']}}">
             </div>
-            <!-- <div class="form-group">
-              <label>Username</label>
-              <input type="email" class="form-control" id="hds_username" placeholder="Enter Username" value="brad">
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" class="form-control" id="hds_password" placeholder="Password" value="00000000">
-            </div> -->
             <button id="conn_hds" type="button" class="btn btn-primary w-100">Connect HDS</button>
           </form>
           <br><br>
@@ -293,17 +284,153 @@
           </select>
           <br><br>
           <select id="hds_key_list" class="form-select w-100" style="height: 300px;" multiple>
-            
           </select>
+          <label>File name</label>
+          <input type="text" class="form-control" id="download_file_name" placeholder="Enter ServerIP:Port" value="result">
         </div>
       </div>
-  
+      
+      <br>
       <div class="row">
         <button id="send_hds_req" type="button" class="btn btn-success w-100">Send Request</button>
       </div>
+      <br>
+
+      <div class="container overflow-auto" id="hds_page_task_status" style="height: 1000px;">
+        
+        <div class="row">
+          <div class="col">
+            <label>Task ID</label>
+            <textarea class="form-control" id="hds_page_task_id" rows="5" readonly></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>HDS REST API</label>
+            <textarea class="form-control" id="hds_rest_api" rows="3" readonly></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Download REST API</label>
+            <textarea class="form-control" id="download_rest_api" rows="3" readonly></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Watch REST API</label>
+            <textarea class="form-control" id="watch_rest_api" rows="3" readonly></textarea>
+          </div>
+        </div>
+      </div>
     </div>
 
-    
+    <!-- import_page -->
+    <div class="container tab-pane fade h-100" id="import_page">
+      <div class="row">
+        <div class="col">
+          <form>
+            <label id = "import_text1">Database</label>
+            <select id="dblist" class="form-select w-100">
+            {% for db_type in db_config %}
+              <option>{{db_type}}</option>
+            {% endfor %}
+            </select>
+            <br><br>
+            <div class="form-group">
+              <label>Server</label>
+              <input type="text" class="form-control" id="server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="email" class="form-control" id="username" placeholder="Enter Username" value="brad">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Password" value="00000000">
+            </div>
+            <button id="connect" type="button" class="btn btn-primary w-100">Connect MySQL</button>
+            <label id="import_status"></label>
+          </form>
+          <select id="import_db_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="import_table_list" class="form-select w-100">
+            <option selected>None</option>
+          </select>
+          <br><br>
+          <select id="import_key_list" class="form-select w-100" style="height: 300px;" multiple>
+            
+          </select>
+        </div>
+        
+      </div>
+      <div class="row">
+        <button id="import_create_req" type="button" class="btn btn-info w-100">Create Task</button>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <label>HDS Table Name</label>
+        <textarea class="form-control" id="import_hds_table_name" rows="3"></textarea>
+      </div>
+
+      <div class="container" id="import_col_opt_list">
+        <div class="row" id="import_col_opt_template" style="visibility: hidden;">
+          <div class="col">
+            <label>Type1</label>
+          </div>
+          <div class="col">
+            <select class="form-select w-100">
+              <option>INTEGER</option>
+              <option>BIGINT</option>
+              <option>FLOAT</option>
+              <option>DOUBLE</option>
+              <option>DECIMAL</option>
+              <option>BOOLEAN</option>
+              <option>TIME</option>
+              <option>DATE</option>
+              <option>TIMESTAMP</option>
+              <option>VARCHAR</option>
+            </select>
+          </div>
+          <div class="col">
+            <label>IsPrimaryKey</label><br>
+          </div>
+          <div class="col">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="import_flexRadioDefault1" value="0">
+            <label>Type1</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>SQL generator 1</label>
+          <textarea class="form-control" id="import_genres" rows="3" readonly></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>HDS Create table generator</label>
+          <textarea class="form-control" id="import_hds_genres" rows="3" readonly></textarea>
+        </div>
+      </div>
+
+      <br><br>
+
+      <div class="row">
+        <label>Task Infomation</label>
+        <textarea class="form-control" id="import_task_info" rows="3" readonly>{}</textarea>
+      </div>
+      <br>
+      <div class="row">
+        <label id="import_sent_task_id">task_id = </label>
+        <button id="import_send_req" type="button" class="btn btn-success w-100">Send Request</button>
+      </div>
+    </div>
   </div>
 </body>
 </html>
