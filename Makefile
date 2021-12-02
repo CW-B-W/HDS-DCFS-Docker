@@ -61,11 +61,11 @@ up:
 
 .PHONY: stop
 stop:
-	docker-compose stop -t 3600
+	docker-compose stop -t 300
 
 .PHONY: down
 down:
-	docker-compose stop -t 3600
+	docker-compose stop -t 300
 	docker-compose down
 
 .PHONY: restart

@@ -44,47 +44,47 @@ $(document).ready(function() {
     //     return task_info;
     // }
 
-    function gen_task_info_2(
-        task_id,
-        db1_username, db1_password, db1_ip, db1_port,
-        db1_db_name, db1_sql,
-        db2_username, db2_password, mongodb_ip, mongodb_port, 
-        mongodb_db_name, db1_sql_2,
-        join_sql,
-        hds_sql, hds_table, hds_columns
-    ){
-        task_info = {
-            'task_id': task_id,
-            'db': [
-                {
-                    'type': $('#db1_list').val().toLowerCase(),
-                    'username': db1_username,
-                    'password': db1_password,
-                    'ip': db1_ip,
-                    'port': db1_port,
-                    'db': db1_db_name,
-                    'sql': db1_sql
-                },
-                {
-                    'type': $('#db2_list').val().toLowerCase(),
-                    'username': db2_username,
-                    'password': db2_password,
-                    'ip': mongodb_ip,
-                    'port': mongodb_port,
-                    'db': mongodb_db_name,
-                    'sql': db1_sql_2
-                }
-            ],
-            'join_sql': join_sql,
-            'hds': {
-                'sql': hds_sql,        // the sql to create table
-                'table': hds_table,
-                'columns': hds_columns // the column names in table (ordered)
-            }
-        };
+    // function gen_task_info_2(
+    //     task_id,
+    //     db1_username, db1_password, db1_ip, db1_port,
+    //     db1_db_name, db1_sql,
+    //     db2_username, db2_password, mongodb_ip, mongodb_port, 
+    //     mongodb_db_name, db1_sql_2,
+    //     join_sql,
+    //     hds_sql, hds_table, hds_columns
+    // ){
+    //     task_info = {
+    //         'task_id': task_id,
+    //         'db': [
+    //             {
+    //                 'type': $('#db1_list').val().toLowerCase(),
+    //                 'username': db1_username,
+    //                 'password': db1_password,
+    //                 'ip': db1_ip,
+    //                 'port': db1_port,
+    //                 'db': db1_db_name,
+    //                 'sql': db1_sql
+    //             },
+    //             {
+    //                 'type': $('#db2_list').val().toLowerCase(),
+    //                 'username': db2_username,
+    //                 'password': db2_password,
+    //                 'ip': mongodb_ip,
+    //                 'port': mongodb_port,
+    //                 'db': mongodb_db_name,
+    //                 'sql': db1_sql_2
+    //             }
+    //         ],
+    //         'join_sql': join_sql,
+    //         'hds': {
+    //             'sql': hds_sql,        // the sql to create table
+    //             'table': hds_table,
+    //             'columns': hds_columns // the column names in table (ordered)
+    //         }
+    //     };
 
-        return task_info;
-    }
+    //     return task_info;
+    // }
 
     function import_gen_task_info(
         task_id,
