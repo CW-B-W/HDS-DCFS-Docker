@@ -13,7 +13,8 @@ services:
       hdrs_network:
         ipv4_address: 172.22.0.2
     volumes:
-      - hadoop_namenode:/hadoop/dfs/name
+      - ./persistent_storage/hadoop_namenode/name:/hadoop/dfs/name
+      - ./persistent_storage/hadoop_namenode/logs:/opt/hadoop-3.2.2/logs
     environment:
       - CLUSTER_NAME=test
     env_file:
@@ -31,7 +32,8 @@ services:
     depends_on:
       - "namenode"
     volumes:
-      - hadoop_datanode1:/hadoop/dfs/data
+      - ./persistent_storage/hadoop_datanode1/data:/hadoop/dfs/data
+      - ./persistent_storage/hadoop_datanode1/logs:/opt/hadoop-3.2.2/logs
     env_file:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
@@ -47,7 +49,8 @@ services:
     depends_on:
       - "namenode"
     volumes:
-      - hadoop_datanode2:/hadoop/dfs/data
+      - ./persistent_storage/hadoop_datanode2/data:/hadoop/dfs/data
+      - ./persistent_storage/hadoop_datanode2/logs:/opt/hadoop-3.2.2/logs
     env_file:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
@@ -67,7 +70,8 @@ services:
       ZOO_ADMINSERVER_ENABLED: 'false'
       ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181
     volumes:
-      - zoo1_data:/zookeeper/data
+      - ./persistent_storage/zoo1/data:/zookeeper/data
+      - ./persistent_storage/zoo1/logs:/zookeeper/logs
     stop_signal: SIGINT
 
   zoo2:
@@ -85,7 +89,8 @@ services:
       ZOO_ADMINSERVER_ENABLED: 'false'
       ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181
     volumes:
-      - zoo2_data:/zookeeper/data
+      - ./persistent_storage/zoo2/data:/zookeeper/data
+      - ./persistent_storage/zoo1/logs:/zookeeper/logs
     stop_signal: SIGINT
 
   hbase-master:
@@ -111,7 +116,8 @@ services:
       - 16010:16010
     stop_signal: SIGINT
     volumes:
-      - hbase-master_tmp:/opt/hbase-2.3.5/tmp
+      - ./persistent_storage/hbase_master/logs:/opt/hbase-2.3.5/logs
+      # - hbase-master_tmp:/opt/hbase-2.3.5/tmp
 
   hbase-regionserver1:
     image: dslab/hbase-hregionserver
@@ -134,7 +140,8 @@ services:
       - 8000:8000
     stop_signal: SIGINT
     volumes:
-      - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
+    - ./persistent_storage/hbase_regionserver1/logs:/opt/hbase-2.3.5/logs
+    #   - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
 
   hbase-regionserver2:
     image: dslab/hbase-hregionserver
@@ -156,7 +163,8 @@ services:
       - 8001:8001
     stop_signal: SIGINT
     volumes:
-      - hbase-regionserver2_tmp:/opt/hbase-2.3.5/tmp
+    - ./persistent_storage/hbase_regionserver2/logs:/opt/hbase-2.3.5/logs
+    #   - hbase-regionserver2_tmp:/opt/hbase-2.3.5/tmp
 
   # resourcemanager:
   #   image: dslab/hadoop-resourcemanager
@@ -235,6 +243,7 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./dcfs/dcfs-share:/dcfs-share
+      - ./persistent_storage/dcfs_master/logs:/opt/hadoop-3.2.2/logs
 
   dcfs-worker1:
     image: dslab/dcfs-worker
@@ -259,6 +268,7 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./dcfs/dcfs-share:/dcfs-share
+      - ./persistent_storage/dcfs_worker1/logs:/opt/hadoop-3.2.2/logs
 
   dcfs-worker2:
     image: dslab/dcfs-worker
@@ -283,6 +293,7 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./dcfs/dcfs-share:/dcfs-share
+      - ./persistent_storage/dcfs_worker2/logs:/opt/hadoop-3.2.2/logs
   
   flask:
     image: dslab/flask
@@ -308,16 +319,16 @@ services:
       - ./web/flask/static:/static
       - ./web/flask/template:/template
 
-volumes:
-  hadoop_namenode:
-  hadoop_datanode1:
-  hadoop_datanode2:
+# volumes:
+  # hadoop_namenode:
+  # hadoop_datanode1:
+  # hadoop_datanode2:
   # hadoop_historyserver:
-  zoo1_data:
-  zoo2_data:
-  hbase-master_tmp:
-  hbase-regionserver1_tmp:
-  hbase-regionserver2_tmp:
+  # zoo1_data:
+  # zoo2_data:
+  # hbase-master_tmp:
+  # hbase-regionserver1_tmp:
+  # hbase-regionserver2_tmp:
 
 networks:
   hdrs_network:
