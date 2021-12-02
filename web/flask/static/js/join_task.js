@@ -26,3 +26,27 @@ function gen_task_info(
 
     return task_info;
 }
+
+function gen_task_info(
+    task_id,
+    _db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist,
+    hds_sql, hds_table, hds_columns
+){
+    const db1_type = _db1_type.toLowerCase();
+
+    task_info = {
+        'task_id': task_id,
+        'db': [
+        ],
+        'hds': {
+            'sql': hds_sql,        // the sql to create table
+            'table': hds_table,
+            'columns': hds_columns // the column names in table (ordered)
+        }
+    };
+
+    /* Use reflection. e.g. if db1_type is 'mongodb', eval(...)(...) will call gen_db_info_mongodb(...) */
+    task_info['db'].push(eval(`gen_db_info_${db1_type}`)(db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist));
+
+    return task_info;
+}
