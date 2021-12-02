@@ -206,12 +206,12 @@ else:
         if do_sleep:
             time.sleep(10)
         df_joined = pysqldf(task_info['join_sql'])
-        columns_order = task_info['hds']['columns']
-        df_joined = df_joined.reindex(columns_order, axis=1)
     except Exception as e:
         print(str(e))
         send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables: " + str(e))
         exit(1)
+columns_order = task_info['hds']['columns']
+df_joined = df_joined.reindex(columns_order, axis=1)
 print(df_joined)
 
 

@@ -27,7 +27,7 @@ function gen_task_info(
     return task_info;
 }
 
-function gen_task_info(
+function gen_task_info_single(
     task_id,
     _db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist,
     hds_sql, hds_table, hds_columns

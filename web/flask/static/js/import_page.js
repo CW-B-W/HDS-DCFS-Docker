@@ -187,7 +187,7 @@ $(document).ready(function() {
 
         update_db_info();
 
-        task_info = gen_task_info(
+        task_info = gen_task_info_single(
             task_id,
             db_type, db_ip, db_port, db_username, db_password, db_dbname, db_tblname, db_keylist,
             hds_sql, hds_table, hds_columns
