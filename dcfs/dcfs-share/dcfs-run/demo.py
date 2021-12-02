@@ -239,13 +239,22 @@ cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper
 process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 stdout, stderr = process.communicate()
 exit_code = process.wait()
+stdout = stdout.decode('utf-8')
+stderr = stderr.decode('utf-8')
+print("Phoenix stdout")
+print(stdout)
+print("Phoenix stderr")
+print(stderr)
+print(f"Phoenix exit code: {exit_code}")
 if exit_code != 0:
-    print(stderr.decode('utf-8'))
-    send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr.decode('utf-8'))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr)
     exit(1)
 else:
     send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully import table into HDS")
 ''' ========== Phoenix ========== '''
 
-send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished")
+if stderr.find("ERROR") == -1:
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished")
+else:
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr)
 exit()
