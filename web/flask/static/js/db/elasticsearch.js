@@ -7,7 +7,7 @@ function elasticsearch_gen_sql(tbl_name, key_names) {
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += tbl_name;
-    sql += ';';
+    // sql += ';'; // DO NOT add ';' for Elasticsearch
     return sql;
 }
 

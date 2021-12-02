@@ -193,7 +193,7 @@ $(document).ready(function() {
             hds_sql, hds_table, hds_columns
         );
 
-        $('#import_genres').text(JSON.stringify(task_info['db'][0]));
+        $('#import_genres').text(JSON.stringify(task_info['db'][0]['sql']));
         $("#import_hds_genres").text(hds_sql);
         $('#import_task_info').text(JSON.stringify(task_info));
 

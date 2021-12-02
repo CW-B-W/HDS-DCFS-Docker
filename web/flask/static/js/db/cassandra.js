@@ -1,4 +1,4 @@
-function cassandra_gen_sql(tbl_name, key_names) {
+function cassandra_gen_sql(db_name, tbl_name, key_names) {
     sql = 'SELECT ';
     for (i in key_names) {
         key_name = key_names[i]
@@ -6,7 +6,7 @@ function cassandra_gen_sql(tbl_name, key_names) {
     }
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
-    sql += tbl_name;
+    sql += db_name + '.' + tbl_name;
     sql += ';';
     return sql;
 }
@@ -19,7 +19,7 @@ function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, ke
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': cassandra_gen_sql(tblname, keylist)
+      'sql': cassandra_gen_sql(dbname, tblname, keylist)
   };
 
   return db;
