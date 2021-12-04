@@ -273,7 +273,11 @@ $(document).ready(function() {
         }
 
         hds_table = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
-        hds_sql = gen_hds_sql(hds_table, key_info);
+
+        if (is_append_task)
+            hds_sql = '';
+        else
+            hds_sql = gen_hds_sql(hds_table, key_info);
         if (hds_table == '') {
             alert("HDS Table Name cannot be empty");
             return;
