@@ -161,19 +161,89 @@ $(document).ready(function() {
     }
 
     $("#create_req").click(function() {
-        update_db1_info();
-        update_db2_info();
-        const intersections = db1_keylist.filter(function(n) {
-            return db2_keylist.indexOf(n) !== -1;
-        });
-        if (intersections.length == 1) {
-            gen_col_opt_elems(db1_keylist.map(txt => txt.toUpperCase()), db2_keylist.map(txt => txt.toUpperCase()));
-        }
-        else if (intersections.length == 0) {
-            alert("No intersection between the two groups");
+        is_append_task = $('#task_append').is(':checked');
+        if (is_append_task) {
+            $('#db1_key_list').attr('disabled', true);
+            $('#db2_key_list').attr('disabled', true);
+            tbl_name = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
+            zoo_url = hds_zoo_ip + ':' + hds_zoo_port;
+            $.ajax({
+                "type": "GET",
+                "dataType": "json",
+                "contentType": "application/json",
+                "url": 'http://'+$("#hds_server").val()+'/dataservice/v1/list?from=jdbc:///&info=jdbc:phoenix:' + zoo_url + '&table=' + tbl_name,
+                "timeout": 30000,
+                success: function(result) {
+                    db1_sel_list = [];
+                    db2_sel_list = [];
+
+                    key_list = result['dataInfo']['Column name'].split(', ');
+                    task_append_error = false;
+                    for (key in key_list) {
+                        key_name = key_list[key];
+                        in_db1 = false;
+                        in_db2 = false;
+                        $('#db1_key_list').children().each(function() {
+                            if ($(this).text().toUpperCase() == key_name) {
+                                db1_sel_list.push($(this).val().toString());
+                                in_db1 = true;
+                            }
+                        });
+                        $('#db2_key_list').children().each(function() {
+                            if ($(this).text().toUpperCase() == key_name) {
+                                db2_sel_list.push($(this).val().toString());
+                                in_db2 = true;
+                            }
+                        });
+                        if (!in_db1 && !in_db2) {
+                            alert(`Cannot find key ${key_name} in any of the source tables`);
+                            task_append_error = true;
+                        }
+                    }
+                    $('#db1_key_list').val(db1_sel_list);
+                    $('#db2_key_list').val(db2_sel_list);
+
+                    if (task_append_error) {
+                        throw `Cannot append to table ${tbl_name}`;
+                    }
+
+                    update_db1_info();
+                    update_db2_info();
+                    const intersections = db1_keylist.filter(function(n) {
+                        return db2_keylist.indexOf(n) !== -1;
+                    });
+                    if (intersections.length == 1) {
+                        gen_col_opt_elems(db1_keylist.map(txt => txt.toUpperCase()), db2_keylist.map(txt => txt.toUpperCase()));
+                    }
+                    else if (intersections.length == 0) {
+                        alert("No intersection between the two groups");
+                    }
+                    else {
+                        alert("There can only be one intersection between the two groups");
+                    }
+                },
+                error: function(jqXHR, JQueryXHR, textStatus) {
+                    alert("Connect HDS failed");
+                }
+            });
         }
         else {
-            alert("There can only be one intersection between the two groups");
+            update_db1_info();
+            update_db2_info();
+            $('#db1_key_list').attr('disabled', false);
+            $('#db2_key_list').attr('disabled', false);
+            const intersections = db1_keylist.filter(function(n) {
+                return db2_keylist.indexOf(n) !== -1;
+            });
+            if (intersections.length == 1) {
+                gen_col_opt_elems(db1_keylist.map(txt => txt.toUpperCase()), db2_keylist.map(txt => txt.toUpperCase()));
+            }
+            else if (intersections.length == 0) {
+                alert("No intersection between the two groups");
+            }
+            else {
+                alert("There can only be one intersection between the two groups");
+            }
         }
     });
 
