@@ -174,7 +174,7 @@
 
       <div class="row">
         <label>HDS Table Name</label>
-        <textarea class="form-control" id="hds_table_name" rows="3"></textarea>
+        <textarea class="form-control" id="hds_table_name" rows="3" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);"></textarea>
       </div>
       
       <br>
@@ -370,15 +370,20 @@
         </div>
         
       </div>
-      <div class="row">
-        <button id="import_create_req" type="button" class="btn btn-info w-100">Create Task</button>
-      </div>
 
-      <br><br>
+      <br>
 
       <div class="row">
         <label>HDS Table Name</label>
-        <textarea class="form-control" id="import_hds_table_name" rows="3"></textarea>
+        <textarea class="form-control" id="import_hds_table_name" rows="3" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);"></textarea>
+      </div>
+
+      <br>
+
+      <div class="row">
+        <input type="checkbox" class="form-check-input" id="import_task_append">
+        <label class="form-check-label" for="import_task_append">Append Task</label>
+        <button id="import_create_req" type="button" class="btn btn-info w-100">Create Task</button>
       </div>
 
       <div class="container" id="import_col_opt_list">

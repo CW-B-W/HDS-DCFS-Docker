@@ -156,8 +156,58 @@ $(document).ready(function() {
     });
 
     $("#import_create_req").click(function() {
-        update_db_info();
-        import_gen_col_opt_elems(db_keylist.map(txt => txt.toUpperCase()));
+        is_append_task = $('#import_task_append').is(':checked');
+        if (is_append_task) {
+            $('#import_key_list').attr('disabled', true);
+            tbl_name = $('#import_hds_table_name').val().replace(/ /g, "_").toUpperCase();
+            if (tbl_name == '') {
+                alert("HDS Table Name cannot be empty");
+                return;
+            }
+            zoo_url = hds_zoo_ip + ':' + hds_zoo_port;
+            $.ajax({
+                "type": "GET",
+                "dataType": "json",
+                "contentType": "application/json",
+                "url": 'http://'+$("#hds_server").val()+'/dataservice/v1/list?from=jdbc:///&info=jdbc:phoenix:' + zoo_url + '&table=' + tbl_name,
+                "timeout": 30000,
+                success: function(result) {
+                    db_sel_list = [];
+    
+                    key_list = result['dataInfo']['Column name'].split(', ');
+                    task_append_error = false;
+                    for (key in key_list) {
+                        key_name = key_list[key];
+                        in_db = false;
+                        $('#import_key_list').children().each(function() {
+                            if ($(this).text().toUpperCase() == key_name) {
+                                db_sel_list.push($(this).val().toString());
+                                in_db = true;
+                            }
+                        });
+                        if (!in_db) {
+                            alert(`Cannot find key ${key_name} in any of the source tables`);
+                            task_append_error = true;
+                        }
+                    }
+                    $('#import_key_list').val(db_sel_list);
+    
+                    if (task_append_error) {
+                        throw `Cannot append to table ${tbl_name}`;
+                    }
+    
+                    update_db_info();
+                    import_gen_col_opt_elems(db_keylist.map(txt => txt.toUpperCase()));
+                },
+                error: function(jqXHR, JQueryXHR, textStatus) {
+                    alert("Connect HDS failed");
+                }
+            });
+        }
+        else {
+            update_db_info();
+            import_gen_col_opt_elems(db_keylist.map(txt => txt.toUpperCase()));
+        }
     });
 
     $("#import_send_req").click(function() {
@@ -178,7 +228,10 @@ $(document).ready(function() {
         }
 
         hds_table = $('#import_hds_table_name').val().replace(/ /g, "_").toUpperCase();
-        hds_sql = gen_hds_sql(hds_table, key_info);
+        if (is_append_task)
+            hds_sql = '';
+        else
+            hds_sql = gen_hds_sql(hds_table, key_info);
         if (hds_table == '') {
             alert("HDS Table Name cannot be empty");
             return;

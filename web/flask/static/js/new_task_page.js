@@ -166,6 +166,10 @@ $(document).ready(function() {
             $('#db1_key_list').attr('disabled', true);
             $('#db2_key_list').attr('disabled', true);
             tbl_name = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
+            if (tbl_name == '') {
+                alert("HDS Table Name cannot be empty");
+                return;
+            }
             zoo_url = hds_zoo_ip + ':' + hds_zoo_port;
             $.ajax({
                 "type": "GET",
