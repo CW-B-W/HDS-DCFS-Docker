@@ -35,7 +35,7 @@ ENV HBASE_HOME=/opt/hbase-$HBASE_VERSION
 ENV HBASE_CONF_DIR=/etc/hbase
 ENV PATH $HBASE_HOME/bin/:$PATH
 
-RUN wget -O /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz https://dlcdn.apache.org/phoenix/phoenix-5.1.2/phoenix-hbase-2.3-5.1.2-bin.tar.gz
+RUN wget -O /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz https://archive.apache.org/dist/phoenix/phoenix-5.1.2/phoenix-hbase-2.3-5.1.2-bin.tar.gz
 RUN tar -xvf /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz -C /opt/ \
     && rm /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz
 ENV PHOENIX_HOME=/opt/phoenix-hbase-2.3-5.1.2-bin
@@ -43,7 +43,7 @@ ENV PATH $PHOENIX_HOME/bin/:$PATH
 RUN cp $PHOENIX_HOME/phoenix-server-hbase-2.3-5.1.2.jar $HBASE_HOME/lib
 ENV PHOENIX_CLASSPATH=$PHOENIX_HOME
 
-RUN wget -O /tmp/phoenix-queryserver-6.0.0-bin.tar.gz https://dlcdn.apache.org/phoenix/phoenix-queryserver-6.0.0/phoenix-queryserver-6.0.0-bin.tar.gz
+RUN wget -O /tmp/phoenix-queryserver-6.0.0-bin.tar.gz https://archive.apache.org/dist/phoenix/phoenix-queryserver-6.0.0/phoenix-queryserver-6.0.0-bin.tar.gz
 RUN tar -xvf /tmp/phoenix-queryserver-6.0.0-bin.tar.gz -C /opt/ \
     && rm /tmp/phoenix-queryserver-6.0.0-bin.tar.gz
 ENV PHOENIXQS_HOME="/opt/phoenix-queryserver-6.0.0"

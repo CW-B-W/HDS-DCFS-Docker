@@ -25,7 +25,7 @@ RUN pip3 install setuptools wheel
 ADD requirements.txt /requirements.txt
 RUN pip3 install -r requirements.txt
 
-RUN wget -O /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz https://dlcdn.apache.org/phoenix/phoenix-5.1.2/phoenix-hbase-2.3-5.1.2-bin.tar.gz
+RUN wget -O /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz https://archive.apache.org/dist/phoenix/phoenix-5.1.2/phoenix-hbase-2.3-5.1.2-bin.tar.gz
 RUN tar -xvf /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz -C /opt/ \
     && rm /tmp/phoenix-hbase-2.3-5.1.2-bin.tar.gz
 ENV PHOENIX_HOME=/opt/phoenix-hbase-2.3-5.1.2-bin
