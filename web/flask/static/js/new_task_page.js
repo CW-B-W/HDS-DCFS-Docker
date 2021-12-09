@@ -213,11 +213,13 @@ $(document).ready(function() {
 
                     update_db1_info();
                     update_db2_info();
-                    const intersections = db1_keylist.filter(function(n) {
-                        return db2_keylist.indexOf(n) !== -1;
+                    db1_keylist_upper = db1_keylist.map(txt => txt.toUpperCase());
+                    db2_keylist_upper = db2_keylist.map(txt => txt.toUpperCase());
+                    const intersections = db1_keylist_upper.filter(function(n) {
+                        return db2_keylist_upper.indexOf(n) !== -1;
                     });
                     if (intersections.length == 1) {
-                        gen_col_opt_elems(db1_keylist.map(txt => txt.toUpperCase()), db2_keylist.map(txt => txt.toUpperCase()));
+                        gen_col_opt_elems(db1_keylist_upper, db2_keylist_upper);
                     }
                     else if (intersections.length == 0) {
                         alert("No intersection between the two groups");
@@ -236,11 +238,13 @@ $(document).ready(function() {
             update_db2_info();
             $('#db1_key_list').attr('disabled', false);
             $('#db2_key_list').attr('disabled', false);
-            const intersections = db1_keylist.filter(function(n) {
-                return db2_keylist.indexOf(n) !== -1;
+            db1_keylist_upper = db1_keylist.map(txt => txt.toUpperCase());
+            db2_keylist_upper = db2_keylist.map(txt => txt.toUpperCase());
+            const intersections = db1_keylist_upper.filter(function(n) {
+                return db2_keylist_upper.indexOf(n) !== -1;
             });
             if (intersections.length == 1) {
-                gen_col_opt_elems(db1_keylist.map(txt => txt.toUpperCase()), db2_keylist.map(txt => txt.toUpperCase()));
+                gen_col_opt_elems(db1_keylist_upper, db2_keylist_upper);
             }
             else if (intersections.length == 0) {
                 alert("No intersection between the two groups");
