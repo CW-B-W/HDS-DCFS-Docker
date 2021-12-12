@@ -28,6 +28,7 @@
     else {
       rabbitmq_http_url = "http://" + flask_ip + ":15672";
     }
+
     if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('ip') && flask_config['HDS']['ip'] != '') {
       hds_ip = flask_config['HDS']['ip'];
     }
@@ -46,6 +47,7 @@
     $(document).ready(function() {
       $('#hds_server').val(hds_ip + ':' + hds_port);
     });
+
     if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('zoo_ip') && flask_config['HDS']['zoo_ip'] != '') {
       hds_zoo_ip = flask_config['HDS']['zoo_ip'];
     }
@@ -57,6 +59,19 @@
     }
     else {
       hds_zoo_port = '2181';
+    }
+
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('phoenixqs_ip') && flask_config['HDS']['phoenixqs_ip'] != '') {
+      hds_phoenixqs_ip = flask_config['HDS']['phoenixqs_ip'];
+    }
+    else {
+      hds_phoenixqs_ip = 'hbase-master';
+    }
+    if (flask_config.hasOwnProperty('HDS') && flask_config['HDS'].hasOwnProperty('phoenixqs_port') && flask_config['HDS']['phoenixqs_port'] != '') {
+      hds_phoenixqs_port = flask_config['HDS']['phoenixqs_port'];
+    }
+    else {
+      hds_phoenixqs_port = '8765';
     }
   </script>
 
@@ -202,6 +217,7 @@
               <option>DATE</option>
               <option>TIMESTAMP</option>
               <option>VARCHAR</option>
+              <option>VARBINARY</option>
             </select>
           </div>
           <div class="col">
@@ -403,6 +419,7 @@
               <option>DATE</option>
               <option>TIMESTAMP</option>
               <option>VARCHAR</option>
+              <option>VARBINARY</option>
             </select>
           </div>
           <div class="col">

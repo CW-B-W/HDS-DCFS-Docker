@@ -4,6 +4,8 @@
         "ip": "",
         "port": "8000",
         "zoo_ip": "zoo1",
-        "zoo_port": "2181"
+        "zoo_port": "2181",
+        "phoenixqs_ip": "hbase-master",
+        "phoenixqs_port": "8765"
     }
 }
