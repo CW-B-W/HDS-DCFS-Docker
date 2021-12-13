@@ -312,11 +312,15 @@ def hbase_list_all_tables(db_name, username, password, ip, port='9090'):
 def hbase_list_all_keys(db_name, table_name, username, password, ip, port='9090'):
     connection = happybase.Connection(ip, port=int(port))
     table = happybase.Table(table_name, connection)
-    qualifiersSet = set()# 建立空的集合
+    qualifiersSet = set()
     for keyx, valuex in table.scan():
         for keyy,valuey in valuex.items():
             qualifiersSet.add(keyy.decode("utf-8"))
-    return sorted(qualifiersSet)
+    key_list = sorted(qualifiersSet)
+    l = []
+    for key in key_list:
+        l.append(key.replace(":", "__"))
+    return l
 ''' ================ HBase ================ '''
 
 
