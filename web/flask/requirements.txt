@@ -5,6 +5,8 @@ elasticsearch==7.15.2
 elasticsearch-dsl==7.4.0
 Flask==2.0.2
 Flask-Cors==3.0.10
+thrift==0.15.0
+happybase==1.2.0
 pandas==1.1.5
 pandasql==0.7.3
 phoenixdb==1.1.0
