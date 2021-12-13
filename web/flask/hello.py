@@ -228,6 +228,7 @@ def phoenix_list_all_types(table_name, ip='hbase-master', port='8765'):
 ''' ================ Phoenix ================ '''
 
 
+
 ''' ================ Elasticsearch ================ '''
 from elasticsearch import Elasticsearch
 #elasticsearch lib
@@ -257,12 +258,12 @@ def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, por
     return df1
     #print(df)
 ''' ================ Elasticsearch ================ '''
+
+
+
 ''' ================ cassandra ================ '''
 import pandas as pd
 from cassandra.cluster import Cluster
-
-
-
 def cassandra_list_all_dbs(username, password, ip, port='9042'):
     #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=XEPDB1" % (username, password, ip, port))
     #df1 = pd.read_sql("select * from global_name", con=db1_engine)
@@ -292,10 +293,33 @@ def cassandra_list_all_keys(db_name, table_name, username, password, ip, port='9
     df1 = pd.DataFrame(rows)
     return df1["column_name"].tolist()
     #return df1.iloc[:,0].tolist()
-
-
-
 ''' ================ cassandra ================ '''
+
+
+
+''' ================ HBase ================ '''
+import happybase
+def hbase_list_all_dbs(username, password, ip, port='9090'):
+    return ["Default"]
+
+def hbase_list_all_tables(db_name, username, password, ip, port='9090'):
+    connection = happybase.Connection(ip, port=int(port))
+    l = []
+    for x in connection.tables():
+        l.append(x.decode("utf-8"))
+    return l
+
+def hbase_list_all_keys(db_name, table_name, username, password, ip, port='9090'):
+    connection = happybase.Connection(ip, port=int(port))
+    table = happybase.Table(table_name, connection)
+    qualifiersSet = set()# 建立空的集合
+    for keyx, valuex in table.scan():
+        for keyy,valuey in valuex.items():
+            qualifiersSet.add(keyy.decode("utf-8"))
+    return sorted(qualifiersSet)
+''' ================ HBase ================ '''
+
+
 
 ''' ================ Flask ================ '''
 from flask import Flask, request, render_template
@@ -537,7 +561,6 @@ def cassandra_tables():
     except:
         return "Error connecting to Cassandra server", 403
 
-
 @app.route('/cassandra/listkeys', methods=['GET'])
 def cassandra_keys():
     try:
@@ -584,7 +607,6 @@ def elasticsearch_tables():
     except:
         return "Error connecting to elasticsearch server", 403
 
-
 @app.route('/elasticsearch/listkeys', methods=['GET'])
 def elasticsearch_keys():
     try:
@@ -600,6 +622,53 @@ def elasticsearch_keys():
         return ret_dict 
     except:
         return "Error connecting to elasticsearch server", 403
+
+''' ----- HBase ----- '''
+@app.route('/hbase/listdbs', methods=['GET'])
+def hbase_dbs():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        ret_dict = {
+            'db_list': hbase_list_all_dbs(username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to hbase server", 403
+
+@app.route('/hbase/listtables', methods=['GET'])
+def hbase_tables():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        db_name = request.args.get('db_name')
+        ret_dict = {
+            'table_list': hbase_list_all_tables(db_name, username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to hbase server", 403
+
+@app.route('/hbase/listkeys', methods=['GET'])
+def hbase_keys():
+    try:
+        username = request.args.get('username')
+        password = request.args.get('password')
+        ip       = request.args.get('ip')
+        port     = request.args.get('port')
+        db_name  = request.args.get('db_name')
+        table_name = request.args.get('table_name')
+        ret_dict = {
+            'key_list': hbase_list_all_keys(db_name, table_name, username, password, ip, port)
+        }
+        return ret_dict 
+    except:
+        return "Error connecting to hbase server", 403
+
 ''' ----- Phoenix ----- '''
 @app.route('/phoenix/listtables', methods=['GET'])
 def phoenix_tables():
