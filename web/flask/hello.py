@@ -78,7 +78,7 @@ def mongodb_list_all_dbs(username, password, ip, port):
         mongo_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
     else:
         mongo_client = MongoClient(f'mongodb://{ip}:{port}/')
-    return mongo_client.list_database_names()
+    return sorted(mongo_client.list_database_names())
 
 def mongodb_list_all_tables(username, password, ip, port, db_name):
     if username != '':
@@ -86,7 +86,7 @@ def mongodb_list_all_tables(username, password, ip, port, db_name):
     else:
         mongo_client = MongoClient(f'mongodb://{ip}:{port}/')
     db = mongo_client[db_name]
-    return db.list_collection_names()
+    return sorted(db.list_collection_names())
 
 
 def mongodb_list_all_keys(username, password, ip, port, db_name, table_name):
@@ -98,7 +98,7 @@ def mongodb_list_all_keys(username, password, ip, port, db_name, table_name):
     map = Code("function() { for (var key in this) { emit(key, null); } }")
     reduce = Code("function(key, stuff) { return null; }")
     result = db[table_name].map_reduce(map, reduce, "myresults")
-    return result.distinct('_id')
+    return sorted(result.distinct('_id'))
 ''' =============== MongoDB =============== '''
 
 
@@ -112,19 +112,19 @@ def mysql_list_all_dbs(username, password, ip, port='3306'):
 #db1_engine = create_engine(r"mysql+pymysql://brad:00000000@Brad-HDS-Master:3306/")
     db1_engine = create_engine("mysql+pymysql://%s:%s@%s:%s/" % (username, password, ip, port))
     df1 = pd.read_sql("SHOW DATABASES;", con=db1_engine)
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 
 def mysql_list_all_tables(db_name, username, password, ip, port='3306'):
 #db1_engine = create_engine(r"mysql+pymysql://brad:00000000@Brad-HDS-Master:3306/%s" % db_name)
     db1_engine = create_engine("mysql+pymysql://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
     df1 = pd.read_sql("SHOW TABLES", con=db1_engine)
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 
 def mysql_list_all_keys(db_name, table_name, username, password, ip, port='3306'):
 #db1_engine = create_engine(r"mysql+pymysql://brad:00000000@Brad-HDS-Master:3306/%s" % db_name)
     db1_engine = create_engine("mysql+pymysql://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
     df_col = pd.read_sql("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='%s' AND `TABLE_NAME`='%s'" % (db_name, table_name), con=db1_engine);
-    return df_col['COLUMN_NAME'].tolist()
+    return sorted(df_col['COLUMN_NAME'].tolist())
 ''' ================ MySQL ================ '''
 
 
@@ -137,17 +137,17 @@ from sqlalchemy import create_engine
 def mssql_list_all_dbs(username, password, ip, port='1433'):
     db1_engine = create_engine("mssql+pymssql://%s:%s@%s:%s/" % (username, password, ip, port))
     df1 = pd.read_sql("SELECT name FROM master.dbo.sysdatabases", con=db1_engine)
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 
 def mssql_list_all_tables(db_name, username, password, ip, port='1433'):
     db1_engine = create_engine("mssql+pymssql://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
     df1 = pd.read_sql("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'", con=db1_engine)
-    return df1.iloc[:,2].tolist()
+    return sorted(df1.iloc[:,2].tolist())
 
 def mssql_list_all_keys(db_name, table_name, username, password, ip, port='1433'):
     db1_engine = create_engine("mssql+pymssql://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
     df1 = pd.read_sql("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='%s' ORDER BY ORDINAL_POSITION" % table_name, con=db1_engine);
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 ''' ================ MSSQL ================ '''
 
 
@@ -163,17 +163,17 @@ from sqlalchemy import *
 def oracle_list_all_dbs(username, password, ip, port_sid='1521/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("select * from global_name", con=db1_engine)
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 
 def oracle_list_all_tables(db_name, username, password, ip, port_sid='1521/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 
 def oracle_list_all_keys(db_name, table_name, username, password, ip, port_sid='1521/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE table_name = '%s'" % table_name, con=db1_engine);
-    return df1.iloc[:,0].tolist()
+    return sorted(df1.iloc[:,0].tolist())
 ''' ================ Oracle ================ '''
 
 
@@ -189,7 +189,7 @@ def phoenix_list_all_tables(ip, port='8765'):
     cursor.execute("select DISTINCT(\"TABLE_NAME\") from SYSTEM.CATALOG")
     res = cursor.fetchall()
     l = [item['TABLE_NAME'] for item in res]
-    return l
+    return sorted(l)
 
 def phoenix_list_all_keys(table_name, ip, port='1521'):
     conn = phoenixdb.connect('http://%s:%s' % (ip, port))
@@ -197,7 +197,7 @@ def phoenix_list_all_keys(table_name, ip, port='1521'):
     cursor.execute("SELECT column_name FROM system.catalog WHERE table_name = '%s' AND column_name IS NOT NULL" % table_name)
     res = cursor.fetchall()
     l = [item['COLUMN_NAME'] for item in res]
-    return l
+    return sorted(l)
 ''' ================ Phoenix ================ '''
 
 
@@ -212,12 +212,12 @@ from elasticsearch_dsl import Search
 
 def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
     test=['test']
-    return test
+    return sorted(test)
 
 def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
     es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
     idx_list = [x for x in es.indices.get_alias().keys() ]
-    return idx_list
+    return sorted(idx_list)
 
 def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port='9200'):
     es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
@@ -227,7 +227,7 @@ def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, por
     for txt in df :
         data = txt.split(".")
         df1.append(data[2])
-    return df1
+    return sorted(df1)
     #print(df)
 ''' ================ Elasticsearch ================ '''
 ''' ================ cassandra ================ '''
@@ -243,7 +243,7 @@ def cassandra_list_all_dbs(username, password, ip, port='9042'):
     session = cluster.connect()
     rows = session.execute("DESCRIBE keyspaces;")
     df1 = pd.DataFrame(rows)
-    return df1["keyspace_name"].tolist()
+    return sorted(df1["keyspace_name"].tolist())
 
 def cassandra_list_all_tables(db_name, username, password, ip, port='9042'):
     #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
@@ -254,7 +254,7 @@ def cassandra_list_all_tables(db_name, username, password, ip, port='9042'):
     session = cluster.connect()
     rows = session.execute("SELECT * FROM system_schema.tables WHERE keyspace_name = '%s'" % (db_name))
     df1 = pd.DataFrame(rows)
-    return df1["table_name"].tolist()
+    return sorted(df1["table_name"].tolist())
 
 def cassandra_list_all_keys(db_name, table_name, username, password, ip, port='9042'):
     #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
@@ -263,7 +263,7 @@ def cassandra_list_all_keys(db_name, table_name, username, password, ip, port='9
     session = cluster.connect()
     rows = session.execute("SELECT * FROM system_schema.columns WHERE keyspace_name = '%s'AND table_name = '%s'" % (db_name, table_name))
     df1 = pd.DataFrame(rows)
-    return df1["column_name"].tolist()
+    return sorted(df1["column_name"].tolist())
     #return df1.iloc[:,0].tolist()
 
 
