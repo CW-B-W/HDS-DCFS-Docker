@@ -215,12 +215,12 @@ def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
     return test
 
 def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
-    es=Elasticsearch(hosts=ip, port=9200)
-    idx_list = [x for x in es.indices.get_alias("*").keys() ]
+    es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
+    idx_list = [x for x in es.indices.get_alias().keys() ]
     return idx_list
 
 def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port='9200'):
-    es=Elasticsearch(hosts=ip, port=9200)
+    es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
     result = es.indices.get_mapping(index = table_name)
     df=json_normalize(result[table_name])
     df1 = []
