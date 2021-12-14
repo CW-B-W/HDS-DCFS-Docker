@@ -211,7 +211,7 @@ from pandas.io.json import json_normalize
 from elasticsearch_dsl import Search
 
 def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
-    test=['test']
+    test=['Default']
     return sorted(test)
 
 def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
