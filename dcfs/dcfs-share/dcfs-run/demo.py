@@ -108,9 +108,9 @@ for i, d in enumerate(task_info['db']):
             username = d['username']
             password = d['password']
             ip       = d['ip']
-            port     = d['port']
-            db_name  = d['db']
-            db_url   = 'oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s' % (username, password, ip, port, db_name)
+            port_sid = d['port'] # e.g., 1521/sid
+            db_name  = d['db'] # no need, replaced with port_sid
+            db_url   = 'oracle+cx_oracle://%s:%s@%s:%s' % (username, password, ip, port_sid)
             db_engine          = create_engine(db_url)
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from OracleDB")
             if do_sleep:

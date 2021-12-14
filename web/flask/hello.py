@@ -160,18 +160,18 @@ import cx_Oracle
 from sqlalchemy import *
 #db1_engine = create_engine(r"oracle+cx_oracle://brad:00000000@192.168.103.60:1521/?service_name=XEPDB1")
 
-def oracle_list_all_dbs(username, password, ip, port='1521'):
-    db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=XEPDB1" % (username, password, ip, port))
+def oracle_list_all_dbs(username, password, ip, port_sid='1521/sid'):
+    db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("select * from global_name", con=db1_engine)
     return df1.iloc[:,0].tolist()
 
-def oracle_list_all_tables(db_name, username, password, ip, port='1521'):
-    db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
+def oracle_list_all_tables(db_name, username, password, ip, port_sid='1521/sid'):
+    db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
     return df1.iloc[:,0].tolist()
 
-def oracle_list_all_keys(db_name, table_name, username, password, ip, port='1521'):
-    db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
+def oracle_list_all_keys(db_name, table_name, username, password, ip, port_sid='1521/sid'):
+    db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE table_name = '%s'" % table_name, con=db1_engine);
     return df1.iloc[:,0].tolist()
 ''' ================ Oracle ================ '''
