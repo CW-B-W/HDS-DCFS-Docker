@@ -1,14 +1,5 @@
 function hbase_gen_filter(key_names) {
-    // field_filter = {
-    //     '_id': 0
-    // };
-    // for (i in key_names) {
-    //     key_name = key_names[i];
-    //     if (key_name == '_id')
-    //         continue;
-    //     field_filter[key_name] = 1
-    // }
-    // return field_filter;
+    return key_names
 }
 
 function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylist, namemapping) {
@@ -19,7 +10,7 @@ function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylis
         'username': username,
         'password': password,
         'db': dbname,
-        'collection': tblname,
+        'tblname': tblname,
         'sql': hbase_gen_filter(keylist),
         'namemapping': namemapping
     };

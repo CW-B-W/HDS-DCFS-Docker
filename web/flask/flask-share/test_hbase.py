@@ -2,7 +2,7 @@ import happybase
 from pandas import DataFrame
 
 # 連線
-connection = happybase.Connection('hbase-master')
+connection = happybase.Connection('192.168.103.52')
 
 print("Table:")
 for x in connection.tables():
@@ -10,7 +10,7 @@ for x in connection.tables():
 print("")
 
 # table = happybase.Table("SYSTEM.CATALOG",connection)
-table = happybase.Table("firstTable",connection)
+table = happybase.Table("score",connection)
 
 # rowkey
 # https://github.com/python-happybase/happybase/issues/12
@@ -51,3 +51,15 @@ print(keylist)
 for val in keylist:
     print(val)
 print("")
+
+data = table.scan(columns = [b'midterm:Math', b'final:Math'])
+# for rowkey, entry in data:
+#     print(f"rowkey: {rowkey}")
+#     for item in entry:
+#         print(f"item: {item}")
+
+my_generator = ((d[b'midterm:Math'], d[b'final:Math']) for k, d in data)
+my_list = list(my_generator)
+print(my_list)
+my_data = DataFrame(my_list, columns=['midterm:Math', 'final:Math'])
+print(my_data)

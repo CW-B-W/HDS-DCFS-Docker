@@ -20,6 +20,7 @@ from elasticsearch import Elasticsearch
 #elasticsearch lib
 from pandas.io.json import json_normalize
 from elasticsearch_dsl import Search
+import happybase
 
 ''' ========== RabbitMQ ========== '''
 import pika, sys
@@ -186,6 +187,32 @@ for i, d in enumerate(task_info['db']):
         except Exception as e:
             print(str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MongoDB: " + str(e))
+            exit(1)
+    elif db_type == 'hbase':
+        try:
+            username = d['username']
+            password = d['password']
+            ip       = d['ip']
+            port     = d['port']
+            tbl_name = d['tblname']
+            columns  = d['sql']
+
+            send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from HBase")
+            if do_sleep:
+                time.sleep(5)
+
+            connection = happybase.Connection(ip, port=int(port))
+            table = happybase.Table(tbl_name, connection)
+            b_columns = [str.encode(s) for s in columns]
+            data = table.scan(columns = b_columns)
+
+            my_generator = ((tuple([d[col] for col in b_columns])) for k, d in data)
+            my_list = list(my_generator)
+            my_data = pd.DataFrame(my_list, columns=columns)
+            locals()['df%d'%i] = my_data
+        except Exception as e:
+            print(str(e))
+            send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from HBase: " + str(e))
             exit(1)
     else:
         print("Unsupported DB type " + db_type)
