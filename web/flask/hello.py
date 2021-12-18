@@ -307,7 +307,7 @@ def hbase_list_all_tables(db_name, username, password, ip, port='9090'):
     l = []
     for x in connection.tables():
         l.append(x.decode("utf-8"))
-    return l
+    return sorted(l)
 
 def hbase_list_all_keys(db_name, table_name, username, password, ip, port='9090'):
     connection = happybase.Connection(ip, port=int(port))
@@ -316,11 +316,7 @@ def hbase_list_all_keys(db_name, table_name, username, password, ip, port='9090'
     for keyx, valuex in table.scan():
         for keyy,valuey in valuex.items():
             qualifiersSet.add(keyy.decode("utf-8"))
-    key_list = sorted(qualifiersSet)
-    l = []
-    for key in key_list:
-        l.append(key.replace(":", "__"))
-    return l
+    return sorted(qualifiersSet)
 ''' ================ HBase ================ '''
 
 
