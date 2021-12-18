@@ -295,10 +295,13 @@ $(document).ready(function() {
         update_db1_info();
         update_db2_info();
 
+        db1_namemapping = gen_namemapping(db1_keylist, hds_columns);
+        db2_namemapping = gen_namemapping(db2_keylist, hds_columns);
+
         task_info = gen_task_info(
             task_id,
-            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist,
-            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist,
+            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping,
+            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping,
             join_sql,
             hds_sql, hds_table, hds_columns
         );
@@ -398,4 +401,22 @@ function gen_col_opt_elems(db1_keylist, db2_keylist) {
         elem.children().eq(3).children().eq(1).text(key_name);
         elem.children().eq(3).children().eq(0).prop('checked', true);
     }
+}
+
+function gen_namemapping(db_keylist, hds_columns)
+{
+    db_keylist_upper = db_keylist.map(txt => txt.toUpperCase());
+    hds_columns_upper = hds_columns.map(txt => txt.toUpperCase());
+
+    namemapping = {}
+
+    for (i = 0; i < db_keylist_upper.length; ++i) {
+        for (j = 0; j < hds_columns_upper.length; ++j) {
+            if (db_keylist_upper[i] == hds_columns_upper[j]) {
+                namemapping[db_keylist[i]] = hds_columns[j];
+            }
+        }
+    }
+
+    return namemapping;
 }

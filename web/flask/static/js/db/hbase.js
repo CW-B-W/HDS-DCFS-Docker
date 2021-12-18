@@ -11,7 +11,7 @@ function hbase_gen_filter(key_names) {
     // return field_filter;
 }
 
-function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylist) {
+function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylist, namemapping) {
     db = {
         'type': 'hbase',
         'ip': ip,
@@ -20,7 +20,8 @@ function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylis
         'password': password,
         'db': dbname,
         'collection': tblname,
-        'sql': hbase_gen_filter(keylist)
+        'sql': hbase_gen_filter(keylist),
+        'namemapping': namemapping
     };
 
     return db;

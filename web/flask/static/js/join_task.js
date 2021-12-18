@@ -1,7 +1,7 @@
 function gen_task_info(
     task_id,
-    _db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist,
-    _db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist,
+    _db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping,
+    _db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping,
     join_sql,
     hds_sql, hds_table, hds_columns
 ){
@@ -21,8 +21,8 @@ function gen_task_info(
     };
 
     /* Use reflection. e.g. if db1_type is 'mongodb', eval(...)(...) will call gen_db_info_mongodb(...) */
-    task_info['db'].push(eval(`gen_db_info_${db1_type}`)(db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist));
-    task_info['db'].push(eval(`gen_db_info_${db2_type}`)(db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist));
+    task_info['db'].push(eval(`gen_db_info_${db1_type}`)(db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping));
+    task_info['db'].push(eval(`gen_db_info_${db2_type}`)(db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping));
 
     return task_info;
 }

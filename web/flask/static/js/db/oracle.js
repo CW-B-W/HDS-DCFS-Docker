@@ -11,7 +11,7 @@ function oracle_gen_sql(tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keylist) {
+function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keylist, namemapping) {
   db = {
       'type': 'oracle',
       'ip': ip,
@@ -19,7 +19,8 @@ function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keyli
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': oracle_gen_sql(tblname, keylist)
+      'sql': oracle_gen_sql(tblname, keylist),
+      'namemapping': namemapping
   };
 
   return db;

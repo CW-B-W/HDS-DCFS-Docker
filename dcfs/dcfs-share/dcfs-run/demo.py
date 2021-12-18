@@ -193,7 +193,11 @@ for i, d in enumerate(task_info['db']):
         exit(1)
 
     # make all column names uppercase
-    locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
+    if 'namemapping' in d:
+        namemapping = d['namemapping']
+        locals()['df%d'%i].rename(columns=namemapping, inplace=True)
+    else:
+        locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
     print(locals()['df%d'%i])
 
 if len(task_info['db']) < 2:

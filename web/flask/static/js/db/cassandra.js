@@ -11,7 +11,7 @@ function cassandra_gen_sql(db_name, tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, keylist) {
+function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, keylist, namemapping) {
   db = {
       'type': 'cassandra',
       'ip': ip,
@@ -19,7 +19,8 @@ function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, ke
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': cassandra_gen_sql(dbname, tblname, keylist)
+      'sql': cassandra_gen_sql(dbname, tblname, keylist),
+      'namemapping': namemapping
   };
 
   return db;

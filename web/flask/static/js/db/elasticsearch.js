@@ -11,7 +11,7 @@ function elasticsearch_gen_sql(tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname, keylist) {
+function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname, keylist, namemapping) {
   db = {
       'type': 'elasticsearch',
       'ip': ip,
@@ -19,7 +19,8 @@ function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': elasticsearch_gen_sql(tblname, keylist)
+      'sql': elasticsearch_gen_sql(tblname, keylist),
+      'namemapping': namemapping
   };
 
   return db;
