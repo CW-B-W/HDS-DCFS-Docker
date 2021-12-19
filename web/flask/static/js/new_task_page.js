@@ -161,6 +161,9 @@ $(document).ready(function() {
     }
 
     $("#create_req").click(function() {
+        db1_type = $('#db1_list').val().toLowerCase();
+        db2_type = $('#db2_list').val().toLowerCase();
+
         is_append_task = $('#task_append').is(':checked');
         if (is_append_task) {
             $('#db1_key_list').attr('disabled', true);
@@ -188,13 +191,13 @@ $(document).ready(function() {
                         in_db1 = false;
                         in_db2 = false;
                         $('#db1_key_list').children().each(function() {
-                            if ($(this).text().toUpperCase() == key_name) {
+                            if (to_matching_key(db1_type, $(this).text()) == key_name) {
                                 db1_sel_list.push($(this).val().toString());
                                 in_db1 = true;
                             }
                         });
                         $('#db2_key_list').children().each(function() {
-                            if ($(this).text().toUpperCase() == key_name) {
+                            if (to_matching_key(db2_type, $(this).text()) == key_name) {
                                 db2_sel_list.push($(this).val().toString());
                                 in_db2 = true;
                             }
@@ -213,13 +216,13 @@ $(document).ready(function() {
 
                     update_db1_info();
                     update_db2_info();
-                    db1_keylist_upper = db1_keylist.map(txt => txt.toUpperCase());
-                    db2_keylist_upper = db2_keylist.map(txt => txt.toUpperCase());
-                    const intersections = db1_keylist_upper.filter(function(n) {
-                        return db2_keylist_upper.indexOf(n) !== -1;
+                    db1_matchingkeylist = db1_keylist.map(txt => to_matching_key(db1_type, txt));
+                    db2_matchingkeylist = db2_keylist.map(txt => to_matching_key(db2_type, txt));
+                    const intersections = db1_matchingkeylist.filter(function(n) {
+                        return db2_matchingkeylist.indexOf(n) !== -1;
                     });
                     if (intersections.length == 1) {
-                        gen_col_opt_elems(db1_keylist_upper, db2_keylist_upper);
+                        gen_col_opt_elems(db1_matchingkeylist, db2_matchingkeylist);
                     }
                     else if (intersections.length == 0) {
                         alert("No intersection between the two groups");
@@ -238,13 +241,13 @@ $(document).ready(function() {
             update_db2_info();
             $('#db1_key_list').attr('disabled', false);
             $('#db2_key_list').attr('disabled', false);
-            db1_keylist_upper = db1_keylist.map(txt => txt.toUpperCase());
-            db2_keylist_upper = db2_keylist.map(txt => txt.toUpperCase());
-            const intersections = db1_keylist_upper.filter(function(n) {
-                return db2_keylist_upper.indexOf(n) !== -1;
+            db1_matchingkeylist = db1_keylist.map(txt => to_matching_key(db1_type, txt));
+            db2_matchingkeylist = db2_keylist.map(txt => to_matching_key(db2_type, txt));
+            const intersections = db1_matchingkeylist.filter(function(n) {
+                return db2_matchingkeylist.indexOf(n) !== -1;
             });
             if (intersections.length == 1) {
-                gen_col_opt_elems(db1_keylist_upper, db2_keylist_upper);
+                gen_col_opt_elems(db1_matchingkeylist, db2_matchingkeylist);
             }
             else if (intersections.length == 0) {
                 alert("No intersection between the two groups");
@@ -257,6 +260,9 @@ $(document).ready(function() {
 
 
     $("#send_req").click(function() {
+        db1_type = $('#db1_list').val().toLowerCase();
+        db2_type = $('#db2_list').val().toLowerCase();
+
         task_id = _uuid();
         $("#sent_task_id").text('task_id = ' + task_id);
 
@@ -274,7 +280,7 @@ $(document).ready(function() {
         }
 
         try {
-            join_sql = sql_gen_join(db1_keylist.map(txt => txt.toUpperCase()), db2_keylist.map(txt => txt.toUpperCase()));
+            join_sql = sql_gen_join(db1_keylist.map(txt => to_matching_key(db1_type, txt)), db2_keylist.map(txt => to_matching_key(db2_type, txt)));
         } catch (error) {
             alert("Error generating JOIN SQL. Message = " + error);
             return;
@@ -295,8 +301,8 @@ $(document).ready(function() {
         update_db1_info();
         update_db2_info();
 
-        db1_namemapping = gen_namemapping(db1_keylist, hds_columns);
-        db2_namemapping = gen_namemapping(db2_keylist, hds_columns);
+        db1_namemapping = gen_namemapping(db1_type, db1_keylist, hds_columns);
+        db2_namemapping = gen_namemapping(db2_type, db2_keylist, hds_columns);
 
         task_info = gen_task_info(
             task_id,
@@ -403,20 +409,28 @@ function gen_col_opt_elems(db1_keylist, db2_keylist) {
     }
 }
 
-function gen_namemapping(db_keylist, hds_columns)
+function gen_namemapping(db_type, db_keylist, hds_columns)
 {
-    db_keylist_upper = db_keylist.map(txt => txt.toUpperCase());
+    db_matchingkeylist = db_keylist.map(txt => to_matching_key(db_type, txt));
     hds_columns_upper = hds_columns.map(txt => txt.toUpperCase());
 
     namemapping = {}
 
-    for (i = 0; i < db_keylist_upper.length; ++i) {
+    for (i = 0; i < db_matchingkeylist.length; ++i) {
         for (j = 0; j < hds_columns_upper.length; ++j) {
-            if (db_keylist_upper[i] == hds_columns_upper[j]) {
+            if (db_matchingkeylist[i] == hds_columns_upper[j]) {
                 namemapping[db_keylist[i]] = hds_columns[j];
             }
         }
     }
 
     return namemapping;
+}
+
+function to_matching_key(db_type, key)
+{
+    if (db_type == 'hbase')
+        return key.substr(key.indexOf(':')+1).toUpperCase();
+    
+    return key.toUpperCase();
 }

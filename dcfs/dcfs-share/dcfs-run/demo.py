@@ -206,7 +206,7 @@ for i, d in enumerate(task_info['db']):
             b_columns = [str.encode(s) for s in columns]
             data = table.scan(columns = b_columns)
 
-            my_generator = ((tuple([d[col] for col in b_columns])) for k, d in data)
+            my_generator = ((tuple([d[col].decode('utf-8') for col in b_columns])) for k, d in data)
             my_list = list(my_generator)
             my_data = pd.DataFrame(my_list, columns=columns)
             locals()['df%d'%i] = my_data
