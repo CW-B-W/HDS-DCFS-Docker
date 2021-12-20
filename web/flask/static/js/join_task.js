@@ -29,7 +29,7 @@ function gen_task_info(
 
 function gen_task_info_single(
     task_id,
-    _db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist,
+    _db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping,
     hds_sql, hds_table, hds_columns
 ){
     const db1_type = _db1_type.toLowerCase();
@@ -46,7 +46,7 @@ function gen_task_info_single(
     };
 
     /* Use reflection. e.g. if db1_type is 'mongodb', eval(...)(...) will call gen_db_info_mongodb(...) */
-    task_info['db'].push(eval(`gen_db_info_${db1_type}`)(db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist));
+    task_info['db'].push(eval(`gen_db_info_${db1_type}`)(db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping));
 
     return task_info;
 }

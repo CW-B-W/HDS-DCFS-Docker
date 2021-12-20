@@ -156,6 +156,7 @@ $(document).ready(function() {
     });
 
     $("#import_create_req").click(function() {
+        db_type = $('#db1_list').val().toLowerCase();
         is_append_task = $('#import_task_append').is(':checked');
         if (is_append_task) {
             $('#import_key_list').attr('disabled', true);
@@ -180,7 +181,7 @@ $(document).ready(function() {
                         key_name = key_list[key];
                         in_db = false;
                         $('#import_key_list').children().each(function() {
-                            if ($(this).text().toUpperCase() == key_name) {
+                            if (to_matching_key(db_type, $(this).text()) == key_name) {
                                 db_sel_list.push($(this).val().toString());
                                 in_db = true;
                             }
@@ -197,7 +198,7 @@ $(document).ready(function() {
                     }
     
                     update_db_info();
-                    import_gen_col_opt_elems(db_keylist.map(txt => txt.toUpperCase()));
+                    import_gen_col_opt_elems(db_keylist.map(txt => to_matching_key(db_type, txt)));
                 },
                 error: function(jqXHR, JQueryXHR, textStatus) {
                     alert("Connect HDS failed");
@@ -206,7 +207,7 @@ $(document).ready(function() {
         }
         else {
             update_db_info();
-            import_gen_col_opt_elems(db_keylist.map(txt => txt.toUpperCase()));
+            import_gen_col_opt_elems(db_keylist.map(txt => to_matching_key(db_type, txt)));
         }
     });
 
@@ -240,9 +241,11 @@ $(document).ready(function() {
 
         update_db_info();
 
+        db_namemapping = gen_namemapping(db_type, db_keylist, hds_columns);
+
         task_info = gen_task_info_single(
             task_id,
-            db_type, db_ip, db_port, db_username, db_password, db_dbname, db_tblname, db_keylist,
+            db_type, db_ip, db_port, db_username, db_password, db_dbname, db_tblname, db_keylist, db_namemapping,
             hds_sql, hds_table, hds_columns
         );
 
