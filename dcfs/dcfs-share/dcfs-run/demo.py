@@ -220,12 +220,17 @@ for i, d in enumerate(task_info['db']):
         exit(1)
 
     # make all column names uppercase
-    if 'namemapping' in d:
-        namemapping = d['namemapping']
-        locals()['df%d'%i].rename(columns=namemapping, inplace=True)
-    else:
-        locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
-    print(locals()['df%d'%i])
+    try:
+        if 'namemapping' in d:
+            namemapping = d['namemapping']
+            locals()['df%d'%i].rename(columns=namemapping, inplace=True)
+        else:
+            locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
+        print(locals()['df%d'%i])
+    except Exception as e:
+        print(str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, "Error in renaming columns: " + str(e))
+        exit(1)
 
 if len(task_info['db']) < 2:
     df_joined = df0
@@ -241,10 +246,15 @@ else:
         print(str(e))
         send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables: " + str(e))
         exit(1)
-columns_order = task_info['hds']['columns']
-df_joined = df_joined.reindex(columns_order, axis=1)
-print(df_joined)
 
+try:
+    columns_order = task_info['hds']['columns']
+    df_joined = df_joined.reindex(columns_order, axis=1)
+    print(df_joined)
+except Exception as e:
+    print(str(e))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables. Please check if duplicated columns exist: " + str(e))
+    exit(1)
 
 
 # save to csv
