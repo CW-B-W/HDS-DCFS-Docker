@@ -165,7 +165,8 @@ $(document).ready(function() {
         db2_type = $('#db2_list').val().toLowerCase();
 
         is_append_task = $('#task_append').is(':checked');
-        if (is_append_task) {
+        if (false) {
+        // if (is_append_task) {
             $('#db1_key_list').attr('disabled', true);
             $('#db2_key_list').attr('disabled', true);
             tbl_name = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
