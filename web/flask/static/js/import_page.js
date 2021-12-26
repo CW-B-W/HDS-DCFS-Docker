@@ -272,6 +272,53 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#import_task_append").change(function() {
+        let checked = this.checked;
+        var textareaobj = $('textarea#import_hds_table_name');
+        var selectobj   = $('select#__import_hds_table_name');
+        if (checked) {
+            textareaobj.hide();
+            selectobj.show();
+
+            args = 'ip=hbase-master';
+            args += '&port=8765';
+            $.ajax({
+                "type": "GET",
+                "dataType": "json",
+                "contentType": "application/json",
+                "url": flask_http_url+'/phoenix/listtables?' + args,
+                "timeout": 30000,
+                success: function(result) {
+                    // clear original options
+                    children = selectobj.children();
+                    for (i = 0; i < children.length; ++i) {
+                        children[i].remove();
+                    }
+
+                    key_list = result['table_list'];
+                    for (key in key_list) {
+                        opt_idx = parseInt(key) + 1
+                        selectobj.append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
+                    }
+
+                    textareaobj.text($('select#__import_hds_table_name option:selected').text());
+                },
+                error: function(jqXHR, JQueryXHR, textStatus) {
+                    alert("Failed to connect to HDS");
+                }
+            });
+        }
+        else {
+            textareaobj.show();
+            selectobj.hide();
+        }
+    });
+
+    $("#__import_hds_table_name").change(function() {
+        var textareaobj = $('textarea#import_hds_table_name');
+        textareaobj.text($('select#__import_hds_table_name option:selected').text());
+    });
 });
 
 // update variables about db from controls

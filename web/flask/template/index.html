@@ -189,15 +189,22 @@
       <br>
 
       <div class="row">
+        <input type="checkbox" class="form-check-input" id="task_append">
+        <label class="form-check-label" for="task_append">Append Task</label>
+      </div>
+
+      <br>
+
+      <div class="row">
         <label>HDS Table Name</label>
         <textarea class="form-control" id="hds_table_name" rows="3" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);"></textarea>
+        <select class="form-select w-100" id="__hds_table_name" style="display: none;">
+        </select>
       </div>
       
       <br>
 
       <div class="row">
-        <input type="checkbox" class="form-check-input" id="task_append">
-        <label class="form-check-label" for="task_append">Append Task</label>
         <button id="create_req" type="button" class="btn btn-info w-100">Create Task</button>
       </div>
 
@@ -391,15 +398,21 @@
       <br>
 
       <div class="row">
-        <label>HDS Table Name</label>
-        <textarea class="form-control" id="import_hds_table_name" rows="3" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);"></textarea>
+        <input type="checkbox" class="form-check-input" id="import_task_append">
+        <label class="form-check-label" for="import_task_append">Append Task</label>
       </div>
 
       <br>
 
       <div class="row">
-        <input type="checkbox" class="form-check-input" id="import_task_append">
-        <label class="form-check-label" for="import_task_append">Append Task</label>
+        <label>HDS Table Name</label>
+        <textarea class="form-control" id="import_hds_table_name" rows="3" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);"></textarea>
+        <select class="form-select w-100" id="__import_hds_table_name" style="display: none;"></select>
+      </div>
+
+      <br>
+
+      <div class="row">
         <button id="import_create_req" type="button" class="btn btn-info w-100">Create Task</button>
       </div>
 
