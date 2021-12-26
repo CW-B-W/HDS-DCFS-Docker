@@ -359,51 +359,109 @@ def value():
 ''' ----- MongoDB ----- '''
 @app.route('/mongodb/listdbs', methods=['GET'])
 def mongodb_dbs():
-    username = request.args.get('username')
-    password = request.args.get('password')
-    ip       = request.args.get('ip')
-    port     = request.args.get('port')
-    ret_dict = {
-        'db_list': mongodb_list_all_dbs(username, password, ip, port)
-    }
-    return ret_dict 
+    try:
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+        
+        funcname = 'mongodb_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': mongodb_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+
+        return ret_dict 
+    except:
+        return "Error connecting to MongoDB server", 403
 
 @app.route('/mongodb/listtables', methods=['GET'])
 def mongodb_tables():
-    username = request.args.get('username')
-    password = request.args.get('password')
-    ip       = request.args.get('ip')
-    port     = request.args.get('port')
-    db_name = request.args.get('db_name')
-    ret_dict = {
-        'table_list': mongodb_list_all_tables(username, password, ip, port, db_name)
-    }
-    return ret_dict 
+    try:
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mongodb_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': mongodb_list_all_tables(username, password, ip, port, db_name)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
+        return ret_dict 
+    except:
+        return "Error connecting to MongoDB server", 403
 
 @app.route('/mongodb/listkeys', methods=['GET'])
 def mongodb_keys():
-    username = request.args.get('username')
-    password = request.args.get('password')
-    ip       = request.args.get('ip')
-    port     = request.args.get('port')
-    db_name = request.args.get('db_name')
-    table_name = request.args.get('table_name')
-    ret_dict = {
-        'key_list': mongodb_list_all_keys(username, password, ip, port, db_name, table_name)
-    }
-    return ret_dict 
+    try:
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = request.args.get('table_name')
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mongodb_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': mongodb_list_all_keys(username, password, ip, port, db_name, table_name)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
+        return ret_dict
+    except:
+        return "Error connecting to MongoDB server", 403
 
 ''' ----- MySQL ----- '''
 @app.route('/mysql/listdbs', methods=['GET'])
 def mysql_dbs():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'db_list': mysql_list_all_dbs(username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mysql_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': mysql_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+
         return ret_dict 
     except:
         return "Error connecting to MySQL server", 403
@@ -411,14 +469,26 @@ def mysql_dbs():
 @app.route('/mysql/listtables', methods=['GET'])
 def mysql_tables():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name  = request.args.get('db_name')
-        ret_dict = {
-            'table_list': mysql_list_all_tables(db_name, username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mysql_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': mysql_list_all_tables(db_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to MySQL server", 403
@@ -432,9 +502,20 @@ def mysql_keys():
         port       = request.args.get('port')
         db_name    = request.args.get('db_name')
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': mysql_list_all_keys(db_name, table_name, username, password, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mysql_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': mysql_list_all_keys(db_name, table_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+
         return ret_dict 
     except:
         return "Error connecting to MySQL server", 403
@@ -443,13 +524,26 @@ def mysql_keys():
 @app.route('/mssql/listdbs', methods=['GET'])
 def mssql_dbs():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'db_list': mssql_list_all_dbs(username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mssql_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': mssql_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+
         return ret_dict 
     except:
         return "Error connecting to MSSQL server", 403
@@ -457,14 +551,26 @@ def mssql_dbs():
 @app.route('/mssql/listtables', methods=['GET'])
 def mssql_tables():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name  = request.args.get('db_name')
-        ret_dict = {
-            'table_list': mssql_list_all_tables(db_name, username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mssql_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': mssql_list_all_tables(db_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+
         return ret_dict 
     except:
         return "Error connecting to MSSQL server", 403
@@ -478,9 +584,20 @@ def mssql_keys():
         port       = request.args.get('port')
         db_name    = request.args.get('db_name')
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': mssql_list_all_keys(db_name, table_name, username, password, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'mssql_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': mssql_list_all_keys(db_name, table_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to MSSQL server", 403
@@ -489,13 +606,26 @@ def mssql_keys():
 @app.route('/oracle/listdbs', methods=['GET'])
 def oracle_dbs():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'db_list': oracle_list_all_dbs(username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'oracle_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': oracle_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Oracle server", 403
@@ -503,14 +633,26 @@ def oracle_dbs():
 @app.route('/oracle/listtables', methods=['GET'])
 def oracle_tables():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name  = request.args.get('db_name')
-        ret_dict = {
-            'table_list': oracle_list_all_tables(db_name, username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'oracle_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': oracle_list_all_tables(db_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Oracle server", 403
@@ -524,9 +666,19 @@ def oracle_keys():
         port       = request.args.get('port')
         db_name    = request.args.get('db_name')
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': oracle_list_all_keys(db_name, table_name, username, password, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'oracle_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': oracle_list_all_keys(db_name, table_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
         return ret_dict 
     except:
         return "Error connecting to Oracle server", 403
@@ -535,13 +687,26 @@ def oracle_keys():
 @app.route('/cassandra/listdbs', methods=['GET'])
 def cassandra_dbs():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'db_list': cassandra_list_all_dbs(username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'cassandra_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': cassandra_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Cassandra server", 403
@@ -549,14 +714,26 @@ def cassandra_dbs():
 @app.route('/cassandra/listtables', methods=['GET'])
 def cassandra_tables():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name = request.args.get('db_name')
-        ret_dict = {
-            'table_list': cassandra_list_all_tables(db_name, username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'cassandra_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': cassandra_list_all_tables(db_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Cassandra server", 403
@@ -564,15 +741,26 @@ def cassandra_tables():
 @app.route('/cassandra/listkeys', methods=['GET'])
 def cassandra_keys():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name  = request.args.get('db_name')
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': cassandra_list_all_keys(db_name, table_name, username, password, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'cassandra_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': cassandra_list_all_keys(db_name, table_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Cassandra server", 403
@@ -581,13 +769,26 @@ def cassandra_keys():
 @app.route('/elasticsearch/listdbs', methods=['GET'])
 def elasticsearch_dbs():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'db_list': elasticsearch_list_all_dbs(username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'elasticsearch_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': elasticsearch_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to elasticsearch server", 403
@@ -595,14 +796,26 @@ def elasticsearch_dbs():
 @app.route('/elasticsearch/listtables', methods=['GET'])
 def elasticsearch_tables():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name = request.args.get('db_name')
-        ret_dict = {
-            'table_list': elasticsearch_list_all_tables(db_name, username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'elasticsearch_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': elasticsearch_list_all_tables(db_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to elasticsearch server", 403
@@ -610,15 +823,26 @@ def elasticsearch_tables():
 @app.route('/elasticsearch/listkeys', methods=['GET'])
 def elasticsearch_keys():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name  = request.args.get('db_name')
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'elasticsearch_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to elasticsearch server", 403
@@ -627,13 +851,26 @@ def elasticsearch_keys():
 @app.route('/hbase/listdbs', methods=['GET'])
 def hbase_dbs():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'db_list': hbase_list_all_dbs(username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'hbase_dbs'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': hbase_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to hbase server", 403
@@ -641,14 +878,26 @@ def hbase_dbs():
 @app.route('/hbase/listtables', methods=['GET'])
 def hbase_tables():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name = request.args.get('db_name')
-        ret_dict = {
-            'table_list': hbase_list_all_tables(db_name, username, password, ip, port)
-        }
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'hbase_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': hbase_list_all_tables(db_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to hbase server", 403
@@ -656,15 +905,26 @@ def hbase_tables():
 @app.route('/hbase/listkeys', methods=['GET'])
 def hbase_keys():
     try:
-        username = request.args.get('username')
-        password = request.args.get('password')
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        db_name  = request.args.get('db_name')
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = request.args.get('db_name')
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': hbase_list_all_keys(db_name, table_name, username, password, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'hbase_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': hbase_list_all_keys(db_name, table_name, username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to hbase server", 403
@@ -673,11 +933,24 @@ def hbase_keys():
 @app.route('/phoenix/listtables', methods=['GET'])
 def phoenix_tables():
     try:
-        ip       = request.args.get('ip')
-        port     = request.args.get('port')
-        ret_dict = {
-            'table_list': phoenix_list_all_tables(ip, port)
-        }
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'phoenix_tables'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'table_list': phoenix_list_all_tables(ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Phoenix server", 403
@@ -687,10 +960,22 @@ def phoenix_keys():
     try:
         ip         = request.args.get('ip')
         port       = request.args.get('port')
+        db_name    = ''
         table_name = request.args.get('table_name')
-        ret_dict = {
-            'key_list': phoenix_list_all_keys(table_name, ip, port)
-        }
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'phoenix_keys'
+        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'key_list': phoenix_list_all_keys(table_name, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+        
         return ret_dict 
     except:
         return "Error connecting to Phoenix server", 403
@@ -700,9 +985,11 @@ def phoenix_types():
     try:
         ip         = request.args.get('ip')
         port       = request.args.get('port')
+        db_name    = ''
         table_name = request.args.get('table_name')
+        
         ret_dict   = phoenix_list_all_types(table_name, ip, port)
-        return ret_dict 
+        return ret_dict
     except:
         return "Error connecting to Phoenix server", 403
 

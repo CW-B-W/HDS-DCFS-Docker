@@ -27,6 +27,8 @@ $(document).ready(function() {
         args += '&password=' + password;
         args += '&ip=' + ip;
         args += '&port=' + port;
+        args += '&cached=True';
+
         $.ajax({
             "type": "GET",
             "dataType": "json",
@@ -66,6 +68,7 @@ $(document).ready(function() {
         args += '&password=' + password;
         args += '&ip=' + ip;
         args += '&port=' + port;
+        args += '&cached=True';
 
         sel_idx = $(this)[0].selectedIndex;
         if (sel_idx != 0) {
@@ -116,6 +119,7 @@ $(document).ready(function() {
         args += '&password=' + password;
         args += '&ip=' + ip;
         args += '&port=' + port;
+        args += '&cached=True';
 
         db_sel_idx = $("#import_db_list")[0].selectedIndex;
         tbl_sel_idx = $(this)[0].selectedIndex;
@@ -283,6 +287,7 @@ $(document).ready(function() {
 
             args = 'ip=hbase-master';
             args += '&port=8765';
+            args += '&cached=True';
             $.ajax({
                 "type": "GET",
                 "dataType": "json",
