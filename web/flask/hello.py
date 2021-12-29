@@ -369,8 +369,9 @@ def mongodb_dbs():
         cached     = request.args.get('cached', True, bool)
         
         funcname = 'mongodb_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -397,8 +398,9 @@ def mongodb_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mongodb_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -425,8 +427,9 @@ def mongodb_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mongodb_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -454,8 +457,9 @@ def mysql_dbs():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mysql_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -482,8 +486,9 @@ def mysql_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mysql_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -510,8 +515,9 @@ def mysql_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mysql_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -539,8 +545,9 @@ def mssql_dbs():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mssql_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -567,8 +574,9 @@ def mssql_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mssql_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -595,8 +603,9 @@ def mssql_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'mssql_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -624,8 +633,9 @@ def oracle_dbs():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'oracle_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -652,8 +662,9 @@ def oracle_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'oracle_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -680,8 +691,9 @@ def oracle_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'oracle_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -708,8 +720,9 @@ def cassandra_dbs():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'cassandra_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -736,8 +749,9 @@ def cassandra_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'cassandra_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -764,8 +778,9 @@ def cassandra_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'cassandra_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -793,8 +808,9 @@ def elasticsearch_dbs():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'elasticsearch_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -821,8 +837,9 @@ def elasticsearch_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'elasticsearch_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -849,8 +866,9 @@ def elasticsearch_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'elasticsearch_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -878,8 +896,9 @@ def hbase_dbs():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'hbase_dbs'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -906,8 +925,9 @@ def hbase_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'hbase_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -934,8 +954,9 @@ def hbase_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'hbase_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -961,8 +982,9 @@ def phoenix_tables():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'phoenix_tables'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -987,8 +1009,9 @@ def phoenix_keys():
         cached     = request.args.get('cached', True, bool)
 
         funcname = 'phoenix_keys'
-        filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
-        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)

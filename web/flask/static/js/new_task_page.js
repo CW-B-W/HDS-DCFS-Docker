@@ -23,14 +23,15 @@ $(document).ready(function() {
             database = $('#db' + db_id + '_list').val().toLowerCase();
             username = $('#db' + db_id + '_username').val();
             password = $('#db' + db_id + '_password').val();
-            ip_port = $('#db' + db_id + '_server').val().split(':');
+            ip_port  = $('#db' + db_id + '_server').val().split(':');
+            cached   = $('#db' + db_id + '_cached').prop("checked");
             ip = ip_port[0];
             port = ip_port[1];
             args = 'username=' + username;
             args += '&password=' + password;
             args += '&ip=' + ip;
             args += '&port=' + port;
-            args += '&cached=True';
+            args += '&cached=' + (cached ? 'True' : '');
 
             $.ajax({
                 "type": "GET",
@@ -65,14 +66,15 @@ $(document).ready(function() {
             database = $('#db' + db_id + '_list').val().toLowerCase();
             username = $('#db' + db_id + '_username').val();
             password = $('#db' + db_id + '_password').val();
-            ip_port = $('#db' + db_id + '_server').val().split(':');
+            ip_port  = $('#db' + db_id + '_server').val().split(':');
+            cached   = $('#db' + db_id + '_cached').prop("checked");
             ip = ip_port[0];
             port = ip_port[1];
             args = 'username=' + username;
             args += '&password=' + password;
             args += '&ip=' + ip;
             args += '&port=' + port;
-            args += '&cached=True';
+            args += '&cached=' + (cached ? 'True' : '');
 
             sel_idx = $(this)[0].selectedIndex;
             if (sel_idx != 0) {
@@ -116,14 +118,15 @@ $(document).ready(function() {
             database = $('#db' + db_id + '_list').val().toLowerCase();
             username = $('#db' + db_id + '_username').val();
             password = $('#db' + db_id + '_password').val();
-            ip_port = $('#db' + db_id + '_server').val().split(':');
+            ip_port  = $('#db' + db_id + '_server').val().split(':');
+            cached   = $('#db' + db_id + '_cached').prop("checked");
             ip = ip_port[0];
             port = ip_port[1];
             args = 'username=' + username;
             args += '&password=' + password;
             args += '&ip=' + ip;
             args += '&port=' + port;
-            args += '&cached=True';
+            args += '&cached=' + (cached ? 'True' : '');
 
             db_sel_idx = $('#db' + db_id + '_db_list')[0].selectedIndex;
             tbl_sel_idx = $(this)[0].selectedIndex;
@@ -353,7 +356,7 @@ $(document).ready(function() {
 
             args = 'ip=hbase-master';
             args += '&port=8765';
-            args += '&cached=True';
+            args += '&cached=';
             $.ajax({
                 "type": "GET",
                 "dataType": "json",
