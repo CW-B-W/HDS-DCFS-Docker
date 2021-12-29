@@ -25,7 +25,7 @@ def listen_task_status_queue():
             connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', credentials=credentials))
             channel = connection.channel()
             break
-        except:
+        except Exception as e:
             try_times -= 1
             if try_times >= 1:
                 print("Connection failed. Retry in 3 seconds")
@@ -370,6 +370,7 @@ def mongodb_dbs():
         
         funcname = 'mongodb_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -381,8 +382,8 @@ def mongodb_dbs():
                 json.dump(ret_dict, wf)
 
         return ret_dict 
-    except:
-        return "Error connecting to MongoDB server", 403
+    except Exception as e:
+        return "Error connecting to MongoDB server. %s" % str(e), 403
 
 @app.route('/mongodb/listtables', methods=['GET'])
 def mongodb_tables():
@@ -397,6 +398,7 @@ def mongodb_tables():
 
         funcname = 'mongodb_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -408,8 +410,8 @@ def mongodb_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to MongoDB server", 403
+    except Exception as e:
+        return "Error connecting to MongoDB server. %s" % str(e), 403
 
 @app.route('/mongodb/listkeys', methods=['GET'])
 def mongodb_keys():
@@ -424,6 +426,7 @@ def mongodb_keys():
 
         funcname = 'mongodb_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -435,8 +438,8 @@ def mongodb_keys():
                 json.dump(ret_dict, wf)
         
         return ret_dict
-    except:
-        return "Error connecting to MongoDB server", 403
+    except Exception as e:
+        return "Error connecting to MongoDB server. %s" % str(e), 403
 
 ''' ----- MySQL ----- '''
 @app.route('/mysql/listdbs', methods=['GET'])
@@ -452,6 +455,7 @@ def mysql_dbs():
 
         funcname = 'mysql_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -463,8 +467,8 @@ def mysql_dbs():
                 json.dump(ret_dict, wf)
 
         return ret_dict 
-    except:
-        return "Error connecting to MySQL server", 403
+    except Exception as e:
+        return "Error connecting to MySQL server. %s" % str(e), 403
 
 @app.route('/mysql/listtables', methods=['GET'])
 def mysql_tables():
@@ -479,6 +483,7 @@ def mysql_tables():
 
         funcname = 'mysql_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -490,8 +495,8 @@ def mysql_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to MySQL server", 403
+    except Exception as e:
+        return "Error connecting to MySQL server. %s" % str(e), 403
 
 @app.route('/mysql/listkeys', methods=['GET'])
 def mysql_keys():
@@ -506,6 +511,7 @@ def mysql_keys():
 
         funcname = 'mysql_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -517,8 +523,8 @@ def mysql_keys():
                 json.dump(ret_dict, wf)
 
         return ret_dict 
-    except:
-        return "Error connecting to MySQL server", 403
+    except Exception as e:
+        return "Error connecting to MySQL server. %s" % str(e), 403
 
 ''' ----- MSSQL ----- '''
 @app.route('/mssql/listdbs', methods=['GET'])
@@ -534,6 +540,7 @@ def mssql_dbs():
 
         funcname = 'mssql_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -545,8 +552,8 @@ def mssql_dbs():
                 json.dump(ret_dict, wf)
 
         return ret_dict 
-    except:
-        return "Error connecting to MSSQL server", 403
+    except Exception as e:
+        return "Error connecting to MSSQL server. %s" % str(e), 403
 
 @app.route('/mssql/listtables', methods=['GET'])
 def mssql_tables():
@@ -561,6 +568,7 @@ def mssql_tables():
 
         funcname = 'mssql_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -572,8 +580,8 @@ def mssql_tables():
                 json.dump(ret_dict, wf)
 
         return ret_dict 
-    except:
-        return "Error connecting to MSSQL server", 403
+    except Exception as e:
+        return "Error connecting to MSSQL server. %s" % str(e), 403
 
 @app.route('/mssql/listkeys', methods=['GET'])
 def mssql_keys():
@@ -588,6 +596,7 @@ def mssql_keys():
 
         funcname = 'mssql_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -599,8 +608,8 @@ def mssql_keys():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to MSSQL server", 403
+    except Exception as e:
+        return "Error connecting to MSSQL server. %s" % str(e), 403
 
 ''' ----- Oracle ----- '''
 @app.route('/oracle/listdbs', methods=['GET'])
@@ -616,6 +625,7 @@ def oracle_dbs():
 
         funcname = 'oracle_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -627,8 +637,8 @@ def oracle_dbs():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Oracle server", 403
+    except Exception as e:
+        return "Error connecting to Oracle server. %s" % str(e), 403
 
 @app.route('/oracle/listtables', methods=['GET'])
 def oracle_tables():
@@ -643,6 +653,7 @@ def oracle_tables():
 
         funcname = 'oracle_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -654,8 +665,8 @@ def oracle_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Oracle server", 403
+    except Exception as e:
+        return "Error connecting to Oracle server. %s" % str(e), 403
 
 @app.route('/oracle/listkeys', methods=['GET'])
 def oracle_keys():
@@ -670,6 +681,7 @@ def oracle_keys():
 
         funcname = 'oracle_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -680,8 +692,8 @@ def oracle_keys():
             with open(filepath, 'w') as wf:
                 json.dump(ret_dict, wf)
         return ret_dict 
-    except:
-        return "Error connecting to Oracle server", 403
+    except Exception as e:
+        return "Error connecting to Oracle server. %s" % str(e), 403
 
 ''' ----- Cassandra ----- '''
 @app.route('/cassandra/listdbs', methods=['GET'])
@@ -697,6 +709,7 @@ def cassandra_dbs():
 
         funcname = 'cassandra_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -708,8 +721,8 @@ def cassandra_dbs():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Cassandra server", 403
+    except Exception as e:
+        return "Error connecting to Cassandra server. %s" % str(e), 403
 
 @app.route('/cassandra/listtables', methods=['GET'])
 def cassandra_tables():
@@ -724,6 +737,7 @@ def cassandra_tables():
 
         funcname = 'cassandra_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -735,8 +749,8 @@ def cassandra_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Cassandra server", 403
+    except Exception as e:
+        return "Error connecting to Cassandra server. %s" % str(e), 403
 
 @app.route('/cassandra/listkeys', methods=['GET'])
 def cassandra_keys():
@@ -751,6 +765,7 @@ def cassandra_keys():
 
         funcname = 'cassandra_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -762,8 +777,8 @@ def cassandra_keys():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Cassandra server", 403
+    except Exception as e:
+        return "Error connecting to Cassandra server. %s" % str(e), 403
 
 ''' ----- elasticsearch ----- '''
 @app.route('/elasticsearch/listdbs', methods=['GET'])
@@ -779,6 +794,7 @@ def elasticsearch_dbs():
 
         funcname = 'elasticsearch_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -790,8 +806,8 @@ def elasticsearch_dbs():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to elasticsearch server", 403
+    except Exception as e:
+        return "Error connecting to elasticsearch server. %s" % str(e), 403
 
 @app.route('/elasticsearch/listtables', methods=['GET'])
 def elasticsearch_tables():
@@ -806,6 +822,7 @@ def elasticsearch_tables():
 
         funcname = 'elasticsearch_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -817,8 +834,8 @@ def elasticsearch_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to elasticsearch server", 403
+    except Exception as e:
+        return "Error connecting to elasticsearch server. %s" % str(e), 403
 
 @app.route('/elasticsearch/listkeys', methods=['GET'])
 def elasticsearch_keys():
@@ -833,6 +850,7 @@ def elasticsearch_keys():
 
         funcname = 'elasticsearch_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -844,8 +862,8 @@ def elasticsearch_keys():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to elasticsearch server", 403
+    except Exception as e:
+        return "Error connecting to elasticsearch server. %s" % str(e), 403
 
 ''' ----- HBase ----- '''
 @app.route('/hbase/listdbs', methods=['GET'])
@@ -861,6 +879,7 @@ def hbase_dbs():
 
         funcname = 'hbase_dbs'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -872,8 +891,8 @@ def hbase_dbs():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to hbase server", 403
+    except Exception as e:
+        return "Error connecting to hbase server. %s" % str(e), 403
 
 @app.route('/hbase/listtables', methods=['GET'])
 def hbase_tables():
@@ -888,6 +907,7 @@ def hbase_tables():
 
         funcname = 'hbase_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -899,8 +919,8 @@ def hbase_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to hbase server", 403
+    except Exception as e:
+        return "Error connecting to hbase server. %s" % str(e), 403
 
 @app.route('/hbase/listkeys', methods=['GET'])
 def hbase_keys():
@@ -915,6 +935,7 @@ def hbase_keys():
 
         funcname = 'hbase_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -926,8 +947,8 @@ def hbase_keys():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to hbase server", 403
+    except Exception as e:
+        return "Error connecting to hbase server. %s" % str(e), 403
 
 ''' ----- Phoenix ----- '''
 @app.route('/phoenix/listtables', methods=['GET'])
@@ -941,6 +962,7 @@ def phoenix_tables():
 
         funcname = 'phoenix_tables'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -952,8 +974,8 @@ def phoenix_tables():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Phoenix server", 403
+    except Exception as e:
+        return "Error connecting to Phoenix server. %s" % str(e), 403
 
 @app.route('/phoenix/listkeys', methods=['GET'])
 def phoenix_keys():
@@ -966,6 +988,7 @@ def phoenix_keys():
 
         funcname = 'phoenix_keys'
         filepath = f'/flask-share/cache/{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = "".join( x for x in filepath if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
             with open(filepath, 'r') as rf:
                 ret_dict = json.load(rf)
@@ -977,8 +1000,8 @@ def phoenix_keys():
                 json.dump(ret_dict, wf)
         
         return ret_dict 
-    except:
-        return "Error connecting to Phoenix server", 403
+    except Exception as e:
+        return "Error connecting to Phoenix server. %s" % str(e), 403
 
 @app.route('/phoenix/listtypes', methods=['GET'])
 def phoenix_types():
@@ -990,8 +1013,8 @@ def phoenix_types():
         
         ret_dict   = phoenix_list_all_types(table_name, ip, port)
         return ret_dict
-    except:
-        return "Error connecting to Phoenix server", 403
+    except Exception as e:
+        return "Error connecting to Phoenix server. %s" % str(e), 403
 
 ''' ----- TaskStatus ----- '''
 @app.route('/taskstatus', methods=['GET'])
