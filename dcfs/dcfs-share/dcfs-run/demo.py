@@ -223,6 +223,10 @@ for i, d in enumerate(task_info['db']):
     try:
         if 'namemapping' in d:
             namemapping = d['namemapping']
+            # make mapping key uppercase
+            namemapping =  {k.upper(): v for k, v in namemapping.items()}
+            # make original columns uppercase
+            locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
             locals()['df%d'%i].rename(columns=namemapping, inplace=True)
         else:
             locals()['df%d'%i].columns = map(str.upper, locals()['df%d'%i].columns)
