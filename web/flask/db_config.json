@@ -19,7 +19,7 @@
     },
     "Oracle": {
         "ip": "192.168.103.60",
-        "port": "1521",
+        "port": "1521/?service_name=XEPDB1",
         "username": "brad",
         "password": "00000000"
     },
