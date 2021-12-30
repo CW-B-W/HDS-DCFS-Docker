@@ -1,6 +1,3 @@
-#do_sleep = True
-do_sleep = False
-
 import os
 import sys
 import time
@@ -80,8 +77,6 @@ for i, d in enumerate(task_info['db']):
             db_url   = 'mysql+pymysql://%s:%s@%s:%s/%s' % (username, password, ip, port, db_name)
             db_engine          = create_engine(db_url)
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MySQL")
-            if do_sleep:
-                time.sleep(5)
             locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
         except Exception as e:
             print(str(e))
@@ -97,8 +92,6 @@ for i, d in enumerate(task_info['db']):
             db_url   = 'mssql+pymssql://%s:%s@%s:%s/%s' % (username, password, ip, port, db_name)
             db_engine          = create_engine(db_url)
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MSSQL")
-            if do_sleep:
-                time.sleep(5)
             locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
         except Exception as e:
             print(str(e))
@@ -114,8 +107,6 @@ for i, d in enumerate(task_info['db']):
             db_url   = 'oracle+cx_oracle://%s:%s@%s:%s' % (username, password, ip, port_sid)
             db_engine          = create_engine(db_url)
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from OracleDB")
-            if do_sleep:
-                time.sleep(5)
             locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
         except Exception as e:
             print(str(e))
@@ -135,8 +126,6 @@ for i, d in enumerate(task_info['db']):
 #            db_url   = 'oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s' % (username, password, ip, port, db_name)
 #            db_engine          = create_engine(db_url)
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Cassandra")
-            if do_sleep:
-                time.sleep(5)
             locals()['df%d'%i] = pd.DataFrame(rows)
         except Exception as e:
             print(str(e))
@@ -158,8 +147,6 @@ for i, d in enumerate(task_info['db']):
                 col.append(result['columns'][x]['name'])
             #df = pd.DataFrame(result['rows'],columns =col)
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch")
-            if do_sleep:
-                time.sleep(5)
             locals()['df%d'%i] = pd.DataFrame(result['rows'],columns =col)
         except Exception as e:
             print(str(e))
@@ -180,8 +167,6 @@ for i, d in enumerate(task_info['db']):
             mongodb_db = mongodb_client[db_name]
             filterj    = d['sql']
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB")
-            if do_sleep:
-                time.sleep(5)
             mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)
             locals()['df%d'%i] = pd.DataFrame(list(mongodb_cursor))
         except Exception as e:
@@ -198,8 +183,6 @@ for i, d in enumerate(task_info['db']):
             columns  = d['sql']
 
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from HBase")
-            if do_sleep:
-                time.sleep(5)
 
             connection = happybase.Connection(ip, port=int(port))
             table = happybase.Table(tbl_name, connection)
@@ -243,8 +226,6 @@ else:
     try:
         pysqldf   = lambda q: sqldf(q, globals())
         send_task_status(task_id, TASKSTATUS_PROCESSING, "Joining two tables")
-        if do_sleep:
-            time.sleep(10)
         df_joined = pysqldf(task_info['join_sql'])
     except Exception as e:
         print(str(e))
