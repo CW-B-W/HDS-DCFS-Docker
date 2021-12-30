@@ -280,12 +280,19 @@ if 'ip' in task_info['hds']:
     hds_ip = task_info['hds']['ip']
 else:
     hds_ip = 'zoo1'
-cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
-process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-stdout, stderr = process.communicate()
-exit_code = process.wait()
-stdout = stdout.decode('utf-8')
-stderr = stderr.decode('utf-8')
+try:
+    send_task_status(task_id, TASKSTATUS_PROCESSING, "Importing into HDS")
+    cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
+    process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    exit_code = process.wait()
+    stdout = stdout.decode('utf-8')
+    stderr = stderr.decode('utf-8')
+except Exception as e:
+    print(str(e))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into HDS\n" + str(e))
+    exit(1)
+
 print("Phoenix stdout")
 print(stdout)
 print("Phoenix stderr")
