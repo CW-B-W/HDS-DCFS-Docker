@@ -1,4 +1,4 @@
-FROM dslab/hadoop-nodemanager
+FROM cwbw/hadoop-nodemanager
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-install-recommends \
       build-essential \

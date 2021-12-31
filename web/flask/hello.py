@@ -329,7 +329,7 @@ from flask_cors import CORS
 #You need to use following line [app Flask(__name__]
 app = Flask(__name__, template_folder='template')
 class Config(object):
-    SECRET_KEY = "DSLAB"
+    SECRET_KEY = "cwbw"
 app.config.from_object(Config())
 CORS(app)
 
