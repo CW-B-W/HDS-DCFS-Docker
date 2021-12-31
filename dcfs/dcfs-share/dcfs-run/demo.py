@@ -99,6 +99,8 @@ setup_logging('joined_' + task_id + '_' + ts + '.log');
 logging.info('Task started. task_id = ' + task_id)
 send_task_status(task_id, TASKSTATUS_PROCESSING, '')
 
+logging.info('Task info:\n' + json.dumps(task_info))
+
 for i, d in enumerate(task_info['db']):
     db_type = d['type']
     if db_type == 'mysql':
