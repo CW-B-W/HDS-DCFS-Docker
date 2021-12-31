@@ -41,7 +41,7 @@ build-flask:
 
 .PHONY: run-flask
 run-flask:
-	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask-share:/flask-share -v $(shell pwd)/web/flask/hello.py:/hello.py -v $(shell pwd)/web/flask/flask_config.json:/flask_config.json -v $(shell pwd)/web/flask/db_config.json:/db_config.json -v $(shell pwd)/web/flask/template:/template -v $(shell pwd)/web/flask/static:/static --network hdsdcfsdocker_hdrs_network --env-file ./web/flask/flask.env dslab/flask
+	docker run -d -p 5000:5000 --name flask -v $(shell pwd)/web/flask/flask-share:/flask-share -v $(shell pwd)/web/flask/hello.py:/hello.py -v $(shell pwd)/web/flask/flask_config.json:/flask_config.json -v $(shell pwd)/web/flask/db_config.json:/db_config.json -v $(shell pwd)/web/flask/template:/template -v $(shell pwd)/web/flask/static:/static --network hds_dcfs_docker_network --env-file ./web/flask/flask.env dslab/flask
 
 .PHONY: stop-flask
 stop-flask:
@@ -57,6 +57,7 @@ run-mq:
 
 .PHONY: up
 up:
+	docker network create -d bridge hds_dcfs_docker_network --ipam-driver default --subnet=172.22.0.0/16
 	docker-compose up -d
 
 .PHONY: stop
@@ -67,6 +68,7 @@ stop:
 down:
 	docker-compose stop -t 300
 	docker-compose down
+	docker network rm hds_dcfs_docker_network
 
 .PHONY: restart
 restart: stop up
