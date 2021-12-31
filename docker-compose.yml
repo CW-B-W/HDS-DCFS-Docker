@@ -10,7 +10,7 @@ services:
       - 9870:9870
       - 9000:9000
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.2
     volumes:
       - ./persistent_storage/hadoop_namenode/name:/hadoop/dfs/name
@@ -26,7 +26,7 @@ services:
     container_name: datanode1
     hostname: datanode1
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.3
     # restart: always
     depends_on:
@@ -43,7 +43,7 @@ services:
     container_name: datanode2
     hostname: datanode2
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.4
     # restart: always
     depends_on:
@@ -61,7 +61,7 @@ services:
     # restart: always
     hostname: zoo1
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.5
     env_file:
       - ./zookeeper/zookeeper.env
@@ -80,7 +80,7 @@ services:
     # restart: always
     hostname: zoo2
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.6
     env_file:
       - ./zookeeper/zookeeper.env
@@ -98,7 +98,7 @@ services:
     container_name: hbase-master
     hostname: hbase-master
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.7
     # restart: always
     depends_on:
@@ -124,7 +124,7 @@ services:
     container_name: hbase-regionserver1
     hostname: hbase-regionserver1
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.8
     # restart: always
     depends_on:
@@ -148,7 +148,7 @@ services:
     container_name: hbase-regionserver2
     hostname: hbase-regionserver2
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.9
     # restart: always
     depends_on:
@@ -210,7 +210,7 @@ services:
     # restart: always
     hostname: rabbitmq
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.10
     ports:
       - 15672:15672
@@ -223,7 +223,7 @@ services:
     container_name: dcfs-master
     hostname: dcfs-master
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.11
     # restart: always
     depends_on:
@@ -250,7 +250,7 @@ services:
     container_name: dcfs-worker1
     hostname: dcfs-worker1
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.12
     # restart: always
     depends_on:
@@ -275,7 +275,7 @@ services:
     container_name: dcfs-worker2
     hostname: dcfs-worker2
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.13
     # restart: always
     depends_on:
@@ -300,7 +300,7 @@ services:
     container_name: flask
     hostname: flask
     networks:
-      hdrs_network:
+      hds_dcfs_docker_network:
         ipv4_address: 172.22.0.14
     # restart: always
     depends_on:
@@ -331,9 +331,11 @@ services:
   # hbase-regionserver2_tmp:
 
 networks:
-  hdrs_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.22.0.0/16
+  hds_dcfs_docker_network:
+    external:
+      name: hds_dcfs_docker_network
+    # driver: bridge
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 172.22.0.0/16
