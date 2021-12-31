@@ -57,7 +57,7 @@ run-mq:
 
 .PHONY: up
 up:
-	docker network create -d bridge hds_dcfs_docker_network --ipam-driver default --subnet=172.22.0.0/16
+	docker network create -d bridge hds_dcfs_docker_network --ipam-driver default --subnet=172.22.0.0/16 || true
 	docker-compose up -d
 
 .PHONY: stop
