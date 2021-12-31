@@ -78,3 +78,7 @@ logs:
 .PHONY: logs
 bash:
 	docker exec -t -i $(name) /bin/bash
+
+.PHONY: pull
+pull:
+	docker-compose pull
