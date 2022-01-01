@@ -67,6 +67,8 @@ stop:
 .PHONY: down
 down:
 	docker-compose stop -t 300
+	docker stop flask
+	docker rm flask
 	docker-compose down
 	docker network rm hds_dcfs_docker_network
 

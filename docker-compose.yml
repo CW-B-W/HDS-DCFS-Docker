@@ -114,6 +114,7 @@ services:
       HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
     ports:
       - 16010:16010
+      - 8765:8765
     stop_signal: SIGINT
     volumes:
       - ./persistent_storage/hbase_master/logs:/opt/hbase-2.3.5/logs

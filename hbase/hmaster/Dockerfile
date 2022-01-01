@@ -3,6 +3,6 @@ FROM cwbw/hbase-base
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
-EXPOSE 16000 16010
+EXPOSE 16000 16010 8765
 
 CMD ["/run.sh"]
