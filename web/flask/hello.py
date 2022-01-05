@@ -142,11 +142,11 @@ def mssql_list_all_dbs(username, password, ip, port='1433'):
 def mssql_list_all_tables(db_name, username, password, ip, port='1433'):
     db1_engine = create_engine("mssql+pymssql://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
     df1 = pd.read_sql("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'", con=db1_engine)
-    return sorted(df1.iloc[:,2].tolist())
+    return sorted((df1.iloc[:,1]+'.'+df1.iloc[:,2]).tolist())
 
 def mssql_list_all_keys(db_name, table_name, username, password, ip, port='1433'):
     db1_engine = create_engine("mssql+pymssql://%s:%s@%s:%s/%s" % (username, password, ip, port, db_name))
-    df1 = pd.read_sql("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='%s' ORDER BY ORDINAL_POSITION" % table_name, con=db1_engine);
+    df1 = pd.read_sql("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='%s' ORDER BY ORDINAL_POSITION" % table_name.split('.', 1)[1], con=db1_engine)
     return sorted(df1.iloc[:,0].tolist())
 ''' ================ MSSQL ================ '''
 
@@ -162,17 +162,17 @@ from sqlalchemy import *
 
 def oracle_list_all_dbs(username, password, ip, port_sid='1521/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
-    df1 = pd.read_sql("select * from global_name", con=db1_engine)
+    df1 = pd.read_sql("select distinct OWNER from user_tab_privs", con=db1_engine)
     return sorted(df1.iloc[:,0].tolist())
 
 def oracle_list_all_tables(db_name, username, password, ip, port_sid='1521/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
-    df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
+    df1 = pd.read_sql("select table_name from user_tab_privs where OWNER = '%s'" % db_name, con=db1_engine)
     return sorted(df1.iloc[:,0].tolist())
 
 def oracle_list_all_keys(db_name, table_name, username, password, ip, port_sid='1521/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
-    df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE table_name = '%s'" % table_name, con=db1_engine);
+    df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE owner = '%s' and table_name = '%s'" % (db_name, table_name), con=db1_engine);
     return sorted(df1.iloc[:,0].tolist())
 ''' ================ Oracle ================ '''
 
