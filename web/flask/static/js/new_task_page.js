@@ -267,7 +267,7 @@ $(document).ready(function() {
     });
 
 
-    $("#send_req").click(function() {
+    $("#create_taskinfo").click(function() {
         db1_type = $('#db1_list').val().toLowerCase();
         db2_type = $('#db2_list').val().toLowerCase();
 
@@ -325,9 +325,11 @@ $(document).ready(function() {
         $('#join_genres').text(join_sql);
         $("#hds_genres").text(hds_sql);
         $('#task_info').text(JSON.stringify(task_info));
+    });
 
+    $("#send_req").click(function() {
         queue = 'task_req'
-        msg = encodeURI($('#task_info').text());
+        msg = encodeURI($('#task_info').val());
         $.ajax({
             "type": "POST",
             "xhrFields": {

@@ -218,7 +218,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#import_send_req").click(function() {
+    $("#import_create_taskinfo").click(function() {
         task_id = _uuid();
         $("#import_sent_task_id").text('task_id = ' + task_id);
 
@@ -259,9 +259,11 @@ $(document).ready(function() {
         $('#import_genres').text(JSON.stringify(task_info['db'][0]['sql']));
         $("#import_hds_genres").text(hds_sql);
         $('#import_task_info').text(JSON.stringify(task_info));
+    });
 
+    $("#import_send_req").click(function() {
         queue = 'task_req'
-        msg = encodeURI($('#import_task_info').text());
+        msg = encodeURI($('#import_task_info').val());
         $.ajax({
             "type": "POST",
             "xhrFields": {
