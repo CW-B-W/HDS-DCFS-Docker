@@ -1,4 +1,4 @@
-function oracle_gen_sql(tbl_name, key_names) {
+function oracle_gen_sql(db_name, tbl_name, key_names) {
     sql = 'SELECT ';
     for (i in key_names) {
         key_name = key_names[i]
@@ -6,6 +6,8 @@ function oracle_gen_sql(tbl_name, key_names) {
     }
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
+    sql += db_name;
+    sql += '.'
     sql += tbl_name;
     // sql += ';'; // DO NOT add ';' for OracleDB
     return sql;
@@ -19,7 +21,7 @@ function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keyli
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': oracle_gen_sql(tblname, keylist),
+      'sql': oracle_gen_sql(db_name, tblname, keylist),
       'namemapping': namemapping
   };
 
