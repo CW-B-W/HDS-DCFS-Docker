@@ -320,6 +320,18 @@ def hbase_list_all_keys(db_name, table_name, username, password, ip, port='9090'
 ''' ================ HBase ================ '''
 
 
+''' ================ Excel ================ '''
+import os
+import pandas
+
+def excel_list_all_tables(dir='/dcfs-share/dcfs-tmp'):
+    return sorted(os.listdir(dir))
+def excel_list_all_keys(dir='/dcfs-share/dcfs-tmp', filename='score.xlsx'):
+    filepath = os.path.join(dir, filename)
+    df = pd.read_excel(filepath)
+    return sorted(list(df.columns))
+''' ================ Excel ================ '''
+
 
 ''' ================ Flask ================ '''
 from flask import Flask, request, render_template
@@ -1038,6 +1050,40 @@ def phoenix_types():
         return ret_dict
     except Exception as e:
         return "Error connecting to Phoenix server. %s" % str(e), 403
+
+''' ----- Excel ----- '''
+@app.route('/excel/listdbs', methods=['GET'])
+def excel_dbs():
+    try:
+        ret_dict = {
+            'db_list': ['/dcfs-share/dcfs-tmp']
+        }
+        return ret_dict 
+    except Exception as e:
+        return "Error listing excel directories. %s" % str(e), 403
+@app.route('/excel/listtables', methods=['GET'])
+def excel_tables():
+    try:
+        db_name = request.args.get('db_name')
+        ret_dict = {
+            'table_list': excel_list_all_tables(dir=db_name)
+        }
+        
+        return ret_dict 
+    except Exception as e:
+        return "Error listing excel file. %s" % str(e), 403
+@app.route('/excel/listkeys', methods=['GET'])
+def excel_keys():
+    try:
+        db_name  = request.args.get('db_name')
+        tbl_name = request.args.get('table_name')
+        ret_dict = {
+            'key_list': excel_list_all_keys(dir=db_name, filename=tbl_name)
+        }
+        
+        return ret_dict 
+    except Exception as e:
+        return "Error accessing excel file. %s" % str(e), 403
 
 ''' ----- TaskStatus ----- '''
 @app.route('/taskstatus', methods=['GET'])

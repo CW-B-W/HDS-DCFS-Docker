@@ -23,10 +23,13 @@ def main():
     def callback(ch, method, properties, body):
         body = urllib.parse.unquote(body.decode('utf-8'))
         print(" [x] Received %s" % body)
-        task_info = json.loads(body)
-        task_id = task_info['task_id']
-        with open('/dcfs-share/dcfs-watch/%s.json' % task_id, 'w') as wf:
-            wf.write(body)
+        try:
+            task_info = json.loads(body)
+            task_id = task_info['task_id']
+            with open('/dcfs-share/dcfs-watch/%s.json' % task_id, 'w') as wf:
+                wf.write(body)
+        except:
+            pass
 
     channel.basic_consume(queue='task_req', on_message_callback=callback, auto_ack=True)
 
