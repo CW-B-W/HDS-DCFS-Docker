@@ -240,6 +240,25 @@ for i, d in enumerate(task_info['db']):
             logging.error("Error in retrieving data from HBase: " + str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from HBase: " + str(e))
             exit(1)
+    elif db_type == 'excel':
+        try:
+            filedir  = '/dcfs-share/dcfs-tmp/'
+            filename = d['tblname']
+            filepath = filedir + filename
+            columns  = d['sql']
+
+            logging.info("Reading xls file")
+            send_task_status(task_id, TASKSTATUS_PROCESSING, "Reading xls file")
+
+            my_data = pd.read_excel(filepath)
+            pysqldf = lambda q: sqldf(q, globals())
+            my_data = pysqldf(columns)
+
+            locals()['df%d'%i] = my_data
+        except Exception as e:
+            logging.error("Error in opening xls file: " + str(e))
+            send_task_status(task_id, TASKSTATUS_FAILED, "Error in opening xls file: " + str(e))
+            exit(1)
     else:
         logging.error("Unsupported DB type " + db_type)
         send_task_status(task_id, TASKSTATUS_FAILED, "Unsupported DB type " + db_type)

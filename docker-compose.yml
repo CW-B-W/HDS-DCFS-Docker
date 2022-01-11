@@ -319,6 +319,7 @@ services:
       - ./web/flask/db_config.json:/db_config.json
       - ./web/flask/static:/static
       - ./web/flask/template:/template
+      - ./dcfs/dcfs-share:/dcfs-share
 
 # volumes:
   # hadoop_namenode:
