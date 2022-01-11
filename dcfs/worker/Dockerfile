@@ -34,4 +34,9 @@ ENV PATH $PHOENIX_HOME/bin/:$PATH
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-install-recommends \
+      cron \
+    && rm -rf /var/lib/apt/lists/*
+ADD crontab_cleantmp.sh /crontab_cleantmp.sh
+
 CMD ["/run.sh"]
