@@ -71,6 +71,7 @@ services:
       ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181
     volumes:
       - ./persistent_storage/zoo1/data:/zookeeper/data
+      - ./persistent_storage/zoo1/datalog:/zookeeper/datalog
       - ./persistent_storage/zoo1/logs:/zookeeper/logs
     stop_signal: SIGINT
 
@@ -90,7 +91,8 @@ services:
       ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181
     volumes:
       - ./persistent_storage/zoo2/data:/zookeeper/data
-      - ./persistent_storage/zoo1/logs:/zookeeper/logs
+      - ./persistent_storage/zoo2/datalog:/zookeeper/datalog
+      - ./persistent_storage/zoo2/logs:/zookeeper/logs
     stop_signal: SIGINT
 
   hbase-master:
@@ -218,6 +220,7 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./persistent_storage/rabbitmq:/var/lib/rabbitmq
 
   dcfs-master:
     image: dslab/dcfs-master
