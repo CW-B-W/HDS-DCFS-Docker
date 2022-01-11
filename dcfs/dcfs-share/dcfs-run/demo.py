@@ -242,9 +242,9 @@ for i, d in enumerate(task_info['db']):
             exit(1)
     elif db_type == 'excel':
         try:
-            filedir  = '/dcfs-share/dcfs-tmp/'
+            filedir  = d['db']
             filename = d['tblname']
-            filepath = filedir + filename
+            filepath = filedir + '/' + filename
             columns  = d['sql']
 
             logging.info("Reading xls file")
