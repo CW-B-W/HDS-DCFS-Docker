@@ -385,13 +385,13 @@ def mongodb_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': mongodb_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
 
         return ret_dict 
@@ -414,13 +414,13 @@ def mongodb_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': mongodb_list_all_tables(username, password, ip, port, db_name)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -443,13 +443,13 @@ def mongodb_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': mongodb_list_all_keys(username, password, ip, port, db_name, table_name)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict
@@ -473,13 +473,13 @@ def mysql_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': mysql_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
 
         return ret_dict 
@@ -502,13 +502,13 @@ def mysql_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': mysql_list_all_tables(db_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -531,13 +531,13 @@ def mysql_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': mysql_list_all_keys(db_name, table_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
 
         return ret_dict 
@@ -561,13 +561,13 @@ def mssql_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': mssql_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
 
         return ret_dict 
@@ -590,13 +590,13 @@ def mssql_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': mssql_list_all_tables(db_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
 
         return ret_dict 
@@ -619,13 +619,13 @@ def mssql_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': mssql_list_all_keys(db_name, table_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -649,13 +649,13 @@ def oracle_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': oracle_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -678,13 +678,13 @@ def oracle_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': oracle_list_all_tables(db_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -707,13 +707,13 @@ def oracle_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': oracle_list_all_keys(db_name, table_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         return ret_dict 
     except Exception as e:
@@ -736,13 +736,13 @@ def cassandra_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': cassandra_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -765,13 +765,13 @@ def cassandra_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': cassandra_list_all_tables(db_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -794,13 +794,13 @@ def cassandra_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': cassandra_list_all_keys(db_name, table_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -824,13 +824,13 @@ def elasticsearch_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': elasticsearch_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -853,13 +853,13 @@ def elasticsearch_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': elasticsearch_list_all_tables(db_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -882,13 +882,13 @@ def elasticsearch_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -912,13 +912,13 @@ def hbase_dbs():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'db_list': hbase_list_all_dbs(username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -941,13 +941,13 @@ def hbase_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': hbase_list_all_tables(db_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -970,13 +970,13 @@ def hbase_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': hbase_list_all_keys(db_name, table_name, username, password, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -998,13 +998,13 @@ def phoenix_tables():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'table_list': phoenix_list_all_tables(ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -1025,13 +1025,13 @@ def phoenix_keys():
         filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
         filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
         if cached and os.path.isfile(filepath):
-            with open(filepath, 'r') as rf:
+            with open(filepath, 'r', encoding='utf-8') as rf:
                 ret_dict = json.load(rf)
         else:
             ret_dict = {
                 'key_list': phoenix_list_all_keys(table_name, ip, port)
             }
-            with open(filepath, 'w') as wf:
+            with open(filepath, 'w', encoding='utf-8') as wf:
                 json.dump(ret_dict, wf)
         
         return ret_dict 
@@ -1091,9 +1091,9 @@ def task_status():
     task_id = request.args.get('task_id')
     try:
         if task_id is None:
-            return json.dumps(get_task_status([]))
+            return json.dumps(get_task_status([]), ensure_ascii=False)
         else:
-            return json.dumps(get_task_status(task_id.split(',')))
+            return json.dumps(get_task_status(task_id.split(',')), ensure_ascii=False)
     except Exception as e:
         print(e)
         return "Task not found", 400
@@ -1170,9 +1170,9 @@ def task_status():
 
 @app.route('/')
 def index():
-    with open('./flask_config.json', 'r') as rf:
+    with open('./flask_config.json', 'r', encoding='utf-8') as rf:
         flask_config = json.load(rf)
-    with open('./db_config.json', 'r') as rf:
+    with open('./db_config.json', 'r', encoding='utf-8') as rf:
         db_config = json.load(rf)
     return render_template('index.html', flask_config = flask_config, db_config = db_config)
 

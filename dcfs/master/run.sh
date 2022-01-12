@@ -4,6 +4,7 @@ trap '$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon stop resourcemana
 
 $HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start resourcemanager
 
+export PYTHONIOENCODING=UTF-8
 nohup python3 /dcfs-share/dcfs-run/task_consumer.py &
 
 is_safemode=$(hdfs dfsadmin -safemode get)

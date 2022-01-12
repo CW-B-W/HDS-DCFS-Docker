@@ -20,6 +20,8 @@ from pandas.io.json import json_normalize
 from elasticsearch_dsl import Search
 import happybase
 
+import xlrd
+
 def setup_logging(filename):
     save_dir = r'/dcfs-share/task-logs/'
     logging.basicConfig(level=logging.DEBUG,
@@ -72,7 +74,7 @@ def send_task_status(task_id, status, message):
         'status': status,
         'message': message
     }
-    body = json.dumps(payload)
+    body = json.dumps(payload, ensure_ascii=False)
 
     channel.basic_publish(exchange='', routing_key='task_status', body=body)
     connection.close()
@@ -83,12 +85,12 @@ try:
     if taskinfo_filepath[0:7] == 'file://':
         taskinfo_filepath = taskinfo_filepath[7:]
     print(taskinfo_filepath)
-    with open(taskinfo_filepath, 'r') as rf:
+    with open(taskinfo_filepath, 'r', encoding='utf-8') as rf:
         task_info = json.load(rf)
 
     task_id = str(task_info['task_id'])
 except Exception as e:
-    with open(taskinfo_filepath, 'r') as rf:
+    with open(taskinfo_filepath, 'r', encoding='utf-8') as rf:
         content = rf.readlines()
     print(str(e), file=sys.stderr)
     send_task_status(str(-1), TASKSTATUS_UNKNOWN, str(e))
@@ -99,7 +101,7 @@ setup_logging('joined_' + task_id + '_' + ts + '.log');
 logging.info('Task started. task_id = ' + task_id)
 send_task_status(task_id, TASKSTATUS_PROCESSING, '')
 
-logging.info('Task info:\n' + json.dumps(task_info))
+logging.info('Task info:\n' + json.dumps(task_info, ensure_ascii=False))
 
 for i, d in enumerate(task_info['db']):
     db_type = d['type']
@@ -313,7 +315,7 @@ os.makedirs("/tmp/dcfs", exist_ok=True)
 tmp_sql_path = '/tmp/dcfs/joined_' + task_id + '_' + ts + '.sql'
 tmp_csv_path = '/tmp/dcfs/joined_' + task_id + '_' + ts + '.csv'
 table_name = task_info['hds']['table']
-with open(tmp_sql_path, 'w') as wf:
+with open(tmp_sql_path, 'w', encoding='utf-8') as wf:
     wf.write(task_info['hds']['sql'])
 df_joined.to_csv(tmp_csv_path, index=False, header=False)
 

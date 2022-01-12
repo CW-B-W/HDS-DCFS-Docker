@@ -26,9 +26,10 @@ def main():
         try:
             task_info = json.loads(body)
             task_id = task_info['task_id']
-            with open('/dcfs-share/dcfs-watch/%s.json' % task_id, 'w') as wf:
+            with open('/dcfs-share/dcfs-watch/%s.json' % task_id, 'w', encoding='utf-8') as wf:
                 wf.write(body)
-        except:
+        except Exception as e:
+            print(str(e), file=sys.stderr)
             pass
 
     channel.basic_consume(queue='task_req', on_message_callback=callback, auto_ack=True)
