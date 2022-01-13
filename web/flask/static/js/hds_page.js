@@ -79,7 +79,7 @@ $(document).ready(function() {
         sql += " FROM " + $("#hds_table_list option:selected").text();
         console.log(sql);
         tmp_file_name = $("#download_file_name").val()+'_'+_uuid()+'.csv';
-        access1 = 'http://'+$("#hds_server").val()+'/dataservice/v1/access?from=jdbc:///&info=jdbc:phoenix:'+zoo_url+'&query='+sql+'&to=file:///tmp/web_download_tmp/'+tmp_file_name+'&async=true&redirectfrom=dcfs-worker1'
+        access1 = 'http://'+$("#hds_server").val()+'/dataservice/v1/access?from=jdbc:///&info=jdbc:phoenix:'+zoo_url+'&query='+sql+'&header=true'+'&to=file:///tmp/web_download_tmp/'+tmp_file_name+'&async=true&redirectfrom=dcfs-worker1'
         access1 = encodeURI(access1)
         access2 = 'http://'+$("#hds_server").val()+'/dataservice/v1/access?from=file:///tmp/web_download_tmp/'+tmp_file_name+'&to=local:///'+$("#download_file_name").val()+'.csv'
         $.ajax({
