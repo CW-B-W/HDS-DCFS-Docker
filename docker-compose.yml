@@ -2,7 +2,7 @@ version: "2"
 
 services:
   namenode:
-    image: dslab/hadoop-namenode
+    image: cwbw/hadoop-namenode
     container_name: namenode
     hostname: namenode
     # restart: always
@@ -22,7 +22,7 @@ services:
     stop_signal: SIGINT
 
   datanode1:
-    image: dslab/hadoop-datanode
+    image: cwbw/hadoop-datanode
     container_name: datanode1
     hostname: datanode1
     networks:
@@ -39,7 +39,7 @@ services:
     stop_signal: SIGINT
 
   datanode2:
-    image: dslab/hadoop-datanode
+    image: cwbw/hadoop-datanode
     container_name: datanode2
     hostname: datanode2
     networks:
@@ -56,7 +56,7 @@ services:
     stop_signal: SIGINT
 
   zoo1:
-    image: dslab/zookeeper
+    image: cwbw/zookeeper
     container_name: zoo1
     # restart: always
     hostname: zoo1
@@ -76,7 +76,7 @@ services:
     stop_signal: SIGINT
 
   zoo2:
-    image: dslab/zookeeper
+    image: cwbw/zookeeper
     container_name: zoo2
     # restart: always
     hostname: zoo2
@@ -96,7 +96,7 @@ services:
     stop_signal: SIGINT
 
   hbase-master:
-    image: dslab/hbase-hmaster
+    image: cwbw/hbase-hmaster
     container_name: hbase-master
     hostname: hbase-master
     networks:
@@ -123,7 +123,7 @@ services:
       # - hbase-master_tmp:/opt/hbase-2.3.5/tmp
 
   hbase-regionserver1:
-    image: dslab/hbase-hregionserver
+    image: cwbw/hbase-hregionserver
     container_name: hbase-regionserver1
     hostname: hbase-regionserver1
     networks:
@@ -147,7 +147,7 @@ services:
     #   - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
 
   hbase-regionserver2:
-    image: dslab/hbase-hregionserver
+    image: cwbw/hbase-hregionserver
     container_name: hbase-regionserver2
     hostname: hbase-regionserver2
     networks:
@@ -170,7 +170,7 @@ services:
     #   - hbase-regionserver2_tmp:/opt/hbase-2.3.5/tmp
 
   # resourcemanager:
-  #   image: dslab/hadoop-resourcemanager
+  #   image: cwbw/hadoop-resourcemanager
   #   container_name: resourcemanager
   #   restart: always
   #   depends_on:
@@ -184,7 +184,7 @@ services:
   #   stop_signal: SIGINT
 
   # nodemanager1:
-  #   image: dslab/hadoop-nodemanager
+  #   image: cwbw/hadoop-nodemanager
   #   container_name: nodemanager
   #   restart: always
   #   depends_on:
@@ -196,7 +196,7 @@ services:
   #   stop_signal: SIGINT
 
   # historyserver:
-  #   image: dslab/hadoop-historyserver
+  #   image: cwbw/hadoop-historyserver
   #   container_name: historyserver
   #   restart: always
   #   depends_on:
@@ -223,7 +223,7 @@ services:
       - ./persistent_storage/rabbitmq:/var/lib/rabbitmq
 
   dcfs-master:
-    image: dslab/dcfs-master
+    image: cwbw/dcfs-master
     container_name: dcfs-master
     hostname: dcfs-master
     networks:
@@ -250,7 +250,7 @@ services:
       - ./persistent_storage/dcfs_master/logs:/opt/hadoop-3.2.2/logs
 
   dcfs-worker1:
-    image: dslab/dcfs-worker
+    image: cwbw/dcfs-worker
     container_name: dcfs-worker1
     hostname: dcfs-worker1
     networks:
@@ -275,7 +275,7 @@ services:
       - ./persistent_storage/dcfs_worker1/logs:/opt/hadoop-3.2.2/logs
 
   dcfs-worker2:
-    image: dslab/dcfs-worker
+    image: cwbw/dcfs-worker
     container_name: dcfs-worker2
     hostname: dcfs-worker2
     networks:
@@ -300,7 +300,7 @@ services:
       - ./persistent_storage/dcfs_worker2/logs:/opt/hadoop-3.2.2/logs
   
   flask:
-    image: dslab/flask
+    image: cwbw/flask
     container_name: flask
     hostname: flask
     networks:

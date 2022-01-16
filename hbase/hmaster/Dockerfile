@@ -1,4 +1,4 @@
-FROM dslab/hbase-base
+FROM cwbw/hbase-base
 
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh

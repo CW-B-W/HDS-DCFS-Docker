@@ -1,5 +1,5 @@
 FROM ubuntu:18.04
-# FROM dslab/zookeeper
+# FROM cwbw/zookeeper
 
 WORKDIR /
 ENV USER=root
