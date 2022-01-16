@@ -80,7 +80,7 @@
   <script src='{{ url_for('static', filename="js/new_task_page.js") }}'></script>
   <script src='{{ url_for('static', filename="js/task_status_page.js") }}'></script>
   <script src='{{ url_for('static', filename="js/hds_page.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/import_page.js") }}'></script>
+  <!-- <script src='{{ url_for('static', filename="js/import_page.js") }}'></script> -->
   <script src='{{ url_for('static', filename="js/db/mysql.js") }}'></script>
   <script src='{{ url_for('static', filename="js/db/mssql.js") }}'></script>
   <script src='{{ url_for('static', filename="js/db/oracle.js") }}'></script>
@@ -89,6 +89,7 @@
   <script src='{{ url_for('static', filename="js/db/elasticsearch.js") }}'></script>
   <script src='{{ url_for('static', filename="js/db/hbase.js") }}'></script>
   <script src='{{ url_for('static', filename="js/db/excel.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/none.js") }}'></script>
   <script src='{{ url_for('static', filename="js/hds.js") }}'></script>
   <style>
     body {
@@ -104,7 +105,7 @@
     <li class="nav-item ml-5"><a href="#new_task_page" data-toggle="tab">New Task</a></li>
     <li class="nav-item ml-5"><a href="#task_status_page" data-toggle="tab">Task Status</a></li>
     <li class="nav-item ml-5"><a href="#hds_page" data-toggle="tab">HDS</a></li>
-    <li class="nav-item ml-5"><a href="#import_page" data-toggle="tab">Data Import</a></li>
+    <!-- <li class="nav-item ml-5"><a href="#import_page" data-toggle="tab">Data Import</a></li> -->
   </ul>
 
   <div id="myTabContent" class="tab-content w-100 mt-3">
@@ -190,7 +191,24 @@
           </select>
         </div>
       </div>
+      <br>
+      <div class="row">
+        <table id="key_table" class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Left Table</th>
+              <th scope="col">Right Table</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <button id="key_table_pop" type="button" class="btn btn-danger w-100">pop</button>
+      </div>
 
+      <br>
+      <hr>
       <br>
 
       <div class="row">
@@ -237,8 +255,8 @@
             <label>IsPrimaryKey</label><br>
           </div>
           <div class="col">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="0">
-            <label>Type1</label>
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" name="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked">Type1</label>
           </div>
         </div>
       </div>
@@ -363,7 +381,7 @@
     </div>
 
     <!-- import_page -->
-    <div class="container tab-pane fade h-100" id="import_page">
+    <!-- <div class="container tab-pane fade h-100" id="import_page">
       <div class="row">
         <div class="col">
           <form>
@@ -485,7 +503,7 @@
       <div class="row">
         <button id="import_send_req" type="button" class="btn btn-success w-100">Send Request</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </body>
 </html>

@@ -3,7 +3,7 @@ $(document).ready(function() {
     for (__i = 1; __i <= 2; ++__i) {
         // use const, or the following `db_id` will be changed as global `_i` is changed
         const db_id = __i;
-        $('#db' + db_id + '_list').change(function() {
+        $(`#db${db_id}_list`).change(function() {
             sel_idx = $(this).val();
             for (db_type in db_config) {
                 if (sel_idx == db_type) {
@@ -11,20 +11,20 @@ $(document).ready(function() {
                     port = db_config[db_type]['port'];
                     username = db_config[db_type]['username'];
                     password = db_config[db_type]['password'];
-                    $('#db' + db_id + '_server').val(ip + ':' + port);
-                    $('#db' + db_id + '_username').val(username);
-                    $('#db' + db_id + '_password').val(password);
+                    $(`#db${db_id}_server`).val(ip + ':' + port);
+                    $(`#db${db_id}_username`).val(username);
+                    $(`#db${db_id}_password`).val(password);
                     $('#conn_db' + db_id + '').text("Connect " + db_type);
                 }
             }
         });
 
-        $('#conn_db' + db_id + '').click(function() {
-            database = $('#db' + db_id + '_list').val().toLowerCase();
-            username = $('#db' + db_id + '_username').val();
-            password = $('#db' + db_id + '_password').val();
-            ip_port  = $('#db' + db_id + '_server').val().split(':');
-            cached   = $('#db' + db_id + '_cached').prop("checked");
+        $(`#conn_db${db_id}`).click(function() {
+            database = $(`#db${db_id}_list`).val().toLowerCase();
+            username = $(`#db${db_id}_username`).val();
+            password = $(`#db${db_id}_password`).val();
+            ip_port  = $(`#db${db_id}_server`).val().split(':');
+            cached   = $(`#db${db_id}_cached`).prop("checked");
             ip = ip_port[0];
             port = ip_port[1];
             args = 'username=' + username;
@@ -41,33 +41,33 @@ $(document).ready(function() {
                 "timeout": 30000,
                 success: function(result) {
                     // clear original options
-                    children = $('#db' + db_id + '_db_list').children();
+                    children = $(`#db${db_id}_db_list`).children();
                     for (i = 1; i < children.length; ++i) {
                         children[i].remove();
                     }
-                    $('#db' + db_id + '_db_list')[0].selectedIndex = 0;
+                    $(`#db${db_id}_db_list`)[0].selectedIndex = 0;
 
                     db_list = result['db_list'];
                     for (key in db_list) {
                         opt_idx = parseInt(key) + 1
-                        $('#db' + db_id + '_db_list').append('<option value="' + opt_idx + '">' + db_list[key] + '</option>');
+                        $(`#db${db_id}_db_list`).append('<option value="' + opt_idx + '">' + db_list[key] + '</option>');
 
                     }
 
-                    $('#conn_db' + db_id + '_status').text("Connect suceeded");
+                    $(`#conn_db${db_id}_status`).text("Connect suceeded");
                 },
                 error: function(jqXHR, JQueryXHR, textStatus) {
-                    $('#conn_db' + db_id + '_status').text("Connect failed");
+                    $(`#conn_db${db_id}_status`).text("Connect failed");
                 }
             });
         });
 
-        $('#db' + db_id + '_db_list').change(function() {
-            database = $('#db' + db_id + '_list').val().toLowerCase();
-            username = $('#db' + db_id + '_username').val();
-            password = $('#db' + db_id + '_password').val();
-            ip_port  = $('#db' + db_id + '_server').val().split(':');
-            cached   = $('#db' + db_id + '_cached').prop("checked");
+        $(`#db${db_id}_db_list`).change(function() {
+            database = $(`#db${db_id}_list`).val().toLowerCase();
+            username = $(`#db${db_id}_username`).val();
+            password = $(`#db${db_id}_password`).val();
+            ip_port  = $(`#db${db_id}_server`).val().split(':');
+            cached   = $(`#db${db_id}_cached`).prop("checked");
             ip = ip_port[0];
             port = ip_port[1];
             args = 'username=' + username;
@@ -88,38 +88,38 @@ $(document).ready(function() {
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
-                        children = $('#db' + db_id + '_table_list').children();
+                        children = $(`#db${db_id}_table_list`).children();
                         for (i = 1; i < children.length; ++i) {
                             children[i].remove();
                         }
-                        $('#db' + db_id + '_table_list')[0].selectedIndex = 0;
+                        $(`#db${db_id}_table_list`)[0].selectedIndex = 0;
 
                         table_list = result['table_list'];
                         for (key in table_list) {
                             opt_idx = parseInt(key) + 1
-                            $('#db' + db_id + '_table_list').append('<option value="' + opt_idx + '">' + table_list[key] + '</option>');
+                            $(`#db${db_id}_table_list`).append('<option value="' + opt_idx + '">' + table_list[key] + '</option>');
 
                         }
                     },
                     error: function(jqXHR, JQueryXHR, textStatus) {
-                        $('#conn_db' + db_id + '_status').text("Connect failed");
+                        $(`#conn_db${db_id}_status`).text("Connect failed");
                     }
                 });
             } else {
-                children = $('#db' + db_id + '_table_list').children();
+                children = $(`#db${db_id}_table_list`).children();
                 for (i = 1; i < children.length; ++i) {
                     children[i].remove();
                 }
-                $('#db' + db_id + '_table_list')[0].selectedIndex = 0;
+                $(`#db${db_id}_table_list`)[0].selectedIndex = 0;
             }
         });
 
-        $('#db' + db_id + '_table_list').change(function() {
-            database = $('#db' + db_id + '_list').val().toLowerCase();
-            username = $('#db' + db_id + '_username').val();
-            password = $('#db' + db_id + '_password').val();
-            ip_port  = $('#db' + db_id + '_server').val().split(':');
-            cached   = $('#db' + db_id + '_cached').prop("checked");
+        $(`#db${db_id}_table_list`).change(function() {
+            database = $(`#db${db_id}_list`).val().toLowerCase();
+            username = $(`#db${db_id}_username`).val();
+            password = $(`#db${db_id}_password`).val();
+            ip_port  = $(`#db${db_id}_server`).val().split(':');
+            cached   = $(`#db${db_id}_cached`).prop("checked");
             ip = ip_port[0];
             port = ip_port[1];
             args = 'username=' + username;
@@ -128,10 +128,10 @@ $(document).ready(function() {
             args += '&port=' + port;
             args += '&cached=' + (cached ? 'True' : '');
 
-            db_sel_idx = $('#db' + db_id + '_db_list')[0].selectedIndex;
+            db_sel_idx = $(`#db${db_id}_db_list`)[0].selectedIndex;
             tbl_sel_idx = $(this)[0].selectedIndex;
             if (tbl_sel_idx != 0) {
-                db_name = $('#db' + db_id + '_db_list').children().eq(db_sel_idx).text();
+                db_name = $(`#db${db_id}_db_list`).children().eq(db_sel_idx).text();
                 tbl_name = $(this).children().eq(tbl_sel_idx).text();
                 args += '&db_name=' + db_name;
                 args += '&table_name=' + tbl_name;
@@ -143,7 +143,7 @@ $(document).ready(function() {
                     "timeout": 30000,
                     success: function(result) {
                         // clear original options
-                        children = $('#db' + db_id + '_key_list').children();
+                        children = $(`#db${db_id}_key_list`).children();
                         for (i = 0; i < children.length; ++i) {
                             children[i].remove();
                         }
@@ -151,118 +151,110 @@ $(document).ready(function() {
                         key_list = result['key_list'];
                         for (key in key_list) {
                             opt_idx = parseInt(key) + 1
-                            $('#db' + db_id + '_key_list').append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
+                            $(`#db${db_id}_key_list`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
+                        }
+                        $(`#db${db_id}_key_list`).append('<option value="' + (++opt_idx) + '">' + '' + '</option>');
+
+                        while (true) {
+                            entry_cnt = $('#key_table tbody>tr').length;
+                            if (entry_cnt <= 0)
+                                break;
+                            $('#key_table tr:last').remove();
                         }
                     },
                     error: function(jqXHR, JQueryXHR, textStatus) {
-                        $('#conn_db' + db_id + '_status').text("Connect failed");
+                        $(`#conn_db${db_id}_status`).text("Connect failed");
                     }
                 });
             } else {
-                children = $('#db' + db_id + '_key_list').children();
+                children = $(`#db${db_id}_key_list`).children();
                 for (i = 0; i < children.length; ++i) {
                     children[i].remove();
                 }
             }
         });
-    }
 
-    $("#create_req").click(function() {
-        db1_type = $('#db1_list').val().toLowerCase();
-        db2_type = $('#db2_list').val().toLowerCase();
+        $(`#db${db_id}_key_list`).dblclick(function() {
+            db1_keylist_elem = $('#db1_key_list');
+            db2_keylist_elem = $('#db2_key_list');
 
-        is_append_task = $('#task_append').is(':checked');
-        if (false) {
-        // if (is_append_task) {
-            $('#db1_key_list').attr('disabled', true);
-            $('#db2_key_list').attr('disabled', true);
-            tbl_name = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
-            if (tbl_name == '') {
-                alert("HDS Table Name cannot be empty");
-                return;
-            }
-            zoo_url = hds_zoo_ip + ':' + hds_zoo_port;
-            $.ajax({
-                "type": "GET",
-                "dataType": "json",
-                "contentType": "application/json",
-                "url": 'http://'+$("#hds_server").val()+'/dataservice/v1/list?from=jdbc:///&info=jdbc:phoenix:' + zoo_url + '&table=' + tbl_name,
-                "timeout": 30000,
-                success: function(result) {
-                    db1_sel_list = [];
-                    db2_sel_list = [];
-
-                    key_list = result['dataInfo']['Column name'].split(', ');
-                    task_append_error = false;
-                    for (key in key_list) {
-                        key_name = key_list[key];
-                        in_db1 = false;
-                        in_db2 = false;
-                        $('#db1_key_list').children().each(function() {
-                            if (to_matching_key(db1_type, $(this).text()) == key_name) {
-                                db1_sel_list.push($(this).val().toString());
-                                in_db1 = true;
-                            }
-                        });
-                        $('#db2_key_list').children().each(function() {
-                            if (to_matching_key(db2_type, $(this).text()) == key_name) {
-                                db2_sel_list.push($(this).val().toString());
-                                in_db2 = true;
-                            }
-                        });
-                        if (!in_db1 && !in_db2) {
-                            alert(`Cannot find key ${key_name} in any of the source tables`);
-                            task_append_error = true;
-                        }
-                    }
-                    $('#db1_key_list').val(db1_sel_list);
-                    $('#db2_key_list').val(db2_sel_list);
-
-                    if (task_append_error) {
-                        throw `Cannot append to table ${tbl_name}`;
-                    }
-
-                    update_db1_info();
-                    update_db2_info();
-                    db1_matchingkeylist = db1_keylist.map(txt => to_matching_key(db1_type, txt));
-                    db2_matchingkeylist = db2_keylist.map(txt => to_matching_key(db2_type, txt));
-                    const intersections = db1_matchingkeylist.filter(function(n) {
-                        return db2_matchingkeylist.indexOf(n) !== -1;
-                    });
-                    if (intersections.length == 1) {
-                        gen_col_opt_elems(db1_matchingkeylist, db2_matchingkeylist);
-                    }
-                    else if (intersections.length == 0) {
-                        alert("No intersection between the two groups");
-                    }
-                    else {
-                        alert("There can only be one intersection between the two groups");
-                    }
-                },
-                error: function(jqXHR, JQueryXHR, textStatus) {
-                    alert("Connect HDS failed");
-                }
-            });
-        }
-        else {
-            update_db1_info();
-            update_db2_info();
-            $('#db1_key_list').attr('disabled', false);
-            $('#db2_key_list').attr('disabled', false);
-            db1_matchingkeylist = db1_keylist.map(txt => to_matching_key(db1_type, txt));
-            db2_matchingkeylist = db2_keylist.map(txt => to_matching_key(db2_type, txt));
-            const intersections = db1_matchingkeylist.filter(function(n) {
-                return db2_matchingkeylist.indexOf(n) !== -1;
-            });
-            if (intersections.length == 1) {
-                gen_col_opt_elems(db1_matchingkeylist, db2_matchingkeylist);
-            }
-            else if (intersections.length == 0) {
-                alert("No intersection between the two groups");
+            if (db1_keylist_elem.val().length > 0) {
+                idx = parseInt(db1_keylist_elem.val()[0]) - 1;
+                db1_key = db1_keylist_elem.children().eq(idx).text();
             }
             else {
-                alert("There can only be one intersection between the two groups");
+                db1_key = '';
             }
+            if (db2_keylist_elem.val().length > 0) {
+                idx = parseInt(db2_keylist_elem.val()[0]) - 1;
+                db2_key = db2_keylist_elem.children().eq(idx).text();
+            }
+            else {
+                db2_key = '';
+            }
+            
+            entry_cnt = $('#key_table tbody>tr').length;
+            if (typeof(entry_cnt) == 'undefined' || entry_cnt <= 0) {
+                $('#key_table tbody').append(`
+                    <tr>
+                        <th scope="row">${entry_cnt+1}</th>
+                        <td>${db1_key}</td>
+                        <td>${db2_key}</td>
+                    </tr>`
+                );
+            }
+            else {
+                $('#key_table tr:last').after(`
+                    <tr>
+                        <th scope="row">${entry_cnt+1}</th>
+                        <td>${db1_key}</td>
+                        <td>${db2_key}</td>
+                    </tr>`
+                );
+            }
+        });
+    }
+
+    $("#key_table_pop").click(function (){
+        entry_cnt = $('#key_table tbody>tr').length;
+        if (entry_cnt <= 0)
+            return;
+        $('#key_table tr:last').remove();
+    });
+
+    $("#create_req").click(function() {
+        join_pairs = get_joining_pairs();
+        
+        children = $('#col_opt_list').children();
+        for (i = 1; i < children.length; ++i) {
+            children[i].remove();
+        }
+
+        for (i = 0; i < join_pairs.length; ++i) {
+            idx      = join_pairs[i]['idx'];
+            leftkey  = join_pairs[i]['leftkey'];
+            rightkey = join_pairs[i]['rightkey'];
+
+            if (leftkey == '' && rightkey == '') {
+                alert("Left key & Right key cannot be both empty");
+                throw "Left key & Right key cannot be both empty";
+            }
+            else if (leftkey == '') {
+                key_name = rightkey;
+            }
+            else {
+                key_name = leftkey;
+            }
+
+            elem = $("#col_opt_template").clone().appendTo($("#col_opt_list")[0]);
+            elem.removeAttr('id');
+            elem.css('visibility', 'visible');
+            elem.children().eq(0).children().eq(0).text(key_name);
+            elem.children().eq(1).children().eq(0).attr('id', 'typeopt_'+key_name);
+            elem.children().eq(3).children().eq(0).val(key_name);
+            elem.children().eq(3).children().eq(1).text(key_name);
+            elem.children().eq(3).children().eq(0).prop('checked', false);
+            elem.children().eq(3).children().eq(0).attr('id', 'isprimary_'+key_name.replace(/:/g, "__"));
         }
     });
 
@@ -271,59 +263,76 @@ $(document).ready(function() {
         db1_type = $('#db1_list').val().toLowerCase();
         db2_type = $('#db2_list').val().toLowerCase();
 
-        task_id = _uuid();
-        $("#sent_task_id").text('task_id = ' + task_id);
+        if (db1_type == 'none') {
+            alert('Only DB2 can be "none"');
+            throw 'Only DB2 can be "none"';
+        }
 
         key_info = {}
-        primary_key = $('input[name=flexRadioDefault]:checked', '#col_opt_list').val();
         l = $("select[id^=typeopt_]");
+        primary_cnt = 0;
         for (i = 0; i < l.length; ++i) {
-            key = l.eq(i).attr('id').substring('typeopt_'.length);
-            opt = l.eq(i).val();
-            key_info[key] = {
-                'key': key,
+            key        = l.eq(i).attr('id').substring('typeopt_'.length);
+            opt        = l.eq(i).val();
+            is_primary = $(`input[id=isprimary_${key.replace(/:/g, "__")}]`).prop('checked')
+            primary_cnt += is_primary;
+            key_info[to_formatted_key(key)] = {
+                'key': to_formatted_key(key),
                 'type': opt,
-                'is_primary': primary_key == key
+                'is_primary': is_primary
             }
+        }
+        if (primary_cnt <= 0) {
+            alert("No primary key was checked");
+            throw "No primary key was checked";
         }
 
         try {
-            join_sql = sql_gen_join(db1_keylist.map(txt => to_matching_key(db1_type, txt)), db2_keylist.map(txt => to_matching_key(db2_type, txt)));
+            join_sql = sql_gen_join(join_pairs);
         } catch (error) {
             alert("Error generating JOIN SQL. Message = " + error);
-            return;
+            throw "Error generating JOIN SQL. Message = " + error;
         }
 
-        hds_table = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
+        hds_table_name = $('#hds_table_name').val().replace(/ /g, "_").toUpperCase();
+        if (hds_table_name == '') {
+            alert("HDS Table Name cannot be empty");
+            throw "HDS Table Name cannot be empty";
+        }
 
+        is_append_task = $('#task_append').is(':checked');
         if (is_append_task)
             hds_sql = '';
         else
-            hds_sql = gen_hds_sql(hds_table, key_info);
-        if (hds_table == '') {
-            alert("HDS Table Name cannot be empty");
-            return;
-        }
+            hds_sql = gen_hds_sql(hds_table_name, key_info);
+
         hds_columns = gen_hds_columns(key_info);
 
         update_db1_info();
         update_db2_info();
 
-        db1_namemapping = gen_namemapping(db1_type, db1_keylist, hds_columns);
-        db2_namemapping = gen_namemapping(db2_type, db2_keylist, hds_columns);
+        db1_namemapping = gen_namemapping(1, join_pairs);
+        db2_namemapping = gen_namemapping(2, join_pairs);
 
+        task_id = _uuid();
+        $("#sent_task_id").text('task_id = ' + task_id);
         task_info = gen_task_info(
             task_id,
             db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping,
             db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping,
             join_sql,
-            hds_sql, hds_table, hds_columns
+            hds_sql, hds_table_name, hds_columns
         );
 
         $('#db1_genres').text(JSON.stringify(task_info['db'][0]['sql']));
         $('#db2_genres').text(JSON.stringify(task_info['db'][1]['sql']));
         $('#join_genres').text(join_sql);
         $("#hds_genres").text(hds_sql);
+
+        if (db2_type == 'none') {
+            delete task_info['db'].pop();
+        }
+
         $('#task_info').text(JSON.stringify(task_info));
     });
 
@@ -411,12 +420,12 @@ function update_db1_info() {
     db1_tblname = $('#db1_table_list').children()
         .eq($('#db1_table_list')[0].selectedIndex)
         .text();
-    db1_key_selidx_list = $('#db1_key_list').val();
+
     db1_keylist = [];
-    for (i in db1_key_selidx_list) {
-        db1_keylist.push(
-            $('#db1_key_list').children()
-            .eq(db1_key_selidx_list[i] - 1).text());
+    join_pairs = get_joining_pairs();
+    for (i = 0; i < join_pairs.length; ++i) {
+        if (join_pairs[i]['leftkey'] != '')
+            db1_keylist.push(join_pairs[i]['leftkey']);
     }
 }
 
@@ -434,50 +443,58 @@ function update_db2_info() {
     db2_tblname = $('#db2_table_list').children()
         .eq($('#db2_table_list')[0].selectedIndex)
         .text();
-    db2_key_selidx_list = $('#db2_key_list').val();
+
     db2_keylist = [];
-    for (i in db2_key_selidx_list) {
-        db2_keylist.push(
-            $('#db2_key_list').children()
-            .eq(db2_key_selidx_list[i] - 1).text());
+    join_pairs = get_joining_pairs();
+    for (i = 0; i < join_pairs.length; ++i) {
+        if (join_pairs[i]['rightkey'] != '')
+            db2_keylist.push(join_pairs[i]['rightkey']);
     }
 }
 
-function gen_col_opt_elems(db1_keylist, db2_keylist) {
-    key_names = db1_keylist.concat(db2_keylist);
-    key_names = key_names.filter(function(value, index, self) {
-        return self.indexOf(value) === index;
-    });
-
-    children = $('#col_opt_list').children();
-    for (i = 1; i < children.length; ++i) {
-        children[i].remove();
-    }
-
-    for (i in key_names) {
-        key_name = key_names[i];
-        elem = $("#col_opt_template").clone().appendTo($("#col_opt_list")[0]);
-        elem.removeAttr('id');
-        elem.css('visibility', 'visible');
-        elem.children().eq(0).children().eq(0).text(key_name);
-        elem.children().eq(1).children().eq(0).attr('id', 'typeopt_'+key_name);
-        elem.children().eq(3).children().eq(0).val(key_name);
-        elem.children().eq(3).children().eq(1).text(key_name);
-        elem.children().eq(3).children().eq(0).prop('checked', true);
-    }
-}
-
-function gen_namemapping(db_type, db_keylist, hds_columns)
+function get_joining_pairs()
 {
-    db_matchingkeylist = db_keylist.map(txt => to_matching_key(db_type, txt));
-    hds_columns_upper = hds_columns.map(txt => txt.toUpperCase());
+    pairs = [];
 
+    tr_list = $('#key_table tbody>tr');
+    for (i = 0; i < tr_list.length; ++i) {
+        tr = tr_list.eq(i);
+
+        idx      = tr.children().eq(0).text();
+        leftkey  = tr.children().eq(1).text();
+        rightkey = tr.children().eq(2).text();
+
+        pairs.push({
+            "idx" : idx,
+            "leftkey" : leftkey,
+            "rightkey" : rightkey,
+        });
+    }
+    
+    return pairs;
+}
+
+function to_formatted_key(key)
+{
+    return key.substr(key.indexOf(':')+1).toUpperCase();
+}
+
+function gen_namemapping(db_id, join_pairs)
+{
     namemapping = {}
 
-    for (i = 0; i < db_matchingkeylist.length; ++i) {
-        for (j = 0; j < hds_columns_upper.length; ++j) {
-            if (db_matchingkeylist[i] == hds_columns_upper[j]) {
-                namemapping[db_keylist[i]] = hds_columns[j];
+    for (i = 0; i < join_pairs.length; ++i) {
+        leftkey  = join_pairs[i]['leftkey'];
+        rightkey = join_pairs[i]['rightkey'];
+        if (db_id == 1 && leftkey != '') {
+            namemapping[leftkey] = to_formatted_key(leftkey);
+        }
+        else if (db_id == 2 && rightkey != '') {
+            if (leftkey == '') {
+                namemapping[rightkey] = to_formatted_key(rightkey);
+            }
+            else {
+                namemapping[rightkey] = to_formatted_key(leftkey);
             }
         }
     }
@@ -485,10 +502,57 @@ function gen_namemapping(db_type, db_keylist, hds_columns)
     return namemapping;
 }
 
-function to_matching_key(db_type, key)
-{
-    if (db_type == 'hbase')
-        return key.substr(key.indexOf(':')+1).toUpperCase();
-    
-    return key.toUpperCase();
+function sql_gen_join(join_pairs) {
+    /* df0 is the table of db1 */
+    /* df1 is the table of db2 */
+
+    sql = 'SELECT ';
+
+    for (i = 0; i < join_pairs.length; ++i) {
+        idx      = join_pairs[i]['idx'];
+        leftkey  = to_formatted_key(join_pairs[i]['leftkey']);
+        rightkey = to_formatted_key(join_pairs[i]['rightkey']);
+
+        if (leftkey == '' && rightkey == '') {
+            alert("Left key & Right key cannot be both empty");
+            throw "Left key & Right key cannot be both empty";
+        }
+        else if (leftkey != '' && rightkey == '') {
+            sql += 'df0.' + leftkey + ' as ' + leftkey + ', '
+        }
+        else if (leftkey == '' && rightkey != '') {
+            sql += 'df1.' + rightkey + ' as ' + rightkey + ', '
+        }
+        else {
+            sql += 'COALESCE(df0.' + leftkey + ', df1.' + leftkey + ') as ' + leftkey + ', ';
+        }
+    }
+
+    sql = sql.substring(0, sql.lastIndexOf(', '));
+    sql += ' FROM df0 LEFT JOIN df1 ON ';
+
+    for (i = 0; i < join_pairs.length; ++i) {
+        leftkey  = join_pairs[i]['leftkey'];
+        rightkey = join_pairs[i]['rightkey'];
+
+        if (leftkey != '' && rightkey != '') {
+            sql += 'df0.' + leftkey + '=df1.' + leftkey + ' AND ';
+        }
+    }
+
+    sql = sql.substring(0, sql.length-4);
+    sql += ';';
+
+    /*
+    SELECT 
+        COALESCE(df0.ID, df1.ID) as ID, 
+        df0.Chinese as Chinese, 
+        df0.Math as Math, 
+        df1.MartialArts as MartialArts, 
+        df1.Swim as Swim 
+        FROM df0 
+        LEFT JOIN df1 
+        ON df0.ID=df1.ID
+    */
+   return sql;
 }

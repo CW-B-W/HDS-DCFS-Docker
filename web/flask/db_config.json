@@ -46,5 +46,11 @@
         "port": "",
         "username": "",
         "password": ""
+    },
+    "None": {
+        "ip": "",
+        "port": "",
+        "username": "",
+        "password": ""
     }
 }
