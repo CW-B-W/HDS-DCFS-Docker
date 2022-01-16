@@ -2,7 +2,12 @@ function gen_hds_sql(table_name, key_info) {
     sql = 'CREATE TABLE ' + table_name + ' (';
 
     for (k in key_info) {
-        sql += k + ' ' + key_info[k]['type'] + ', ';
+        if (key_info[k]['is_primary']) {
+            sql += k + ' ' + key_info[k]['type'] + ' not null, ';
+        }
+        else {
+            sql += k + ' ' + key_info[k]['type'] + ', ';
+        }
     }
 
     sql += 'CONSTRAINT pk PRIMARY KEY (';
