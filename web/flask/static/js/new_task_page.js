@@ -178,48 +178,56 @@ $(document).ready(function() {
             db1_keylist_elem = $('#db1_key_list');
             db2_keylist_elem = $('#db2_key_list');
 
-            if (db1_keylist_elem.val().length > 0) {
-                idx = parseInt(db1_keylist_elem.val()[0]) - 1;
-                db1_key = db1_keylist_elem.children().eq(idx).text();
+            db1_keys = [];
+            db2_keys = [];
+
+            if (db1_keylist_elem.val().length == 0) {
+                db1_keys.push('');
             }
             else {
-                db1_key = '';
+                for (var i = 0; i < db1_keylist_elem.val().length; ++i) {
+                    var idx = parseInt(db1_keylist_elem.val()[i]) - 1;
+                    db1_keys.push(db1_keylist_elem.children().eq(idx).text());
+                }
             }
-            if (db2_keylist_elem.val().length > 0) {
-                idx = parseInt(db2_keylist_elem.val()[0]) - 1;
-                db2_key = db2_keylist_elem.children().eq(idx).text();
-            }
-            else {
-                db2_key = '';
-            }
-            
-            entry_cnt = $('#key_table tbody>tr').length;
-            if (typeof(entry_cnt) == 'undefined' || entry_cnt <= 0) {
-                $('#key_table tbody').append(`
-                    <tr>
-                        <th scope="row">${entry_cnt+1}</th>
-                        <td>${db1_key}</td>
-                        <td>${db2_key}</td>
-                    </tr>`
-                );
+
+            if (db2_keylist_elem.val().length == 0) {
+                db2_keys.push('');
             }
             else {
-                $('#key_table tr:last').after(`
-                    <tr>
-                        <th scope="row">${entry_cnt+1}</th>
-                        <td>${db1_key}</td>
-                        <td>${db2_key}</td>
-                    </tr>`
-                );
+                for (var i = 0; i < db2_keylist_elem.val().length; ++i) {
+                    var idx = parseInt(db2_keylist_elem.val()[i]) - 1;
+                    db2_keys.push(db2_keylist_elem.children().eq(idx).text());
+                }
+            }
+
+
+            if (db1_keys.length == 1 && db2_keys.length == 1) {
+                key_table_insert(db1_keys[0], db2_keys[0]);
+            }
+            else if (db1_keys.length > 1) {
+                if (!(db2_keys.length == 1 || db2_keys[i] == '')) {
+                    alert("Undefined behavior of selection");
+                    throw "Undefined behavior of selection";
+                }
+                for (var i = 0; i < db1_keys.length; ++i) {
+                    key_table_insert(db1_keys[i], '');
+                }
+            }
+            else if (db2_keys.length > 1) {
+                if (!(db1_keys.length == 1 || db1_keys[i] == '')) {
+                    alert("Undefined behavior of selection");
+                    throw "Undefined behavior of selection";
+                }
+                for (var i = 0; i < db2_keys.length; ++i) {
+                    key_table_insert('', db2_keys[i]);
+                }
             }
         });
     }
 
     $("#key_table_pop").click(function (){
-        entry_cnt = $('#key_table tbody>tr').length;
-        if (entry_cnt <= 0)
-            return;
-        $('#key_table tr:last').remove();
+        key_table_pop();
     });
 
     $("#create_req").click(function() {
@@ -555,4 +563,27 @@ function sql_gen_join(join_pairs) {
         ON df0.ID=df1.ID
     */
    return sql;
+}
+
+function key_table_insert(db1_key, db2_key)
+{
+    entry_cnt = $('#key_table tbody>tr').length;
+    if (typeof(entry_cnt) == 'undefined' || entry_cnt <= 0) {
+        entry_cnt = 0;
+    }
+    $('#key_table tbody').append(`
+        <tr>
+            <th scope="row">${entry_cnt+1}</th>
+            <td>${db1_key}</td>
+            <td>${db2_key}</td>
+        </tr>`
+    );
+}
+
+function key_table_pop()
+{
+    entry_cnt = $('#key_table tbody>tr').length;
+    if (entry_cnt <= 0)
+        return;
+    $('#key_table tr:last').remove();
 }
