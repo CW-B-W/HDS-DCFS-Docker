@@ -248,15 +248,14 @@ def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
     return sorted(idx_list)
 
 def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port='9200'):
-    es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-    result = es.indices.get_mapping(index = table_name)
-    df=json_normalize(result[table_name])
-    df1 = []
-    for txt in df :
-        data = txt.split(".")
-        df1.append(data[2])
-    return sorted(df1)
-    #print(df)
+    es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
+    mapping = es.indices.get_mapping(index = table_name)
+    keys = []
+    for index in mapping:
+        for key in mapping[index]['mappings']['properties']:
+            keys.append(key)
+    print(keys)
+    return sorted(keys)
 ''' ================ Elasticsearch ================ '''
 
 
