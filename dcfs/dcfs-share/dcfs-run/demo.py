@@ -179,7 +179,7 @@ for i, d in enumerate(task_info['db']):
             port     = d['port']
             db_name  = d['db']
 
-            es=Elasticsearch(hosts=ip, port=port)
+            es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
             result=es.sql.query(body={'query': d['sql']})
             col = []
             l = len(result['columns'])
