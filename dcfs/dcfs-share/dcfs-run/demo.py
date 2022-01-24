@@ -137,13 +137,13 @@ for i, d in enumerate(task_info['db']):
             exit(1)
     elif db_type == 'oracle':
         try:
-            username = d['username']
-            password = d['password']
-            ip       = d['ip']
-            port_sid = d['port'] # e.g., 1521/sid
-            db_name  = d['db'] # no need, replaced with port_sid
-            db_url   = 'oracle+cx_oracle://%s:%s@%s:%s' % (username, password, ip, port_sid)
-            db_engine          = create_engine(db_url)
+            username  = d['username']
+            password  = d['password']
+            ip        = d['ip']
+            port_sid  = d['port'] # e.g., 1521/sid
+            db_name   = d['db'] # no need, replaced with port_sid
+            db_url    = 'oracle+cx_oracle://%s:%s@%s:%s' % (username, password, ip, port_sid)
+            db_engine = create_engine(db_url)
             logging.info("Retrieving data from OracleDB")
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from OracleDB")
             locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
@@ -173,22 +173,37 @@ for i, d in enumerate(task_info['db']):
             exit(1)
     elif db_type == 'elasticsearch':
         try:
-            username = d['username']
-            password = d['password']
-            ip       = d['ip']
-            port     = d['port']
-            db_name  = d['db']
+            username   = d['username']
+            password   = d['password']
+            ip         = d['ip']
+            port       = d['port']
+            db_name    = d['db']
+            index_name = d['index']
+            keynames   = d['sql']
 
-            es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-            result=es.sql.query(body={'query': d['sql']})
-            col = []
-            l = len(result['columns'])
-            for x in range(l):
-                col.append(result['columns'][x]['name'])
-            #df = pd.DataFrame(result['rows'],columns =col)
+            es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
+            response = es.search(index=index_name, _source=keynames)
+            
+            rows = []
+            for hit in response['hits']['hits']:
+                val_dict = hit['_source']
+                tmp_dict = {}
+                for keyname in keynames:
+                    if keyname.find('.') != -1:
+                        key1, key2 = keyname.split('.')
+                        val = val_dict[key1][key2]
+                    else:
+                        val = val_dict[keyname]
+                        
+                    if type(val) == dict or type(val) == list:
+                        val = json.dumps(val)
+                        
+                    tmp_dict[keyname] = val
+                rows.append(tmp_dict)
+            
             logging.info("Retrieving data from Elasticsearch")
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch")
-            locals()['df%d'%i] = pd.DataFrame(result['rows'],columns =col)
+            locals()['df%d'%i] = pd.DataFrame(rows, columns=keynames)
         except Exception as e:
             logging.error("Error in retrieving data from Elasticsearch: " + str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Elasticsearch: " + str(e))
@@ -300,6 +315,7 @@ else:
 
 try:
     columns_order = task_info['hds']['columns']
+    print(columns_order)
     df_joined = df_joined.reindex(columns_order, axis=1)
     logging.debug(str(df_joined))
 except Exception as e:

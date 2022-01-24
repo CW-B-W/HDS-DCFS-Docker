@@ -252,8 +252,12 @@ def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, por
     mapping = es.indices.get_mapping(index = table_name)
     keys = []
     for index in mapping:
-        for key in mapping[index]['mappings']['properties']:
-            keys.append(key)
+        for layer1 in mapping[index]['mappings']['properties']:
+            if 'properties' in mapping[index]['mappings']['properties'][layer1]:
+                for layer2 in mapping[index]['mappings']['properties'][layer1]['properties']:
+                    keys.append(layer1 + '.' + layer2)
+            else:
+                keys.append(layer1)
     print(keys)
     return sorted(keys)
 ''' ================ Elasticsearch ================ '''

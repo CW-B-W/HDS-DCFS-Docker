@@ -1,14 +1,5 @@
-function elasticsearch_gen_sql(tbl_name, key_names) {
-    sql = 'SELECT ';
-    for (i in key_names) {
-        key_name = key_names[i]
-        sql += key_name + ', ';
-    }
-    sql = sql.substring(0, sql.length - 2);
-    sql += ' FROM ';
-    sql += tbl_name;
-    // sql += ';'; // DO NOT add ';' for Elasticsearch
-    return sql;
+function elasticsearch_gen_sql(key_names) {
+    return key_names
 }
 
 function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname, keylist, namemapping) {
@@ -19,7 +10,8 @@ function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': elasticsearch_gen_sql(tblname, keylist),
+      'index': tblname,
+      'sql': elasticsearch_gen_sql(keylist),
       'namemapping': namemapping
   };
 

@@ -1,0 +1,51 @@
+PUT test-dash
+
+PUT test-dash/_doc/1
+{
+  "host": {
+    "architecture": "x86_64",
+    "ip": [
+      "192.168.0.1",
+      "192.168.0.2"
+    ],
+    "mac": [
+      "AA:BB:CC:DD:EE:FF",
+      "AA:BB:CC:DD:EE:GG"
+    ],
+    "os": {
+      "build": "hi"
+    }
+  }
+}
+PUT test-dash/_doc/2
+{
+  "host": {
+    "architecture": "arm64",
+    "ip": [
+      "192.168.0.3",
+      "192.168.0.4"
+    ],
+    "mac": [
+      "ZZ:BB:CC:DD:EE:FF",
+      "ZZ:BB:CC:DD:EE:GG"
+    ],
+    "os": {
+      "build": "hihi"
+    }
+  }
+}
+
+GET test-dash
+{
+  
+}
+
+GET test-dash/_doc/1
+{
+  
+}
+
+POST /_sql?format=json
+{
+  "query": "SELECT * FROM score"
+}

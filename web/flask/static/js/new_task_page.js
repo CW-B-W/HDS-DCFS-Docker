@@ -262,7 +262,7 @@ $(document).ready(function() {
             elem.children().eq(3).children().eq(0).val(key_name);
             elem.children().eq(3).children().eq(1).text(key_name);
             elem.children().eq(3).children().eq(0).prop('checked', false);
-            elem.children().eq(3).children().eq(0).attr('id', 'isprimary_'+key_name.replace(/:/g, "__"));
+            elem.children().eq(3).children().eq(0).attr('id', 'isprimary_'+key_name.replace(/[:.]/g, "_"));
         }
     });
 
@@ -282,7 +282,7 @@ $(document).ready(function() {
         for (i = 0; i < l.length; ++i) {
             key        = l.eq(i).attr('id').substring('typeopt_'.length);
             opt        = l.eq(i).val();
-            is_primary = $(`input[id=isprimary_${key.replace(/:/g, "__")}]`).prop('checked')
+            is_primary = $(`input[id=isprimary_${key.replace(/[:.]/g, "_")}]`).prop('checked')
             primary_cnt += is_primary;
             key_info[to_formatted_key(key)] = {
                 'key': to_formatted_key(key),
@@ -484,7 +484,7 @@ function get_joining_pairs()
 
 function to_formatted_key(key)
 {
-    return key.substr(key.indexOf(':')+1).toUpperCase();
+    return key.replace(/[:.]/g, "_").toUpperCase();
 }
 
 function gen_namemapping(db_id, join_pairs)
