@@ -249,16 +249,19 @@ def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
 
 def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port='9200'):
     es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-    mapping = es.indices.get_mapping(index = table_name)
+    mapping = es.indices.get_mapping(index = table_name)[table_name]['mappings']
     keys = []
-    for index in mapping:
-        for layer1 in mapping[index]['mappings']['properties']:
-            if 'properties' in mapping[index]['mappings']['properties'][layer1]:
-                for layer2 in mapping[index]['mappings']['properties'][layer1]['properties']:
-                    keys.append(layer1 + '.' + layer2)
-            else:
-                keys.append(layer1)
-    print(keys)
+    
+    def dfs_mapping(prefix, d):
+        if 'properties' in d:
+            for key in d['properties']:
+                next_key = prefix + '.' + key if prefix != '' else key
+                dfs_mapping(next_key, d['properties'][key])
+        else:
+            keys.append(prefix)
+    
+    dfs_mapping('', mapping)
+    
     return sorted(keys)
 ''' ================ Elasticsearch ================ '''
 
