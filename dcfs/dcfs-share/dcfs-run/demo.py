@@ -190,8 +190,10 @@ for i, d in enumerate(task_info['db']):
                 tmp_dict = {}
                 for keyname in keynames:
                     if keyname.find('.') != -1:
-                        key1, key2 = keyname.split('.')
-                        val = val_dict[key1][key2]
+                        keys = keyname.split('.')
+                        val = val_dict
+                        for layer in range(len(keys)):
+                            val = val[keys[layer]]
                     else:
                         val = val_dict[keyname]
                         
