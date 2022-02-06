@@ -1,1 +1,1 @@
-/dcfs-job/dcfsJob watch file:///dcfs-share/dcfs-watch python3 /dcfs-share/dcfs-run/demo.py dcfsInput
+/dcfs-job/dcfsJob watch file:///dcfs-share/dcfs-watch python3 /dcfs-share/dcfs-run/demo.py dcfsInput --configpath /dcfs-job/dcfs-config.xml
