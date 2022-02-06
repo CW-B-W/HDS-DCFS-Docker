@@ -247,6 +247,7 @@ services:
     stop_signal: SIGINT
     volumes:
       - ./dcfs/dcfs-share:/dcfs-share
+      - ./dcfs/master/dcfs-job:/dcfs-job
       - ./persistent_storage/dcfs_master/logs:/opt/hadoop-3.2.2/logs
 
   dcfs-worker1:

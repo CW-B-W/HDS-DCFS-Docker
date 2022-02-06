@@ -13,8 +13,6 @@ RUN pip3 install -r requirements.txt
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
-ADD dcfs-job /dcfs-job
-
 RUN chmod a+x /dcfs-job/dcfsJob
 
 CMD ["/run.sh"]
