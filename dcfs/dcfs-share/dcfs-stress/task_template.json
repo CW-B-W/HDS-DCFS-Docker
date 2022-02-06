@@ -1,0 +1,73 @@
+{
+    "task_id":"_TASKID_",
+    "db":[
+        {
+            "type":"mysql",
+            "ip":"192.168.103.52",
+            "port":"3306",
+            "username":"brad",
+            "password":"00000000",
+            "db":"STRESS_TEST",
+            "sql":"SELECT id, col__TBL1ID_LO__1, col__TBL1ID_LO__2, col__TBL1ID_LO__3, col__TBL1ID_LO__4, col__TBL1ID_LO__5, col__TBL1ID_LO__6, col__TBL1ID_LO__7, col__TBL1ID_LO__8, col__TBL1ID_LO__9 FROM table__TBL1ID_LO_;",
+            "namemapping":{
+                "id":"ID",
+                "col__TBL1ID_LO__1":"COL__TBL1ID_HI__1",
+                "col__TBL1ID_LO__2":"COL__TBL1ID_HI__2",
+                "col__TBL1ID_LO__3":"COL__TBL1ID_HI__3",
+                "col__TBL1ID_LO__4":"COL__TBL1ID_HI__4",
+                "col__TBL1ID_LO__5":"COL__TBL1ID_HI__5",
+                "col__TBL1ID_LO__6":"COL__TBL1ID_HI__6",
+                "col__TBL1ID_LO__7":"COL__TBL1ID_HI__7",
+                "col__TBL1ID_LO__8":"COL__TBL1ID_HI__8",
+                "col__TBL1ID_LO__9":"COL__TBL1ID_HI__9"
+            }
+        },
+        {
+            "type":"mysql",
+            "ip":"192.168.103.52",
+            "port":"3306",
+            "username":"brad",
+            "password":"00000000",
+            "db":"STRESS_TEST",
+            "sql":"SELECT id, col__TBL2ID_LO__1, col__TBL2ID_LO__2, col__TBL2ID_LO__3, col__TBL2ID_LO__4, col__TBL2ID_LO__5, col__TBL2ID_LO__6, col__TBL2ID_LO__7, col__TBL2ID_LO__8, col__TBL2ID_LO__9 FROM table__TBL2ID_LO_;",
+            "namemapping":{
+                "id":"ID",
+                "col__TBL2ID_LO__1":"COL__TBL2ID_HI__1",
+                "col__TBL2ID_LO__2":"COL__TBL2ID_HI__2",
+                "col__TBL2ID_LO__3":"COL__TBL2ID_HI__3",
+                "col__TBL2ID_LO__4":"COL__TBL2ID_HI__4",
+                "col__TBL2ID_LO__5":"COL__TBL2ID_HI__5",
+                "col__TBL2ID_LO__6":"COL__TBL2ID_HI__6",
+                "col__TBL2ID_LO__7":"COL__TBL2ID_HI__7",
+                "col__TBL2ID_LO__8":"COL__TBL2ID_HI__8",
+                "col__TBL2ID_LO__9":"COL__TBL2ID_HI__9"
+            }
+        }
+    ],
+    "join_sql":"SELECT COALESCE(df0.ID, df1.ID) as ID, df0.COL__TBL1ID_HI__1 as COL__TBL1ID_HI__1, df0.COL__TBL1ID_HI__2 as COL__TBL1ID_HI__2, df0.COL__TBL1ID_HI__3 as COL__TBL1ID_HI__3, df0.COL__TBL1ID_HI__4 as COL__TBL1ID_HI__4, df0.COL__TBL1ID_HI__5 as COL__TBL1ID_HI__5, df0.COL__TBL1ID_HI__6 as COL__TBL1ID_HI__6, df0.COL__TBL1ID_HI__7 as COL__TBL1ID_HI__7, df0.COL__TBL1ID_HI__8 as COL__TBL1ID_HI__8, df0.COL__TBL1ID_HI__9 as COL__TBL1ID_HI__9, df1.COL__TBL2ID_HI__1 as COL__TBL2ID_HI__1, df1.COL__TBL2ID_HI__2 as COL__TBL2ID_HI__2, df1.COL__TBL2ID_HI__3 as COL__TBL2ID_HI__3, df1.COL__TBL2ID_HI__4 as COL__TBL2ID_HI__4, df1.COL__TBL2ID_HI__5 as COL__TBL2ID_HI__5, df1.COL__TBL2ID_HI__6 as COL__TBL2ID_HI__6, df1.COL__TBL2ID_HI__7 as COL__TBL2ID_HI__7, df1.COL__TBL2ID_HI__8 as COL__TBL2ID_HI__8, df1.COL__TBL2ID_HI__9 as COL__TBL2ID_HI__9 FROM df0 LEFT JOIN df1 ON df0.id=df1.id ;",
+    "hds":{
+        "sql":"CREATE TABLE JOIN_R10C10__TBL2ID_HI_ (ID VARCHAR not null, COL__TBL1ID_HI__1 VARCHAR, COL__TBL1ID_HI__2 VARCHAR, COL__TBL1ID_HI__3 VARCHAR, COL__TBL1ID_HI__4 VARCHAR, COL__TBL1ID_HI__5 VARCHAR, COL__TBL1ID_HI__6 VARCHAR, COL__TBL1ID_HI__7 VARCHAR, COL__TBL1ID_HI__8 VARCHAR, COL__TBL1ID_HI__9 VARCHAR, COL__TBL2ID_HI__1 VARCHAR, COL__TBL2ID_HI__2 VARCHAR, COL__TBL2ID_HI__3 VARCHAR, COL__TBL2ID_HI__4 VARCHAR, COL__TBL2ID_HI__5 VARCHAR, COL__TBL2ID_HI__6 VARCHAR, COL__TBL2ID_HI__7 VARCHAR, COL__TBL2ID_HI__8 VARCHAR, COL__TBL2ID_HI__9 VARCHAR, CONSTRAINT pk PRIMARY KEY (ID));",
+        "table":"JOIN_R10C10__TBL2ID_HI_",
+        "columns":[
+            "ID",
+            "COL__TBL1ID_HI__1",
+            "COL__TBL1ID_HI__2",
+            "COL__TBL1ID_HI__3",
+            "COL__TBL1ID_HI__4",
+            "COL__TBL1ID_HI__5",
+            "COL__TBL1ID_HI__6",
+            "COL__TBL1ID_HI__7",
+            "COL__TBL1ID_HI__8",
+            "COL__TBL1ID_HI__9",
+            "COL__TBL2ID_HI__1",
+            "COL__TBL2ID_HI__2",
+            "COL__TBL2ID_HI__3",
+            "COL__TBL2ID_HI__4",
+            "COL__TBL2ID_HI__5",
+            "COL__TBL2ID_HI__6",
+            "COL__TBL2ID_HI__7",
+            "COL__TBL2ID_HI__8",
+            "COL__TBL2ID_HI__9"
+        ]
+    }
+}
