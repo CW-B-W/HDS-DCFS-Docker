@@ -216,6 +216,7 @@ services:
       hds_dcfs_docker_network:
         ipv4_address: 172.22.0.10
     ports:
+      - 5672:5672
       - 15672:15672
     stop_signal: SIGINT
     volumes:
