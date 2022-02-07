@@ -6,7 +6,7 @@ def get_tbl_id(n_row):
     return f'r{n_row}_c10'
 
 def gen_task_info(taskid, tblname, tbl1_n_row, tbl2_n_row):
-    with open('/dcfs-share/dcfs-stress/task_template.json') as rf:
+    with open('task_template.json') as rf:
         raw_text = rf.read() \
             .replace("_TASKID_", taskid) \
             .replace("_TBLNAME_", tblname.upper()) \
@@ -20,7 +20,7 @@ def gen_task_info(taskid, tblname, tbl1_n_row, tbl2_n_row):
 def send_task_req(task_info):    
     credentials = pika.PlainCredentials('guest', 'guest')
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='rabbitmq', credentials=credentials))
+        pika.ConnectionParameters(host='127.0.0.1', credentials=credentials))
     channel = connection.channel()
 
     channel.queue_declare(queue='task_req')
@@ -31,6 +31,7 @@ def send_task_req(task_info):
     channel.basic_publish(exchange='', routing_key='task_req', body=body)
     connection.close()
 
-for t in range(1000):
-    task_info = gen_task_info(f'stress1280_{t}', f'stress1280_{t}', 1280, 1280)
+for t in range(1):
+    n_row = 2 ** 17 * 10
+    task_info = gen_task_info(f'stress{n_row}_{t}', f'stress{n_row}_{t}', n_row, n_row)
     send_task_req(task_info)
