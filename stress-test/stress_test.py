@@ -31,7 +31,13 @@ def send_task_req(task_info):
     channel.basic_publish(exchange='', routing_key='task_req', body=body)
     connection.close()
 
-for t in range(1):
-    n_row = 2 ** 17 * 10
+level  = int(sys.argv[1])
+n_task = int(sys.argv[2])
+if not (0 <= level and level <= 17):
+    print("argv[1] should be in [0, 17]")
+    exit(0)
+
+for t in range(n_task):
+    n_row = 2 ** level * 10
     task_info = gen_task_info(f'stress{n_row}_{t}', f'stress{n_row}_{t}', n_row, n_row)
     send_task_req(task_info)
