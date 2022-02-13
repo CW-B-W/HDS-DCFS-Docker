@@ -7,7 +7,7 @@ $HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start resourcemanager
 nohup python3 /dcfs-share/dcfs-run/task_consumer.py &
 
 is_safemode=$(hdfs dfsadmin -safemode get)
-retry=10
+retry=100
 while [[ $is_safemode == *"ON"* && $retry != 0 ]]
 do
     echo "HDFS is in Safe mode, wait 3s. retry = ${retry}"
