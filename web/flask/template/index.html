@@ -154,7 +154,7 @@
           <div class="container">
             <div class='col-md-5'>
               <div class="form-group">
-                <div class='input-group date' id='datetimepicker6'>
+                <div class='input-group date' id='datetimepicker_start'>
                   <input type='text' class="form-control" />
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
@@ -164,7 +164,7 @@
             </div>
             <div class='col-md-5'>
               <div class="form-group">
-                <div class='input-group date' id='datetimepicker7'>
+                <div class='input-group date' id='datetimepicker_end'>
                   <input type='text' class="form-control" />
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
@@ -175,13 +175,13 @@
           </div>
           <script type="text/javascript">
             $(function () {
-                $('#datetimepicker6').datetimepicker({uiLibrary: 'bootstrap4'});
-                $('#datetimepicker7').datetimepicker({useCurrent: false});
-                $("#datetimepicker6").on("dp.change", function (e) {
-                    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+                $('#datetimepicker_start').datetimepicker({uiLibrary: 'bootstrap4'});
+                $('#datetimepicker_end').datetimepicker({useCurrent: false});
+                $("#datetimepicker_start").on("dp.change", function (e) {
+                    $('#datetimepicker_end').data("DateTimePicker").minDate(e.date);
                 });
-                $("#datetimepicker7").on("dp.change", function (e) {
-                    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+                $("#datetimepicker_end").on("dp.change", function (e) {
+                    $('#datetimepicker_start').data("DateTimePicker").maxDate(e.date);
                 });
             });
          </script>

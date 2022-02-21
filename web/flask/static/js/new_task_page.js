@@ -326,7 +326,7 @@ $(document).ready(function() {
         $("#sent_task_id").text('task_id = ' + task_id);
         task_info = gen_task_info(
             task_id,
-            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping,
+            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime,
             db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping,
             join_sql,
             hds_sql, hds_table_name, hds_columns
@@ -435,6 +435,16 @@ function update_db1_info() {
         if (join_pairs[i]['leftkey'] != '')
             db1_keylist.push(join_pairs[i]['leftkey']);
     }
+    if ($('#datetimepicker_start').find('input').val()=="" || $('#datetimepicker_end').find('input').val()==""){
+        db1_starttime = "";
+        db1_endtime = "";
+    }else{
+        time_val = $('#datetimepicker_start').data('datetimepicker').getDate();
+        db1_starttime = time_val.getFullYear() + "-" + (time_val.getMonth()+1) + "-" + time_val.getDate() + "T" + time_val.getHours() + ":" + time_val.getMinutes() + ":00.000Z"; //The value of second is default set to "00"
+        time_val = $('#datetimepicker_end').data('datetimepicker').getDate();
+        db1_endtime = time_val.getFullYear() + "-" + (time_val.getMonth()+1) + "-" + time_val.getDate() + "T" + time_val.getHours() + ":" + time_val.getMinutes() + ":00.000Z"; //The value of second is default set to "00"    
+    }
+    
 }
 
 // update variables about db2 from controls

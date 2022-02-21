@@ -245,24 +245,27 @@ def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
 def elasticsearch_list_all_tables(db_name, username, password, ip, port='9200'):
     es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
     idx_list = [x for x in es.indices.get_alias().keys() ]
-    return sorted(idx_list)
+    index_df = pd.DataFrame(idx_list,columns={"Index"})
+    index_df_new = index_df[~index_df["Index"].str.startswith('.')].reset_index(drop=True)
+    index_df_new['Index'] = index_df_new['Index'].apply(lambda x : x.rsplit("-",1)[0])
+    index_df_new = index_df_new.drop_duplicates().reset_index(drop=True)
+    index_df_new['Index'] = index_df_new['Index'].apply(lambda x : x + '-*')
+    idx_list_new = index_df_new['Index'].to_list()
+    return sorted(idx_list_new)
 
 def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, port='9200'):
     es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-    mapping = es.indices.get_mapping(index = table_name)[table_name]['mappings']
+    mapping = es.indices.get_mapping(index = table_name)
     keys = []
-    
-    def dfs_mapping(prefix, d):
-        if 'properties' in d:
-            for key in d['properties']:
-                next_key = prefix + '.' + key if prefix != '' else key
-                dfs_mapping(next_key, d['properties'][key])
-        else:
-            keys.append(prefix)
-    
-    dfs_mapping('', mapping)
-    
-    return sorted(keys)
+    for index in mapping:
+        for layer1 in mapping[index]['mappings']['properties']:
+            if 'properties' in mapping[index]['mappings']['properties'][layer1]:
+                for layer2 in mapping[index]['mappings']['properties'][layer1]['properties']:
+                    keys.append(layer1 + '.' + layer2)
+            else:
+                keys.append(layer1)
+    newKeys = list(dict.fromkeys(keys))
+    return sorted(newKeys)
 ''' ================ Elasticsearch ================ '''
 
 
