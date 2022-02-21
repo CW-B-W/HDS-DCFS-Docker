@@ -15,6 +15,7 @@ import json
 from pymongo import MongoClient
 from cassandra.cluster import Cluster
 from elasticsearch import Elasticsearch
+from elasticsearch import helpers
 #elasticsearch lib
 from pandas.io.json import json_normalize
 from elasticsearch_dsl import Search
@@ -181,10 +182,29 @@ for i, d in enumerate(task_info['db']):
             index_name = d['index']
             keynames   = d['sql']
 
+            time_from = d['starttime']
+            time_end = d['endtime']
             es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
+            es_result = helpers.scan(
+                    client = es,
+                    query = {"query" : {
+                        "bool": {
+                            "filter":[
+                                {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}
+                            ]
+                        }
+                    },
+                },
+            _source= keynames,
+            index = index_name,
+            scroll ='10m',
+            timeout ="10m")
+            rows = [k["_source"] for k in es_result]
+            '''es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
             response = es.search(index=index_name, _source=keynames)
             
             rows = []
+            
             for hit in response['hits']['hits']:
                 val_dict = hit['_source']
                 tmp_dict = {}
@@ -201,7 +221,7 @@ for i, d in enumerate(task_info['db']):
                         val = json.dumps(val)
                         
                     tmp_dict[keyname] = val
-                rows.append(tmp_dict)
+                rows.append(tmp_dict)'''
             
             logging.info("Retrieving data from Elasticsearch")
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch")
