@@ -262,7 +262,7 @@ $(document).ready(function() {
             elem.children().eq(3).children().eq(0).val(key_name);
             elem.children().eq(3).children().eq(1).text(key_name);
             elem.children().eq(3).children().eq(0).prop('checked', false);
-            elem.children().eq(3).children().eq(0).attr('id', 'isprimary_'+key_name.replace(/[:.]/g, "_"));
+            elem.children().eq(3).children().eq(0).attr('id', 'isprimary_'+key_name.replace(/[:.]/g, "_").replace(/[@]/g, ""));
         }
     });
 
@@ -282,7 +282,7 @@ $(document).ready(function() {
         for (i = 0; i < l.length; ++i) {
             key        = l.eq(i).attr('id').substring('typeopt_'.length);
             opt        = l.eq(i).val();
-            is_primary = $(`input[id=isprimary_${key.replace(/[:.]/g, "_")}]`).prop('checked')
+            is_primary = $(`input[id=isprimary_${key.replace(/[:.]/g, "_").replace(/[@]/g, "")}]`).prop('checked')
             primary_cnt += is_primary;
             key_info[to_formatted_key(key)] = {
                 'key': to_formatted_key(key),
@@ -327,7 +327,7 @@ $(document).ready(function() {
         task_info = gen_task_info(
             task_id,
             db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime,
-            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping,
+            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime,
             join_sql,
             hds_sql, hds_table_name, hds_columns
         );
@@ -439,10 +439,12 @@ function update_db1_info() {
         db1_starttime = "";
         db1_endtime = "";
     }else{
-        time_val = $('#datetimepicker_start').data('datetimepicker').getDate();
-        db1_starttime = time_val.getFullYear() + "-" + (time_val.getMonth()+1) + "-" + time_val.getDate() + "T" + time_val.getHours() + ":" + time_val.getMinutes() + ":00.000Z"; //The value of second is default set to "00"
-        time_val = $('#datetimepicker_end').data('datetimepicker').getDate();
-        db1_endtime = time_val.getFullYear() + "-" + (time_val.getMonth()+1) + "-" + time_val.getDate() + "T" + time_val.getHours() + ":" + time_val.getMinutes() + ":00.000Z"; //The value of second is default set to "00"    
+        db1_starttime = $('#datetimepicker_start').find('input').val().replace(" ","T") + ":00";
+        db1_endtime = $('#datetimepicker_end').find('input').val().replace(" ","T") + ":00";
+        //time_val = $('#datetimepicker_start').data('datetimepicker').getDate();
+        //db1_starttime = time_val.getFullYear() + "-" + (time_val.getMonth()+1) + "-" + time_val.getDate() + "T" + time_val.getHours() + ":" + time_val.getMinutes() + ":00.000Z"; //The value of second is default set to "00"
+        //time_val = $('#datetimepicker_end').data('datetimepicker').getDate();
+        //db1_endtime = time_val.getFullYear() + "-" + (time_val.getMonth()+1) + "-" + time_val.getDate() + "T" + time_val.getHours() + ":" + time_val.getMinutes() + ":00.000Z"; //The value of second is default set to "00"    
     }
     
 }
@@ -467,6 +469,17 @@ function update_db2_info() {
     for (i = 0; i < join_pairs.length; ++i) {
         if (join_pairs[i]['rightkey'] != '')
             db2_keylist.push(join_pairs[i]['rightkey']);
+    }
+    if ($('#datetimepicker_start2').find('input').val()=="" || $('#datetimepicker_end2').find('input').val()==""){
+        db2_starttime = "";
+        db2_endtime = "";
+    }else{
+        db2_starttime = $('#datetimepicker_start2').find('input').val().replace(" ","T") + ":00";
+        db2_endtime = $('#datetimepicker_end2').find('input').val().replace(" ","T") + ":00";
+        //time_val_2 = $('#datetimepicker_start2').data('datetimepicker').getDate();
+        //db2_starttime = time_val_2.getFullYear() + "-" + (time_val_2.getMonth()+1) + "-" + time_val_2.getDate() + "T" + time_val_2.getHours() + ":" + time_val_2.getMinutes() + ":00"; //The value of second is default set to "00"
+        //time_val_2 = $('#datetimepicker_end2').data('datetimepicker').getDate();
+        //db2_endtime = time_val_2.getFullYear() + "-" + (time_val_2.getMonth()+1) + "-" + time_val_2.getDate() + "T" + time_val_2.getHours() + ":" + time_val_2.getMinutes() + ":00"; //The value of second is default set to "00"    
     }
 }
 
@@ -494,7 +507,7 @@ function get_joining_pairs()
 
 function to_formatted_key(key)
 {
-    return key.replace(/[:.]/g, "_").toUpperCase();
+    return key.replace(/[:.]/g, "_").replace(/[@]/g, "").toUpperCase();
 }
 
 function gen_namemapping(db_id, join_pairs)

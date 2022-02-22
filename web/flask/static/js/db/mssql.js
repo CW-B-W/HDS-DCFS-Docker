@@ -12,7 +12,7 @@ function mssql_gen_sql(tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylist, namemapping) {
+function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
   db = {
       'type': 'mssql',
       'ip': ip,
@@ -21,7 +21,9 @@ function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylis
       'password': password,
       'db': dbname,
       'sql': mssql_gen_sql(tblname, keylist),
-      'namemapping': namemapping
+      'namemapping': namemapping,
+      'starttime': starttime,
+      'endtime': endtime
   };
 
   return db;
