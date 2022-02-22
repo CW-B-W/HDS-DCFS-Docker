@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="221d7778-6478-47fb-affa-cd796690ea35" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/dcfs/dcfs-share/dcfs-run/demo.py" beforeDir="false" afterPath="$PROJECT_DIR$/dcfs/dcfs-share/dcfs-run/demo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/flask/cx_Oracle.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask/db_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/flask/db_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask/static/js/db/elasticsearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/flask/static/js/db/elasticsearch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask/static/js/db/mssql.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/flask/static/js/db/mssql.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask/static/js/join_task.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/flask/static/js/join_task.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask/static/js/new_task_page.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/flask/static/js/new_task_page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/flask/template/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/flask/template/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

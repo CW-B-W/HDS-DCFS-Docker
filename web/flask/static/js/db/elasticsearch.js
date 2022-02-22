@@ -14,7 +14,7 @@ function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname
       'sql': elasticsearch_gen_sql(keylist),
       'namemapping': namemapping,
       'starttime': starttime,
-      'endstart': endtime
+      'endtime': endtime
   };
 
   return db;

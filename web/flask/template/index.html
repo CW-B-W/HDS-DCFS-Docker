@@ -76,22 +76,22 @@
     }
   </script>
 
-  <script src='{{ url_for('static', filename="js/utils.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/join_task.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/new_task_page.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/task_status_page.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/hds_page.js") }}'></script>
+  <script src="../static/js/utils.js") ></script>
+  <script src="../static/js/join_task.js") ></script>
+  <script src="../static/js/new_task_page.js") ></script>
+  <script src="../static/js/task_status_page.js") ></script>
+  <script src="../static/js/hds_page.js") ></script>
   <!-- <script src='{{ url_for('static', filename="js/import_page.js") }}'></script> -->
-  <script src='{{ url_for('static', filename="js/db/mysql.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/mssql.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/oracle.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/mongodb.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/cassandra.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/elasticsearch.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/hbase.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/excel.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/db/none.js") }}'></script>
-  <script src='{{ url_for('static', filename="js/hds.js") }}'></script>
+  <script src="../static/js/db/mysql.js") ></script>
+  <script src="../static/js/db/mssql.js") ></script>
+  <script src="../static/js/db/oracle.js") ></script>
+  <script src="../static/js/db/mongodb.js") ></script>
+  <script src="../static/js/db/cassandra.js") ></script>
+  <script src="../static/js/db/elasticsearch.js") ></script>
+  <script src="../static/js/db/hbase.js") ></script>
+  <script src="../static/js/db/excel.js") ></script>
+  <script src="../static/js/db/none.js") ></script>
+  <script src="../static/js/hds.js")></script>
 
   <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 
@@ -226,6 +226,40 @@
             <option selected>None</option>
           </select>
           <br><br>
+          <div class="container">
+            <div class='col-md-5'>
+              <div class="form-group">
+                <div class='input-group date' id='datetimepicker_start2'>
+                  <input type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class='col-md-5'>
+              <div class="form-group">
+                <div class='input-group date' id='datetimepicker_end2'>
+                  <input type='text' class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker_start2').datetimepicker({uiLibrary: 'bootstrap4'});
+                $('#datetimepicker_end2').datetimepicker({useCurrent: false});
+                $("#datetimepicker_start2").on("dp.change", function (e) {
+                    $('#datetimepicker_end2').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker_end2").on("dp.change", function (e) {
+                    $('#datetimepicker_start2').data("DateTimePicker").maxDate(e.date);
+                });
+            });
+         </script>
           <select id="db2_key_list" class="form-select w-100" style="height: 300px;" multiple>
             
           </select>

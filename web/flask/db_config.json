@@ -30,7 +30,7 @@
         "password": "00000000"
     },
     "Elasticsearch": {
-        "ip": "192.168.103.125",
+        "ip": "192.168.103.120",
         "port": "9200",
         "username": "brad",
         "password": "00000000"
