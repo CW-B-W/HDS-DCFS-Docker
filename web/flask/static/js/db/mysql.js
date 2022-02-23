@@ -11,7 +11,7 @@ function mysql_gen_sql(tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_mysql(ip, port, username, password, dbname, tblname, keylist, namemapping) {
+function gen_db_info_mysql(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
   db = {
       'type': 'mysql',
       'ip': ip,

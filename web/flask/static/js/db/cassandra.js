@@ -11,7 +11,7 @@ function cassandra_gen_sql(db_name, tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, keylist, namemapping) {
+function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
   db = {
       'type': 'cassandra',
       'ip': ip,

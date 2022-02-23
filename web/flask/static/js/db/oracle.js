@@ -13,7 +13,7 @@ function oracle_gen_sql(db_name, tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keylist, namemapping) {
+function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
   db = {
       'type': 'oracle',
       'ip': ip,
