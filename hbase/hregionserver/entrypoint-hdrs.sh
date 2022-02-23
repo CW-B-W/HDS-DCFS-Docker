@@ -31,7 +31,7 @@ function configure() {
     done
 }
 
-configure /etc/hbase/hbase-site.xml hbase HBASE_CONF
+# configure /etc/hbase/hbase-site.xml hbase HBASE_CONF
 configure /etc/hbase/hbase-site.xml hbase HDS_CONF
 
 function wait_for_it()

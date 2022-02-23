@@ -20,6 +20,7 @@ services:
     env_file:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
+    mem_limit: 3072MB
 
   datanode1:
     image: cwbw/hadoop-datanode
@@ -37,6 +38,7 @@ services:
     env_file:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
+    mem_limit: 1024MB
 
   datanode2:
     image: cwbw/hadoop-datanode
@@ -54,6 +56,7 @@ services:
     env_file:
       - ./hadoop/hadoop.env
     stop_signal: SIGINT
+    mem_limit: 1024MB
 
   zoo1:
     image: cwbw/zookeeper
@@ -74,6 +77,7 @@ services:
       - ./persistent_storage/zoo1/datalog:/zookeeper/datalog
       - ./persistent_storage/zoo1/logs:/zookeeper/logs
     stop_signal: SIGINT
+    mem_limit: 512MB
 
   zoo2:
     image: cwbw/zookeeper
@@ -94,6 +98,7 @@ services:
       - ./persistent_storage/zoo2/datalog:/zookeeper/datalog
       - ./persistent_storage/zoo2/logs:/zookeeper/logs
     stop_signal: SIGINT
+    mem_limit: 512MB
 
   hbase-master:
     image: cwbw/hbase-hmaster
@@ -114,6 +119,10 @@ services:
       - ./zookeeper/zookeeper.env
     environment:
       HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
+      # HBASE_CONF_hbase_regionserver_region_split_policy: org.apache.hadoop.hbase.regionserver.DisabledRegionSplitPolicy
+      # HBASE_HEAPSIZE: 9728M
+      # HBASE_REGIONSERVER_OPTS: -Xms9728M -Xmx9728M
+      HBASE_CONF_zookeeper_session_timeout: 600000
     ports:
       - 16010:16010
       - 8765:8765
@@ -121,6 +130,8 @@ services:
     volumes:
       - ./persistent_storage/hbase_master/logs:/opt/hbase-2.3.5/logs
       # - hbase-master_tmp:/opt/hbase-2.3.5/tmp
+    mem_limit: 1024MB
+    # mem_limit: 9216MB
 
   hbase-regionserver1:
     image: cwbw/hbase-hregionserver
@@ -138,6 +149,10 @@ services:
       HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
       HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver1
       HDS_CONF_hds_httpserver_port: 8000
+      # HBASE_CONF_hbase_regionserver_region_split_policy: org.apache.hadoop.hbase.regionserver.DisabledRegionSplitPolicy
+      # HBASE_HEAPSIZE: 6144M
+      # HBASE_REGIONSERVER_OPTS: -Xms6144M -Xmx6144M
+      HBASE_CONF_zookeeper_session_timeout: 600000
     ports:
       - 16030:16030
       - 8000:8000
@@ -145,6 +160,8 @@ services:
     volumes:
     - ./persistent_storage/hbase_regionserver1/logs:/opt/hbase-2.3.5/logs
     #   - hbase-regionserver1_tmp:/opt/hbase-2.3.5/tmp
+    mem_limit: 10240MB
+    # mem_limit: 24576MB
 
   hbase-regionserver2:
     image: cwbw/hbase-hregionserver
@@ -162,12 +179,18 @@ services:
       HBASE_CONF_hbase_zookeeper_quorum: zoo1,zoo2
       HBASE_CONF_hbase_regionserver_hostname: hbase-regionserver2
       HDS_CONF_hds_httpserver_port: 8001
+      # HBASE_CONF_hbase_regionserver_region_split_policy: org.apache.hadoop.hbase.regionserver.DisabledRegionSplitPolicy
+      # HBASE_HEAPSIZE: 6144M
+      # HBASE_REGIONSERVER_OPTS: -Xms6144M -Xmx6144M
+      HBASE_CONF_zookeeper_session_timeout: 600000
     ports:
       - 8001:8001
     stop_signal: SIGINT
     volumes:
     - ./persistent_storage/hbase_regionserver2/logs:/opt/hbase-2.3.5/logs
     #   - hbase-regionserver2_tmp:/opt/hbase-2.3.5/tmp
+    mem_limit: 10240MB
+    # mem_limit: 24576MB
 
   # resourcemanager:
   #   image: cwbw/hadoop-resourcemanager
@@ -222,6 +245,7 @@ services:
     volumes:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./persistent_storage/rabbitmq:/var/lib/rabbitmq
+    mem_limit: 1024MB
 
   dcfs-master:
     image: cwbw/dcfs-master
@@ -250,6 +274,7 @@ services:
       - ./dcfs/dcfs-share:/dcfs-share
       - ./dcfs/master/dcfs-job:/dcfs-job
       - ./persistent_storage/dcfs_master/logs:/opt/hadoop-3.2.2/logs
+    mem_limit: 1024MB
 
   dcfs-worker1:
     image: cwbw/dcfs-worker
@@ -271,10 +296,12 @@ services:
       - YARN_CONF_yarn_resourcemanager_address=dcfs-master:8032
       - YARN_CONF_yarn_resourcemanager_scheduler_address=dcfs-master:8030
       - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
+      - YARN_CONF_yarn_nodemanager_resource_memory___mb=19456
     stop_signal: SIGINT
     volumes:
       - ./dcfs/dcfs-share:/dcfs-share
       - ./persistent_storage/dcfs_worker1/logs:/opt/hadoop-3.2.2/logs
+    mem_limit: 19456MB
 
   dcfs-worker2:
     image: cwbw/dcfs-worker
@@ -296,10 +323,12 @@ services:
       - YARN_CONF_yarn_resourcemanager_address=dcfs-master:8032
       - YARN_CONF_yarn_resourcemanager_scheduler_address=dcfs-master:8030
       - YARN_CONF_yarn_resourcemanager_resource__tracker_address=dcfs-master:8031
+      - YARN_CONF_yarn_nodemanager_resource_memory___mb=13312
     stop_signal: SIGINT
     volumes:
       - ./dcfs/dcfs-share:/dcfs-share
       - ./persistent_storage/dcfs_worker2/logs:/opt/hadoop-3.2.2/logs
+    mem_limit: 13312MB
   
   flask:
     image: cwbw/flask
@@ -325,6 +354,7 @@ services:
       - ./web/flask/static:/static
       - ./web/flask/template:/template
       - ./dcfs/dcfs-share:/dcfs-share
+    mem_limit: 1024MB
 
 # volumes:
   # hadoop_namenode:

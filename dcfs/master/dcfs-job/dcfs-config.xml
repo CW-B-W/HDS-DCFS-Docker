@@ -26,11 +26,11 @@
     </property>
     <property>
         <name>dcfs.cbox.memory.request</name>
-        <value>512</value>
+        <value>2048</value>
     </property>
     <property>
         <name>dcfs.cbox.memory.limit</name>
-        <value>4096</value>
+        <value>2048</value>
     </property>
     <property>
         <name>dcfs.cbox.vcore.request</name>
@@ -38,7 +38,7 @@
     </property>
     <property>
         <name>dcfs.cbox.vcore.limit</name>
-        <value>2</value>
+        <value>4</value>
     </property>
     <property>
         <name>dcfs.cbox.jvm.xmx</name>
@@ -50,11 +50,11 @@
     </property>
     <property>
         <name>dcfs.cbox.minimum.amount</name>
-        <value>5</value>
+        <value>10</value>
     </property>
     <property>
         <name>dcfs.cbox.maximum.amount</name>
-        <value>20</value>
+        <value>10</value>
     </property>
     <property>
         <name>dcfs.cbox.initial.amount</name>
@@ -78,7 +78,7 @@
     </property>
     <property>
         <name>dcfs.cbox.monitoring.oom.limit.times</name>
-        <value>3</value>
+        <value>2147483647</value>
     </property>
     <property>
         <name>dcfs.cbox.resizer.evaluation.frequency</name>
@@ -110,11 +110,11 @@
     </property>
     <property>
         <name>dcfs.job.auto.resizing</name>
-        <value>true</value>
+        <value>false</value>
     </property>
     <property>
         <name>dcfs.job.auto.scaling</name>
-        <value>true</value>
+        <value>false</value>
     </property>
     <property>
         <name>dcfs.config.path</name>
