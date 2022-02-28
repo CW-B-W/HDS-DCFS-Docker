@@ -345,6 +345,13 @@ except Exception as e:
     send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables. Please check if duplicated columns exist: " + str(e))
     exit(1)
 
+# auto add primary key if not have one
+def generate_phoenix_autotimestamp():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+if task_info['hds']['sql'].find('AUTOTIMESTAMP__') >= 0:
+    autotimestamp = [generate_phoenix_autotimestamp() for t in range(df_joined.shape[0])]
+    df_joined['AUTOTIMESTAMP__'] = autotimestamp
 
 # save to csv
 os.makedirs("/tmp/dcfs", exist_ok=True)

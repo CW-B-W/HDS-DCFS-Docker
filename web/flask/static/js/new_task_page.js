@@ -278,21 +278,15 @@ $(document).ready(function() {
 
         key_info = {}
         l = $("select[id^=typeopt_]");
-        primary_cnt = 0;
         for (i = 0; i < l.length; ++i) {
             key        = l.eq(i).attr('id').substring('typeopt_'.length);
             opt        = l.eq(i).val();
             is_primary = $(`input[id=isprimary_${key.replace(/[:.]/g, "_").replace(/[@]/g, "")}]`).prop('checked')
-            primary_cnt += is_primary;
             key_info[to_formatted_key(key)] = {
                 'key': to_formatted_key(key),
                 'type': opt,
                 'is_primary': is_primary
             }
-        }
-        if (primary_cnt <= 0) {
-            alert("No primary key was checked");
-            throw "No primary key was checked";
         }
 
         try {
