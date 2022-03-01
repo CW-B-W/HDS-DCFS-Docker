@@ -1,0 +1,14 @@
+docker push cwbw/hadoop-base
+docker push cwbw/hadoop-namenode
+docker push cwbw/hadoop-datanode
+docker push cwbw/hadoop-resourcemanager
+docker push cwbw/hadoop-nodemanager
+docker push cwbw/hadoop-historyserver
+docker push cwbw/hadoop-submit
+docker push cwbw/zookeeper
+docker push cwbw/hbase-base
+docker push cwbw/hbase-hmaster
+docker push cwbw/hbase-hregionserver
+docker push cwbw/dcfs-master
+docker push cwbw/dcfs-worker
+docker push cwbw/flask
