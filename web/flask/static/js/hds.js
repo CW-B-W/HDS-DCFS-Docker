@@ -1,4 +1,4 @@
-function gen_hds_sql(table_name, key_info) {
+function gen_hds_sql(table_name, key_info, is_append_task) {
     sql = 'CREATE TABLE ' + table_name + ' (';
 
     var primary_key_cnt = 0;
@@ -10,6 +10,12 @@ function gen_hds_sql(table_name, key_info) {
         else {
             sql += k + ' ' + key_info[k]['type'] + ', ';
         }
+    }
+
+    // force to add AUTOTIMESTAMP__ for append task which don't have primary key
+    if (is_append_task && primary_key_cnt == 0) {
+        sql = 'AUTOTIMESTAMP__';
+        return sql;
     }
 
     if (primary_key_cnt != 0) {

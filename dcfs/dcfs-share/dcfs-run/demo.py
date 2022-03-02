@@ -359,7 +359,9 @@ tmp_sql_path = '/tmp/dcfs/joined_' + task_id + '_' + ts + '.sql'
 tmp_csv_path = '/tmp/dcfs/joined_' + task_id + '_' + ts + '.csv'
 table_name = task_info['hds']['table']
 with open(tmp_sql_path, 'w') as wf:
-    wf.write(task_info['hds']['sql'])
+    # special case for append task
+    if task_info['hds']['sql'] != 'AUTOTIMESTAMP__':
+        wf.write(task_info['hds']['sql'])
 df_joined.to_csv(tmp_csv_path, index=False, header=False)
 
 

@@ -303,10 +303,7 @@ $(document).ready(function() {
         }
 
         is_append_task = $('#task_append').is(':checked');
-        if (is_append_task)
-            hds_sql = '';
-        else
-            hds_sql = gen_hds_sql(hds_table_name, key_info);
+        hds_sql = gen_hds_sql(hds_table_name, key_info, is_append_task);
 
         hds_columns = gen_hds_columns(key_info);
 
