@@ -183,11 +183,12 @@ for i, d in enumerate(task_info['db']):
             keynames   = d['sql']
 
             time_from = d['starttime']
-            time_end = d['endtime']
+            time_end  = d['endtime']
             es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
             es_result = helpers.scan(
-                    client = es,
-                    query = {"query" : {
+                client = es,
+                query = {
+                    "query" : {
                         "bool": {
                             "filter":[
                                 {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}
@@ -195,10 +196,11 @@ for i, d in enumerate(task_info['db']):
                         }
                     },
                 },
-            _source= keynames,
-            index = index_name,
-            scroll ='10m',
-            timeout ="10m")
+                _source = keynames,
+                index   = index_name,
+                scroll  ='10m',
+                timeout ="10m"
+            )
             rows = [k["_source"] for k in es_result]
             '''es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
             response = es.search(index=index_name, _source=keynames)
@@ -301,6 +303,20 @@ for i, d in enumerate(task_info['db']):
         send_task_status(task_id, TASKSTATUS_FAILED, "Unsupported DB type " + db_type)
         exit(1)
     logging.info(f'Finished retrieving table {i} from {db_type}')
+# !!!!!!!!!! DEBUG !!!!!!!!!!
+    pysqldf   = lambda q: sqldf(q, globals())
+    logging.warn(f"[DEBUG] Use SQLite on df{i}")
+    send_task_status(task_id, TASKSTATUS_PROCESSING, f"[DEBUG] Use SQLite on df{i}")
+    try:
+        __debug_result = pysqldf(f'SELECT * FROM df{i}')
+    except Exception as e:
+        logging.error(f"Error in using SQLite on df{i}" + str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, f"Error in using SQLite on df{i}" + str(e))
+        exit(1)
+    logging.warn(f"[DEBUG] Finish SQLite on df{i}")
+    send_task_status(task_id, TASKSTATUS_PROCESSING, f"[DEBUG] Finish SQLite on df{i}")
+# !!!!!!!!!! DEBUG !!!!!!!!!!
+    
 
     # make all column names uppercase
     try:
