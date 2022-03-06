@@ -51,9 +51,9 @@ stop-flask:
 .PHONY: restart-flask
 restart-flask: stop-flask run-flask
 
-.PHONY: run-mq
-run-mq:
-	docker run -d -p 15672:15672 --name rabbitmq -v $(shell pwd)/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf rabbitmq:3.9.10-management
+.PHONY: add-regionserver
+add-regionserver:
+	docker run -d -p $(shell expr 7999 + $(id)):$(shell expr 7999 + $(id)) -p $(shell expr 16029 + $(id)):16030 --name hbase-regionserver$(id) -v $(shell pwd)/persistent_storage/hbase_regionserver$(id)/logs:/opt/hbase-2.3.5/logs --network hds_dcfs_docker_network --env-file ./hbase/hbase.env --env HBASE_CONF_hbase_zookeeper_quorum=zoo1,zoo2 --env HBASE_CONF_hbase_regionserver_hostname=hbase-regionserver$(id) --env HDS_CONF_hds_httpserver_port=$(shell expr 7999 + $(id)) --env HBASE_CONF_zookeeper_session_timeout=600000 --memory=10240M cwbw/hbase-hregionserver
 
 .PHONY: up
 up:
