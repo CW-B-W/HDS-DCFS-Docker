@@ -36,14 +36,8 @@ PUT test-dash/_doc/2
 }
 
 GET test-dash
-{
-  
-}
 
 GET test-dash/_doc/1
-{
-  
-}
 
 POST /_sql?format=json
 {

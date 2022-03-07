@@ -191,7 +191,7 @@ for i, d in enumerate(task_info['db']):
                     "query" : {
                         "bool": {
                             "filter":[
-                                {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}
+                                
                             ]
                         }
                     },
@@ -201,14 +201,17 @@ for i, d in enumerate(task_info['db']):
                 scroll  ='10m',
                 timeout ="10m"
             )
+<<<<<<< HEAD
             rows = [k["_source"] for k in es_result]
             '''es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
             response = es.search(index=index_name, _source=keynames)
             
+=======
+
+>>>>>>> dev-stress
             rows = []
-            
-            for hit in response['hits']['hits']:
-                val_dict = hit['_source']
+            for k in es_result:
+                val_dict = k['_source']
                 tmp_dict = {}
                 for keyname in keynames:
                     if keyname.find('.') != -1:
@@ -223,7 +226,7 @@ for i, d in enumerate(task_info['db']):
                         val = json.dumps(val)
                         
                     tmp_dict[keyname] = val
-                rows.append(tmp_dict)'''
+                rows.append(tmp_dict)
             
             logging.info("Retrieving data from Elasticsearch")
             send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch")
@@ -316,8 +319,6 @@ for i, d in enumerate(task_info['db']):
     logging.warn(f"[DEBUG] Finish SQLite on df{i}")
     send_task_status(task_id, TASKSTATUS_PROCESSING, f"[DEBUG] Finish SQLite on df{i}")
 # !!!!!!!!!! DEBUG !!!!!!!!!!
-    
-
     # make all column names uppercase
     try:
         if 'namemapping' in d:
