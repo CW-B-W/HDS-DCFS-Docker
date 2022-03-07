@@ -201,14 +201,6 @@ for i, d in enumerate(task_info['db']):
                 scroll  ='10m',
                 timeout ="10m"
             )
-<<<<<<< HEAD
-            rows = [k["_source"] for k in es_result]
-            '''es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-            response = es.search(index=index_name, _source=keynames)
-            
-=======
-
->>>>>>> dev-stress
             rows = []
             for k in es_result:
                 val_dict = k['_source']
