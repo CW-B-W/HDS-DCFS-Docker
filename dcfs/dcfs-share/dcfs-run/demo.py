@@ -191,7 +191,7 @@ for i, d in enumerate(task_info['db']):
                     "query" : {
                         "bool": {
                             "filter":[
-                                
+                                {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}   
                             ]
                         }
                     },
