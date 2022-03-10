@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dcfsCore">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dcfs/master/dcfs-job/dcfsCore.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

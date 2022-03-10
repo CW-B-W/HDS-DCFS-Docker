@@ -136,6 +136,22 @@ for i, d in enumerate(task_info['db']):
             logging.error("Error in retrieving data from MSSQL: " + str(e))
             send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MSSQL: " + str(e))
             exit(1)
+    elif db_type == 'phoenix':
+        try:
+            username = d['username']
+            password = d['password']
+            ip       = d['ip']
+            port     = d['port']
+            db_name  = d['db']
+            db_url   = 'phoenix://%s:%s/' % (ip, port)
+            db_engine          = create_engine(db_url)
+            logging.info("Retrieving data from Phoenix")
+            send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Phoenix")
+            locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
+        except Exception as e:
+            logging.error("Error in retrieving data from Phoenix: " + str(e))
+            send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Phoenix: " + str(e))
+            exit(1)
     elif db_type == 'oracle':
         try:
             username  = d['username']
