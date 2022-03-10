@@ -47,6 +47,12 @@
         "username": "",
         "password": ""
     },
+    "Phoenix": {
+        "ip": "192.168.103.125",
+        "port": "8765",
+        "username": "",
+        "password": ""
+    },
     "None": {
         "ip": "",
         "port": "",

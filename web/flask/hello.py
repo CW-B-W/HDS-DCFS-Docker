@@ -182,6 +182,9 @@ def oracle_list_all_keys(db_name, table_name, username, password, ip, port_sid='
 import phoenixdb
 import phoenixdb.cursor
 # database_url = 'http://192.168.103.53:8765/'
+def phoenix_list_all_dbs(username, password, ip, port='9200'):
+    test=['Default']
+    return sorted(test)
 
 def phoenix_list_all_tables(ip='hbase-master', port='8765'):
     conn = phoenixdb.connect('http://%s:%s' % (ip, port))
@@ -993,6 +996,35 @@ def hbase_keys():
         return "Error connecting to hbase server. %s" % str(e), 403
 
 ''' ----- Phoenix ----- '''
+@app.route('/phoenix/listdbs', methods=['GET'])
+def phoenix_dbs():
+    try:
+        username   = request.args.get('username')
+        password   = request.args.get('password')
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = ''
+        cached     = request.args.get('cached', True, bool)
+
+        funcname = 'phoenix_dbs'
+        savedir  = '/flask-share/cache/'
+        filename = f'{funcname}_{ip}_{port}_{db_name}_{table_name}.json'
+        filepath = savedir + "".join( x for x in filename if (x.isalnum() or x in "._- ")) # remove invalid characters
+        if cached and os.path.isfile(filepath):
+            with open(filepath, 'r') as rf:
+                ret_dict = json.load(rf)
+        else:
+            ret_dict = {
+                'db_list': phoenix_list_all_dbs(username, password, ip, port)
+            }
+            with open(filepath, 'w') as wf:
+                json.dump(ret_dict, wf)
+
+        return ret_dict
+    except Exception as e:
+        return "Error connecting to phoenix server. %s" % str(e), 403
+
 @app.route('/phoenix/listtables', methods=['GET'])
 def phoenix_tables():
     try:
