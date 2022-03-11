@@ -48,7 +48,7 @@
         "password": ""
     },
     "Phoenix": {
-        "ip": "192.168.103.125",
+        "ip": "hbase-master",
         "port": "8765",
         "username": "",
         "password": ""
