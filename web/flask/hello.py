@@ -1075,7 +1075,7 @@ def phoenix_keys():
             with open(filepath, 'w') as wf:
                 json.dump(ret_dict, wf)
         
-        return ret_dict 
+        return ret_dict.remove("AUTOTIMESTAMP__")
     except Exception as e:
         return "Error connecting to Phoenix server. %s" % str(e), 403
 
