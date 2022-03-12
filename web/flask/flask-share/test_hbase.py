@@ -2,7 +2,7 @@ import happybase
 from pandas import DataFrame
 
 # 連線
-connection = happybase.Connection('192.168.103.52')
+connection = happybase.Connection('hbase-master')
 
 print("Table:")
 for x in connection.tables():
