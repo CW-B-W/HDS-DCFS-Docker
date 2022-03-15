@@ -124,11 +124,11 @@ services:
       # HBASE_REGIONSERVER_OPTS: -Xms9728M -Xmx9728M
       HBASE_CONF_zookeeper_session_timeout: 600000
 
-      MAIL_FROM : p76091111@gs.ncku.edu.tw
-      PASSWARD : jdalvsdmtnhbidip
-      MAIL_TO : sss85921@gmail.com
-      REGION_LIMIT : 50
-      POLLING_INTERVAL : 60
+      MAIL_FROM : 
+      PASSWARD : 
+      MAIL_TO : 
+      REGION_LIMIT : 
+      POLLING_INTERVAL : 
     ports:
       - 16010:16010
       - 8765:8765

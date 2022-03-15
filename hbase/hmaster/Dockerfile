@@ -5,12 +5,12 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-
       python3-pip \
       python3-dev \
     && rm -rf /var/lib/apt/lists/*
-
 RUN pip3 install setuptools wheel
+RUN apt-get update
+RUN apt-get -y install gcc libkrb5-dev
 ADD requirements.txt /requirements.txt
 RUN pip3 install -r requirements.txt
-RUN pip3 install requests
-RUN pip3 install BeautifulSoup
+ADD crawler.py /crawler.py
 
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
