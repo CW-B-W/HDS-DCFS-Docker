@@ -92,6 +92,7 @@
   <script src='{{ url_for('static', filename="js/db/excel.js") }}'></script>
   <script src='{{ url_for('static', filename="js/db/none.js") }}'></script>
   <script src='{{ url_for('static', filename="js/db/phoenix.js") }}'></script>
+  <script src='{{ url_for('static', filename="js/db/dataframe.js") }}'></script>
   <script src='{{ url_for('static', filename="js/hds.js") }}'></script>
 
   <script src='{{ url_for('static', filename="js/bootstrap-datetimepicker.js") }}' charset="UTF-8"></script>
@@ -111,7 +112,6 @@
     <li class="nav-item ml-5"><a href="#new_task_page" data-toggle="tab">New Task</a></li>
     <li class="nav-item ml-5"><a href="#task_status_page" data-toggle="tab">Task Status</a></li>
     <li class="nav-item ml-5"><a href="#hds_page" data-toggle="tab">HDS</a></li>
-    <!-- <li class="nav-item ml-5"><a href="#import_page" data-toggle="tab">Data Import</a></li> -->
   </ul>
 
   <div id="myTabContent" class="tab-content w-100 mt-3">
@@ -363,12 +363,12 @@
 
       <div class="row">
         <label>Task Infomation</label>
-        <textarea class="form-control" id="task_info" rows="3">{}</textarea>
+        <textarea class="form-control" id="task_info" rows="3"></textarea>
       </div>
       <br>
       <div class="row">
         <label id="sent_task_id">task_id = </label>
-        <button id="create_taskinfo" type="button" class="btn btn-primary w-100">Create Request</button>
+        <button id="create_taskinfo" type="button" class="btn btn-primary w-100">Append Task</button>
       </div>
       <br>
       <div class="row">
@@ -454,131 +454,6 @@
         </div>
       </div>
     </div>
-
-    <!-- import_page -->
-    <!-- <div class="container tab-pane fade h-100" id="import_page">
-      <div class="row">
-        <div class="col">
-          <form>
-            <label id = "import_text1">Database</label>
-            <select id="dblist" class="form-select w-100">
-            {% for db_type in db_config %}
-              <option>{{db_type}}</option>
-            {% endfor %}
-            </select>
-            <br><br>
-            <div class="form-group">
-              <label>Server</label>
-              <input type="text" class="form-control" id="server" placeholder="Enter ServerIP:Port" value="{{db_config['MySQL']['ip']}}:{{db_config['MySQL']['port']}}">
-            </div>
-            <div class="form-group">
-              <label>Username</label>
-              <input type="email" class="form-control" id="username" placeholder="Enter Username" value="brad">
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" class="form-control" id="password" placeholder="Password" value="00000000">
-            </div>
-            <input type="checkbox" class="form-check-input" id="db_cached" checked>
-            <label class="form-check-label" for="db_cached">Cached</label>
-            <button id="connect" type="button" class="btn btn-primary w-100">Connect MySQL</button>
-            <label id="import_status"></label>
-          </form>
-          <select id="import_db_list" class="form-select w-100">
-            <option selected>None</option>
-          </select>
-          <br><br>
-          <select id="import_table_list" class="form-select w-100">
-            <option selected>None</option>
-          </select>
-          <br><br>
-          <select id="import_key_list" class="form-select w-100" style="height: 300px;" multiple>
-            
-          </select>
-        </div>
-        
-      </div>
-
-      <br>
-
-      <div class="row">
-        <input type="checkbox" class="form-check-input" id="import_task_append">
-        <label class="form-check-label" for="import_task_append">Append Task</label>
-      </div>
-
-      <br>
-
-      <div class="row">
-        <label>HDS Table Name</label>
-        <textarea class="form-control" id="import_hds_table_name" rows="3" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);"></textarea>
-        <select class="form-select w-100" id="__import_hds_table_name" style="display: none;"></select>
-      </div>
-
-      <br>
-
-      <div class="row">
-        <button id="import_create_req" type="button" class="btn btn-info w-100">Create Task</button>
-      </div>
-
-      <div class="container" id="import_col_opt_list">
-        <div class="row" id="import_col_opt_template" style="visibility: hidden;">
-          <div class="col">
-            <label>Type1</label>
-          </div>
-          <div class="col">
-            <select class="form-select w-100">
-              <option>INTEGER</option>
-              <option>BIGINT</option>
-              <option>FLOAT</option>
-              <option>DOUBLE</option>
-              <option>DECIMAL</option>
-              <option>BOOLEAN</option>
-              <option>TIME</option>
-              <option>DATE</option>
-              <option>TIMESTAMP</option>
-              <option selected="selected">VARCHAR</option>
-              <option>VARBINARY</option>
-            </select>
-          </div>
-          <div class="col">
-            <label>IsPrimaryKey</label><br>
-          </div>
-          <div class="col">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="import_flexRadioDefault1" value="0">
-            <label>Type1</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <label>SQL generator 1</label>
-          <textarea class="form-control" id="import_genres" rows="3" readonly></textarea>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label>HDS Create table generator</label>
-          <textarea class="form-control" id="import_hds_genres" rows="3" readonly></textarea>
-        </div>
-      </div>
-
-      <br><br>
-
-      <div class="row">
-        <label>Task Infomation</label>
-        <textarea class="form-control" id="import_task_info" rows="3">{}</textarea>
-      </div>
-      <br>
-      <div class="row">
-        <label id="import_sent_task_id">task_id = </label>
-        <button id="import_create_taskinfo" type="button" class="btn btn-primary w-100">Create Request</button>
-      </div>
-      <br>
-      <div class="row">
-        <button id="import_send_req" type="button" class="btn btn-success w-100">Send Request</button>
-      </div>
-    </div> -->
   </div>
   
   
