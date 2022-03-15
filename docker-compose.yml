@@ -124,11 +124,13 @@ services:
       # HBASE_REGIONSERVER_OPTS: -Xms9728M -Xmx9728M
       HBASE_CONF_zookeeper_session_timeout: 600000
 
-      MAIL_FROM : 
-      PASSWARD : 
-      MAIL_TO : 
-      REGION_LIMIT : 
-      POLLING_INTERVAL : 
+      MAIL_FROM :               # Sender's email account
+      PASSWARD :                # Sender's email passward
+      MAIL_TO :                 # Receiver's email account
+      REGION_LIMIT :            # region number threshold
+      POLLING_INTERVAL :        # polling interval (second)
+      SMTP_HOST :               # ex: smtp.gmail.com
+      SMTP_PORT :               # ex: 587
     ports:
       - 16010:16010
       - 8765:8765

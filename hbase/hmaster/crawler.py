@@ -13,22 +13,27 @@ pwd = os.environ['PASSWARD']
 mail_to = os.environ['MAIL_TO']
 region_limit = int(os.environ['REGION_LIMIT'])
 polling_interval = int(os.environ['POLLING_INTERVAL'])
-
-
-#hbase-master
-
+smtp_server_host = os.environ['SMTP_HOST']
+smtp_server_port = str(os.environ['SMTP_PORT'])
 
 def main():
+
     content = MIMEMultipart()  # 建立MIMEMultipart物件
     content["subject"] = "[Warning] Region server may over load"  # 郵件標題
     content["from"] = mail_from # 寄件者
     content["to"] = mail_to  # 收件者
     content.attach(MIMEText("The number of region is about to exceed the threshold !"))  # 郵件純文字內容
+
     print('Waiting for hbase clusrt up.')
     sleep(120) # wait for hbase culster up.
+
     while True:
         print('Getting region number.')
-        r = requests.get("http://"+'hbase-master'+":16010/master-status#baseStats", timeout = 30) #將網頁資料GET下來
+        try:
+            r = requests.get("http://"+'hbase-master'+":16010/master-status#baseStats", timeout = 30) #將網頁資料GET下來
+        except Exception as e:
+            sleep(5)
+            continue
         soup = BeautifulSoup(r.text,"html.parser") #將網頁資料以html.parser
 
         #list total region num
@@ -39,7 +44,7 @@ def main():
         print('Check if the number is exceed the threshold.')
         if region_num > region_limit :
             print('The number is exceed.')
-            with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+            with smtplib.SMTP(host=smtp_server_host, port=smtp_server_port) as smtp:  # 設定SMTP伺服器
                 try:
                     print("Sending an Email...")
                     smtp.ehlo()  # 驗證SMTP伺服器
@@ -49,7 +54,9 @@ def main():
                     print("Complete!")
                 except Exception as e:
                     print("Error message: ", e)
+        else:
             print('The number is not exceed. Wait for the next round.')
+        print('Waiting for next round.')
         sleep(polling_interval)
 
 if __name__ == '__main__':
