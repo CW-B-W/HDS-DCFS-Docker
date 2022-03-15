@@ -8,6 +8,8 @@ trap '/opt/hbase-$HBASE_VERSION/bin/hbase-daemon.sh stop master' EXIT INT TERM
 
 queryserver.py start &
 
+nohup python3 /crawler.py &
+
 tail -F /opt/hbase-2.3.5/logs/hbase-$USER-master-$(hostname).log &
 child=$! 
 wait "$child"
