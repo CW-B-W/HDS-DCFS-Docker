@@ -313,10 +313,7 @@ $(document).ready(function() {
         db1_namemapping = gen_namemapping(1, join_pairs);
         db2_namemapping = gen_namemapping(2, join_pairs);
 
-        task_id = _uuid();
-        $("#sent_task_id").text('task_id = ' + task_id);
         task_info = gen_task_info(
-            task_id,
             db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime,
             db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime,
             join_sql,
@@ -332,7 +329,45 @@ $(document).ready(function() {
             delete task_info['db'].pop();
         }
 
-        $('#task_info').text(JSON.stringify(task_info));
+        try {
+            task_dict = JSON.parse($('#task_info').text());
+        }
+        catch (e) {
+            // this is the first task
+            task_id = _uuid();
+            $("#sent_task_id").text('task_id = ' + task_id);
+            task_dict = {
+                'task_id': task_id,
+                'task_list': []
+            }
+
+            // lock left table to Dataframe
+            {
+                $('#db1_list').children().eq(0).text('Dataframe');
+                $('#db1_list').val('Dataframe');
+                $('#db1_list').prop('disabled', true);
+            }
+        }
+        task_dict['task_list'].push(task_info);
+        $('#task_info').text(JSON.stringify(task_dict));
+
+        // set #db1_key_list to Dataframe keys
+        {
+            children = $('#db1_key_list').children();
+            for (i = 0; i < children.length; ++i) {
+                children[i].remove();
+            }
+            last_task = task_dict['task_list'][task_dict['task_list'].length - 1];
+            key_list = last_task['hds']['columns'];
+            for (key in key_list) {
+                opt_idx = parseInt(key) + 1
+                $('#db1_key_list').append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
+            }
+            $('#db1_key_list').append('<option value="' + (++opt_idx) + '">' + '' + '</option>');
+
+            while (key_table_pop())
+                ;
+        }
     });
 
     $("#send_req").click(function() {
@@ -598,6 +633,7 @@ function key_table_pop()
 {
     entry_cnt = $('#key_table tbody>tr').length;
     if (entry_cnt <= 0)
-        return;
+        return false;
     $('#key_table tr:last').remove();
+    return true;
 }

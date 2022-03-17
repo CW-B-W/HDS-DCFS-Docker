@@ -1,53 +1,106 @@
 {
-    "task_id":"6acc980b-5845-4206-a0c1-c3b50bfa3040",
-    "db":[
+   "task_id":"ca33fb24-85c5-4ad9-a747-a678b66a9cf0",
+   "task_list":[
        {
-          "type":"hbase",
-          "ip":"192.168.103.52",
-          "port":"9090",
-          "username":"",
-          "password":"",
-          "db":"Default",
-          "tblname":"score",
-          "sql":[
-             "final:Chinese",
-             "final:English",
-             "final:Math",
-             "id:id"
-          ],
-          "namemapping":{
-             "final:Chinese":"CHINESE",
-             "final:English":"ENGLISH",
-             "final:Math":"MATH",
-             "id:id":"ID"
-          }
+           "db":[
+               {
+                   "type":"mysql",
+                   "ip":"192.168.103.52",
+                   "port":"3306",
+                   "username":"brad",
+                   "password":"00000000",
+                   "db":"HDS_JDBC",
+                   "sql":"SELECT ID, Math FROM SCORE;",
+                   "namemapping":{
+                       "ID":"ID",
+                       "Math":"MATH"
+                   }
+               },
+               {
+                   "type":"mysql",
+                   "ip":"192.168.103.52",
+                   "port":"3306",
+                   "username":"brad",
+                   "password":"00000000",
+                   "db":"HDS_JDBC",
+                   "sql":"SELECT ID FROM SCORE2;",
+                   "namemapping":{
+                       "ID":"ID"
+                   }
+               }
+           ],
+           "join_sql":"SELECT COALESCE(df0.ID, df1.ID) as ID, df0.MATH as MATH FROM df0 LEFT JOIN df1 ON df0.ID=df1.ID ;",
+           "hds":{
+               "sql":"CREATE TABLE HHH (ID VARCHAR, MATH VARCHAR, AUTOTIMESTAMP__ TIMESTAMP , CONSTRAINT pk PRIMARY KEY (AUTOTIMESTAMP__));",
+               "table":"HHH",
+               "columns":[
+                   "ID",
+                   "MATH"
+               ]
+           }
        },
        {
-          "type":"mysql",
-          "ip":"192.168.103.52",
-          "port":"3306",
-          "username":"brad",
-          "password":"00000000",
-          "db":"HDS_JDBC",
-          "sql":"SELECT Badminton, ID, Tennis FROM SCORE2;",
-          "namemapping":{
-             "Badminton":"BADMINTON",
-             "ID":"ID",
-             "Tennis":"TENNIS"
-          }
+           "db":[
+               {
+                   "type":"dataframe"
+               },
+               {
+                   "type":"mysql",
+                   "ip":"192.168.103.52",
+                   "port":"3306",
+                   "username":"brad",
+                   "password":"00000000",
+                   "db":"HDS_JDBC",
+                   "sql":"SELECT ID, Tennis FROM SCORE2;",
+                   "namemapping":{
+                       "ID":"ID",
+                       "Tennis":"TENNIS"
+                   }
+               }
+           ],
+           "join_sql":"SELECT COALESCE(df0.ID, df1.ID) as ID, df0.MATH as MATH, df1.TENNIS as TENNIS FROM df0 LEFT JOIN df1 ON df0.ID=df1.ID ;",
+           "hds":{
+               "sql":"CREATE TABLE HHH (ID VARCHAR, MATH VARCHAR, TENNIS VARCHAR, AUTOTIMESTAMP__ TIMESTAMP , CONSTRAINT pk PRIMARY KEY (AUTOTIMESTAMP__));",
+               "table":"HHH",
+               "columns":[
+                   "ID",
+                   "MATH",
+                   "TENNIS"
+               ]
+           }
+       },
+       {
+           "db":[
+               {
+                   "type":"dataframe"
+               },
+               {
+                   "type":"mysql",
+                   "ip":"192.168.103.52",
+                   "port":"3306",
+                   "username":"brad",
+                   "password":"00000000",
+                   "db":"HDS_JDBC",
+                   "sql":"SELECT ID, Badminton, MartialArts FROM SCORE2;",
+                   "namemapping":{
+                       "ID":"ID",
+                       "Badminton":"BADMINTON",
+                       "MartialArts":"MARTIALARTS"
+                   }
+               }
+           ],
+           "join_sql":"SELECT COALESCE(df0.ID, df1.ID) as ID, df0.MATH as MATH, df0.TENNIS as TENNIS, df1.BADMINTON as BADMINTON, df1.MARTIALARTS as MARTIALARTS FROM df0 LEFT JOIN df1 ON df0.ID=df1.ID ;",
+           "hds":{
+               "sql":"CREATE TABLE HHH (ID VARCHAR, MATH VARCHAR, TENNIS VARCHAR, BADMINTON VARCHAR, MARTIALARTS VARCHAR, AUTOTIMESTAMP__ TIMESTAMP , CONSTRAINT pk PRIMARY KEY (AUTOTIMESTAMP__));",
+               "table":"HHH",
+               "columns":[
+                   "ID",
+                   "MATH",
+                   "TENNIS",
+                   "BADMINTON",
+                   "MARTIALARTS"
+               ]
+           }
        }
-    ],
-    "join_sql":"SELECT COALESCE(df0.ID, df1.ID) as ID, df0.CHINESE as CHINESE, df0.ENGLISH as ENGLISH, df0.MATH as MATH, df1.BADMINTON as BADMINTON, df1.TENNIS as TENNIS FROM df0 LEFT JOIN df1 ON df0.ID=df1.ID ;",
-    "hds":{
-       "sql":"CREATE TABLE HAKDSHJAD (ID INTEGER PRIMARY KEY, BADMINTON VARCHAR, CHINESE VARCHAR, ENGLISH VARCHAR, MATH VARCHAR, TENNIS VARCHAR);",
-       "table":"HAKDSHJAD",
-       "columns":[
-          "ID",
-          "BADMINTON",
-          "CHINESE",
-          "ENGLISH",
-          "MATH",
-          "TENNIS"
-       ]
-    }
- }
+   ]
+}
