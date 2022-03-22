@@ -461,7 +461,7 @@ def to_hbase(df, con, table_name, key, cf):
         b.put(column_dtype_key, column_dtype_value)
         b.put(column_order_key, column_order_value)
         for row in df.iterrows():
-            row_key = row_key_template + struct.pack('>q', row[0]).decode('utf-8')
+            row_key = str.encode(row_key_template) + struct.pack('>q', row[0])
             row_value = dict()
             for column, value in row[1].iteritems():
                 if not pd.isnull(value):
