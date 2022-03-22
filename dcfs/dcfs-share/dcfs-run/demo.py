@@ -368,6 +368,7 @@ if task_info['hds']['sql'].find('AUTOTIMESTAMP__') >= 0:
     df_joined['AUTOTIMESTAMP__'] = autotimestamp
 
 # save to csv
+'''
 os.makedirs("/tmp/dcfs", exist_ok=True)
 tmp_sql_path = '/tmp/dcfs/joined_' + task_id + '_' + ts + '.sql'
 tmp_csv_path = '/tmp/dcfs/joined_' + task_id + '_' + ts + '.csv'
@@ -379,7 +380,9 @@ with open(tmp_sql_path, 'w') as wf:
 df_joined.to_csv(tmp_csv_path, index=False, header=False)
 
 
+'''
 ''' ========== Phoenix ========== '''
+'''
 import subprocess
 #phoenix_home = os.environ['PHOENIX_HOME']
 phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
@@ -413,7 +416,9 @@ if exit_code != 0:
 else:
     logging.error("Successfully importing table into HDS" + stderr)
     send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully importing table into HDS")
+'''
 ''' ========== Phoenix ========== '''
+'''
 
 if stderr.find("ERROR") == -1:
     logging.error("Job finished")
@@ -421,4 +426,75 @@ if stderr.find("ERROR") == -1:
 else:
     logging.error("Job finished with error message: \n" + stderr)
     send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr)
+'''
+
+
+import struct
+def to_hbase(df, con, table_name, key, cf):
+    """Write a pandas DataFrame object to HBase table.
+    :param df: pandas DataFrame object that has to be persisted
+    :type df: pd.DataFrame
+    :param con: HBase connection object
+    :type con: happybase.Connection
+    :param table_name: HBase table name to which the DataFrame should be written
+    :type table_name: str
+    :param key: row key to which the dataframe should be written
+    :type key: str
+    :param cf: Column Family name
+    :type cf: str
+    """
+    table = con.table(table_name)
+
+    column_dtype_key = key + 'columns'
+    column_dtype_value = dict()
+    for column in df.columns:
+        column_dtype_value[':'.join((cf, column))] = df.dtypes[column].name
+
+    column_order_key = key + 'column_order'
+    column_order_value = dict()
+    for i, column_name in enumerate(df.columns.tolist()):
+        order_key = struct.pack('>q', i)
+        column_order_value[':'.join((cf, order_key.decode('utf-8')))] = column_name
+
+    row_key_template = key + 'rows'
+    with table.batch(transaction=True) as b:
+        b.put(column_dtype_key, column_dtype_value)
+        b.put(column_order_key, column_order_value)
+        for row in df.iterrows():
+            row_key = row_key_template + struct.pack('>q', row[0]).decode('utf-8')
+            row_value = dict()
+            for column, value in row[1].iteritems():
+                if not pd.isnull(value):
+                    row_value[':'.join((cf, column))] = str(value)
+            b.put(row_key, row_value)
+
+
+table_name = task_info['hds']['table']
+hbase_rk = 'rk'
+hbase_cf = 'joined'
+#df_joined = df_joined.rename(columns=lambda s: hbase_cf+':'+s)
+connection = happybase.Connection('hbase-master')
+connection.create_table(table_name, families={
+    hbase_cf : dict()
+})
+to_hbase(df_joined, connection, table_name, hbase_rk, hbase_cf)
+
+
+
+import sys
+import time
+import pandas as pd
+from pandasql import sqldf
+from sqlalchemy import create_engine
+
+logging.error("Delete table: \n")
+send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Delete table: \n")
+
+#db1_engine = create_engine("phoenix://hbase-master:8765/")
+#df1 = pd.read_sql(f"DROP TABLE {table_name}", con=db1_engine)
+#connection.delete_table(table_name, True)
+connection.close()
+
+logging.error("Table deleted: \n")
+send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Table deleted: \n")
 exit()
