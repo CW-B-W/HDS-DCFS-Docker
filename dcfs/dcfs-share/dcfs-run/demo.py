@@ -473,11 +473,17 @@ table_name = task_info['hds']['table']
 hbase_rk = 'rk'
 hbase_cf = 'joined'
 #df_joined = df_joined.rename(columns=lambda s: hbase_cf+':'+s)
-connection = happybase.Connection('hbase-master')
-connection.create_table(table_name, families={
-    hbase_cf : dict()
-})
-to_hbase(df_joined, connection, table_name, hbase_rk, hbase_cf)
+logging.info("Start importing to HBase")
+send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing to HBase")
+try:
+    connection = happybase.Connection('hbase-master')
+    connection.create_table(table_name, families={
+        hbase_cf : dict()
+    })
+    to_hbase(df_joined, connection, table_name, hbase_rk, hbase_cf)
+except Exception as e:
+    logging.error("Error connecting with HBase: \n" + str(e))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Error connecting with HBase: \n" + str(e))
 
 
 
@@ -487,14 +493,18 @@ import pandas as pd
 from pandasql import sqldf
 from sqlalchemy import create_engine
 
-logging.error("Delete table: \n")
-send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Delete table: \n")
+logging.info("Delete table: \n")
+send_task_status(task_id, TASKSTATUS_PROCESSING, "Delete table: \n")
 
 #db1_engine = create_engine("phoenix://hbase-master:8765/")
 #df1 = pd.read_sql(f"DROP TABLE {table_name}", con=db1_engine)
-#connection.delete_table(table_name, True)
-connection.close()
+try:
+    connection.delete_table(table_name, True)
+    connection.close()
+except Exception as e:
+    logging.error("Error deleteing HBase table: \n" + str(e))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Error deleting HBase table: \n" + str(e))
 
-logging.error("Table deleted: \n")
+logging.info("Table deleted: \n")
 send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Table deleted: \n")
 exit()
