@@ -16,5 +16,6 @@ ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
 EXPOSE 16000 16010 8765
+ADD check_master.sh /check_master.sh
 
 CMD ["/run.sh"]
