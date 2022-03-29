@@ -31,62 +31,83 @@ TASKSTATUS_UNKNOWN    = 6
 def sync_send_task(task_info):
     task_id = task_info['task_id']
     send_task_req(task_info)
+    time.sleep(1)
     status_url = f'http://192.168.103.48:5000/taskstatus?task_id={task_id}'
     while True:
-        r = requests.get(status_url, timeout=10)
-        if r.status_code == 200:
-            task_status = r.json()
-            print(task_status)
-            if len(task_status) == 0:
-                pass
+        try:
+            r = requests.get(status_url, timeout=10)
+            if r.status_code == 200:
+                task_status = r.json()
+                print(task_status)
+                if len(task_status) == 0:
+                    pass
+                else:
+                    if task_status[0]['status'] == TASKSTATUS_SUCCEEDED:
+                        print("Task succeeded")
+                        return True
+                    elif task_status[0]['status'] == TASKSTATUS_FAILED or task_status[0]['status'] == TASKSTATUS_ERROR or task_status[0]['status'] == TASKSTATUS_UNKNOWN:
+                        print("Task failed")
+                        return False
             else:
-                if task_status[0]['status'] == TASKSTATUS_SUCCEEDED:
-                    print("Task succeeded")
-                    break
-                elif task_status[0]['status'] == TASKSTATUS_FAILED or task_status[0]['status'] == TASKSTATUS_ERROR or task_status[0]['status'] == TASKSTATUS_UNKNOWN:
-                    print("Task failed")
-                    break
+                return False
+        except Exception as e:
+            print(str(e))
+            return False
         time.sleep(1)
-    pass
+    
+    return False
 
 def sync_download_table(table_name):
     # send table download request
     dlreq_uuid = str(uuid.uuid1())
     download_req_url = f'http://192.168.103.48:8000/dataservice/v1/access?from=jdbc:///&info=jdbc:phoenix:zoo1:2181&query=SELECT%20%2A%20FROM%20{table_name}&header=true&to=file:///tmp/web_download_tmp/result_{dlreq_uuid}.csv&async=true&redirectfrom=dcfs-worker1'
-    r = requests.get(download_req_url, timeout=10)
-    if r.status_code == 200:
-        hds_download_taskid = r.json()['task']['id']
-        pass
-    else:
-        print("Error in sending download request")
-        return
+    try:
+        r = requests.get(download_req_url, timeout=10)
+        if r.status_code == 200:
+            hds_download_taskid = r.json()['task']['id']
+            pass
+        else:
+            print("Error in sending download request")
+            return False
+    except Exception as e:
+        prints(str(e))
+        return False
     
     time.sleep(1)
     # watch download task status
     hds_watch_id = urllib.parse.quote_plus(hds_download_taskid)
     watch_url = f'http://192.168.103.48:8000/dataservice/v1/watch?id={hds_watch_id}'
     while True:
-        r = requests.get(watch_url, timeout=10)
-        if r.status_code == 200:
-            task_status = r.json()
-            print(task_status)
-            if len(task_status['task']) == 0:
-                print("Download task finished")
-                break
+        try:
+            r = requests.get(watch_url, timeout=10)
+            if r.status_code == 200:
+                task_status = r.json()
+                print(task_status)
+                if len(task_status['task']) == 0:
+                    print("Download task finished")
+                    break
+        except Exception as e:
+            prints(str(e))
+            return False
         time.sleep(1)
 
     time.sleep(1)
     # download the csv file
     download_url = f'http://192.168.103.48:8000/dataservice/v1/access?from=file:///tmp/web_download_tmp/result_{dlreq_uuid}.csv&to=local:///result.csv'
-    r = requests.get(download_url, timeout=10)
-    if r.status_code == 200:
-        with open('./result.csv', 'wb') as f:
-            f.write(r.content)
-    else:
-        print("Error in downloading csv")
-        return
+    try:
+        r = requests.get(download_url, timeout=10)
+        if r.status_code == 200:
+            with open('./result.csv', 'wb') as f:
+                f.write(r.content)
+            return True
+        else:
+            print("Error in downloading csv")
+            return False
+    except Exception as e:
+            prints(str(e))
+            return False
     
-    pass
+    return False
 
 
 def main():
@@ -137,9 +158,10 @@ def main():
         ]
     }
 
-    sync_send_task(task_info)
+    task_ok = sync_send_task(task_info)
 
-    sync_download_table(task_info['task_list'][-1]['hds']['table'])
+    if task_ok:
+        sync_download_table(task_info['task_list'][-1]['hds']['table'])
     
     pass
 
