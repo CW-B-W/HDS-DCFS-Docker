@@ -589,8 +589,8 @@ function sql_gen_join(join_pairs) {
     sql += ' FROM df0 LEFT JOIN df1 ON ';
 
     for (i = 0; i < join_pairs.length; ++i) {
-        leftkey  = join_pairs[i]['leftkey'];
-        rightkey = join_pairs[i]['rightkey'];
+        leftkey  = to_formatted_key(join_pairs[i]['leftkey']);
+        rightkey = to_formatted_key(join_pairs[i]['rightkey']);
 
         if (leftkey != '' && rightkey != '') {
             sql += 'df0.' + leftkey + '=df1.' + leftkey + ' AND ';
