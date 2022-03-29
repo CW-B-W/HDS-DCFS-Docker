@@ -26,13 +26,13 @@
     "Cassandra": {
         "ip": "192.168.103.125",
         "port": "9042",
-        "username": "brad",
-        "password": "00000000"
+        "username": "cassandra",
+        "password": "cassandra"
     },
     "Elasticsearch": {
         "ip": "192.168.103.120",
         "port": "9200",
-        "username": "brad",
+        "username": "elastic",
         "password": "00000000"
     },
     "HBase": {

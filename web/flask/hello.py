@@ -242,6 +242,8 @@ from pandas.io.json import json_normalize
 from elasticsearch_dsl import Search
 
 def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
+    es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
+    es.info()
     test=['Default']
     return sorted(test)
 
@@ -276,10 +278,13 @@ def elasticsearch_list_all_keys(db_name, table_name, username, password, ip, por
 ''' ================ cassandra ================ '''
 import pandas as pd
 from cassandra.cluster import Cluster
+from cassandra.auth import PlainTextAuthProvider
+
 def cassandra_list_all_dbs(username, password, ip, port='9042'):
     #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=XEPDB1" % (username, password, ip, port))
     #df1 = pd.read_sql("select * from global_name", con=db1_engine)
-    cluster = Cluster([ip],port=9042)
+    auth_provider = PlainTextAuthProvider(username, password)
+    cluster = Cluster([ip],port=9042, auth_provider=auth_provider)
     session = cluster.connect()
     rows = session.execute("DESCRIBE keyspaces;")
     df1 = pd.DataFrame(rows)
@@ -290,7 +295,8 @@ def cassandra_list_all_tables(db_name, username, password, ip, port='9042'):
     #df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
     #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
     #df1 = pd.read_sql("SELECT table_name FROM user_tables", con=db1_engine)
-    cluster = Cluster([ip],port=9042)
+    auth_provider = PlainTextAuthProvider(username, password)
+    cluster = Cluster([ip],port=9042, auth_provider=auth_provider)
     session = cluster.connect()
     rows = session.execute("SELECT * FROM system_schema.tables WHERE keyspace_name = '%s'" % (db_name))
     df1 = pd.DataFrame(rows)
@@ -299,7 +305,8 @@ def cassandra_list_all_tables(db_name, username, password, ip, port='9042'):
 def cassandra_list_all_keys(db_name, table_name, username, password, ip, port='9042'):
     #db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s/?service_name=%s" % (username, password, ip, port, db_name))
     #df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE table_name = '%s'" % table_name, con=db1_engine);
-    cluster = Cluster([ip],port=9042)
+    auth_provider = PlainTextAuthProvider(username, password)
+    cluster = Cluster([ip],port=9042, auth_provider=auth_provider)
     session = cluster.connect()
     rows = session.execute("SELECT * FROM system_schema.columns WHERE keyspace_name = '%s'AND table_name = '%s'" % (db_name, table_name))
     df1 = pd.DataFrame(rows)
