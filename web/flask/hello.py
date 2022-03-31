@@ -243,8 +243,7 @@ from elasticsearch_dsl import Search
 
 def elasticsearch_list_all_dbs(username, password, ip, port='9200'):
     es=Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-    if es.ping()==False:
-        raise ConnectionError
+    idx_list = [x for x in es.indices.get_alias().keys() ]
     test=['Default']
     return sorted(test)
 
