@@ -201,22 +201,32 @@ for task_idx, task_info in enumerate(task_list):
                 time_from = d['starttime']
                 time_end  = d['endtime']
                 es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
-                es_result = helpers.scan(
-                    client = es,
-                    query = {
-                        "query" : {
-                            "bool": {
-                                "filter":[
-                                    {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}   
-                                ]
-                            }
+                if filter_js != '':
+                    es_result = helpers.scan(
+                        client = es,
+                        query = filter_js,
+                        _source = keynames,
+                        index   = index_name,
+                        scroll  ='10m',
+                        timeout ="10m"
+                    )
+                else:
+                    es_result = helpers.scan(
+                        client = es,
+                        query = {
+                            "query" : {
+                                "bool": {
+                                    "filter":[
+                                        {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}
+                                    ]
+                                }
+                            },
                         },
-                    },
-                    _source = keynames,
-                    index   = index_name,
-                    scroll  ='10m',
-                    timeout ="10m"
-                )
+                        _source = keynames,
+                        index   = index_name,
+                        scroll  ='10m',
+                        timeout ="10m"
+                    )
 
                 rows = []
                 for k in es_result:
