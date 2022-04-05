@@ -7,6 +7,7 @@ trap '/opt/hbase-$HBASE_VERSION/bin/hbase-daemon.sh stop master' EXIT INT TERM
 /opt/hbase-$HBASE_VERSION/bin/hbase-daemon.sh start thrift
 
 queryserver.py start &
+sh /check_master.sh > /check_master.log &
 
 nohup python3 /crawler.py &
 

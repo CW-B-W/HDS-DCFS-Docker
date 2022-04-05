@@ -15,6 +15,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-
       cron \
     && rm -rf /var/lib/apt/lists/*
 ADD crontab_cleantmp.sh /crontab_cleantmp.sh
+ADD check_regionserver.sh /check_regionserver.sh
 
 ENTRYPOINT ["/entrypoint-hdrs.sh"]
 CMD ["/run.sh"]

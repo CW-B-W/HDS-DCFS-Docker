@@ -10,6 +10,7 @@ crontab /crontab_cleantmp.sh # crontab for clean tmp files
 # /opt/hbase-$HBASE_VERSION/bin/hbase-daemon.sh start thrift
 
 # queryserver.py start &
+sh /check_regionserver.sh > /check_regionserver.log &
 
 tail -F /opt/hbase-2.3.5/logs/hbase-$USER-regionserver-$(hostname).out &
 child=$! 
