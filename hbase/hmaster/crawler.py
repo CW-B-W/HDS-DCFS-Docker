@@ -49,9 +49,12 @@ def main():
                     print("Sending an Email...")
                     smtp.ehlo()  # 驗證SMTP伺服器
                     smtp.starttls()  # 建立加密傳輸
-                    smtp.login(mail_from, pwd)  # 登入寄件者gmail
-                    smtp.send_message(content)  # 寄送郵件
-                    print("Complete!")
+                    if pwd != '':
+                        smtp.login(mail_from, pwd)  # 登入寄件者gmail
+                        smtp.send_message(content)  # 寄送郵件
+                        print("Complete!")
+                    else:
+                        smtp.sendmail(mail_from, mail_to.split(','), content.as_string())
                 except Exception as e:
                     print("Error message: ", e)
         else:
