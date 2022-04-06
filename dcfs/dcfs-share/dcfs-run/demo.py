@@ -197,6 +197,7 @@ for task_idx, task_info in enumerate(task_list):
                 db_name    = d['db']
                 index_name = d['index']
                 keynames   = d['sql']
+                filter_js = d['filter']
 
                 time_from = d['starttime']
                 time_end  = d['endtime']
