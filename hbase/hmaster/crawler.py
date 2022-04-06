@@ -44,19 +44,22 @@ def main():
         print('Check if the number is exceed the threshold.')
         if region_num > region_limit :
             print('The number is exceed.')
-            with smtplib.SMTP(host=smtp_server_host, port=smtp_server_port) as smtp:  # 設定SMTP伺服器
-                try:
-                    print("Sending an Email...")
-                    smtp.ehlo()  # 驗證SMTP伺服器
-                    smtp.starttls()  # 建立加密傳輸
-                    if pwd != '':
+            if pwd == '':
+                smtp = smtplib.SMTP(smtp_server_host)
+                smtp.sendmail(mail_from, mail_to.split(','), content.as_string())
+                smtp.quit()
+            else:
+                with smtplib.SMTP(host=smtp_server_host, port=smtp_server_port) as smtp:  # 設定SMTP伺服器
+                    try:
+                        print("Sending an Email...")
+                        smtp.ehlo()  # 驗證SMTP伺服器
+                        smtp.starttls()  # 建立加密傳輸
                         smtp.login(mail_from, pwd)  # 登入寄件者gmail
                         smtp.send_message(content)  # 寄送郵件
                         print("Complete!")
-                    else:
-                        smtp.sendmail(mail_from, mail_to.split(','), content.as_string())
-                except Exception as e:
-                    print("Error message: ", e)
+
+                    except Exception as e:
+                        print("Error message: ", e)
         else:
             print('The number is not exceed. Wait for the next round.')
         print('Waiting for next round.')
