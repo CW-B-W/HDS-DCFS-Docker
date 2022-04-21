@@ -232,16 +232,7 @@ def phoenix_list_all_types(table_name, ip='hbase-master', port='8765'):
 def phoenix_drop_table(table_name, ip='hbase-master', port='8765'):
     conn = phoenixdb.connect('http://%s:%s' % (ip, port))
     cursor = conn.cursor(cursor_factory=phoenixdb.cursor.DictCursor)
-    cursor.execute("DROP TABLE '%s'" % table_name)
-    res = cursor.fetchall()
-    return res
-
-def phoenix_disable_table(table_name, ip='hbase-master', port='8765'):
-    conn = phoenixdb.connect('http://%s:%s' % (ip, port))
-    cursor = conn.cursor(cursor_factory=phoenixdb.cursor.DictCursor)
-    cursor.execute("disable \''%s'\'" % table_name)
-    res = cursor.fetchall()
-    return res
+    cursor.execute("DROP TABLE IF EXISTS {}".format(table_name))
 
 ''' ================ Phoenix ================ '''
 
@@ -1116,25 +1107,16 @@ def phoenix_types():
     except Exception as e:
         return "Error connecting to Phoenix server. %s" % str(e), 403
 
-@app.route('/phoenix/drop/<table_name>', methods=['GET'])
-def phoenix_drop_table_for_api(table_name):
+@app.route('/phoenix/drop', methods=['GET'])
+def phoenix_drop_table_for_api():
     try:
         ip         = request.args.get('ip')
         port       = request.args.get('port')
-        result     = phoenix_drop_table(table_name, ip, port)
-        return "Success drop table form Phoenix server. %s" % str(result)
+        table_name = request.args.get('table_name')
+        phoenix_drop_table(table_name, ip, port)
+        return "Success drop table %s form Phoenix server." % str(table_name)
     except Exception as e:
         return "Error drop table form Phoenix server. %s" % str(e)
-
-@app.route('/phoenix/disable/<table_name>', methods=['GET'])
-def phoenix_disable_table_for_api(table_name):
-    try:
-        ip         = request.args.get('ip')
-        port       = request.args.get('port')
-        result     = phoenix_disable_table(table_name, ip, port)
-        return "Success disable table form Phoenix server. %s" % str(result)
-    except Exception as e:
-        return "Error disable table form Phoenix server. %s" % str(e)
 
 ''' ----- Excel ----- '''
 @app.route('/excel/listdbs', methods=['GET'])
