@@ -242,7 +242,7 @@ def phoenix_disable_table(table_name, ip='hbase-master', port='8765'):
     cursor.execute("disable \''%s'\'" % table_name)
     res = cursor.fetchall()
     return res
-    
+
 ''' ================ Phoenix ================ '''
 
 
@@ -1116,8 +1116,8 @@ def phoenix_types():
     except Exception as e:
         return "Error connecting to Phoenix server. %s" % str(e), 403
 
-@app.route('/phoenix/drop/<string:table_name>', methods=['GET'])
-def phoenix_drop_table_for_api():
+@app.route('/phoenix/drop/<table_name>', methods=['GET'])
+def phoenix_drop_table_for_api(table_name):
     try:
         ip         = request.args.get('ip')
         port       = request.args.get('port')
@@ -1126,8 +1126,8 @@ def phoenix_drop_table_for_api():
     except Exception as e:
         return "Error drop table form Phoenix server. %s" % str(e)
 
-@app.route('/phoenix/disable/<string:table_name>', methods=['GET'])
-def phoenix_disable_table_for_api():
+@app.route('/phoenix/disable/<table_name>', methods=['GET'])
+def phoenix_disable_table_for_api(table_name):
     try:
         ip         = request.args.get('ip')
         port       = request.args.get('port')
