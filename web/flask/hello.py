@@ -1112,9 +1112,9 @@ def phoenix_drop_table_for_api():
     try:
         table_name = request.args.get('table_name')
         phoenix_drop_table(table_name)
-        return "Success drop table %s form Phoenix server." % str(table_name)
+        return "Success Drop table %s from Phoenix server." % str(table_name)
     except Exception as e:
-        return "Error dropping table form Phoenix server. %s" % str(e)
+        return "Error dropping table from Phoenix server. %s" % str(e)
 
 ''' ----- Excel ----- '''
 @app.route('/excel/listdbs', methods=['GET'])
