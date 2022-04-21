@@ -242,8 +242,7 @@ def phoenix_disable_table(table_name, ip='hbase-master', port='8765'):
     cursor.execute("disable \''%s'\'" % table_name)
     res = cursor.fetchall()
     return res
-
-
+    
 ''' ================ Phoenix ================ '''
 
 
@@ -1100,6 +1099,19 @@ def phoenix_keys():
         
         if "AUTOTIMESTAMP__" in ret_dict['key_list']:
             ret_dict['key_list'].remove("AUTOTIMESTAMP__")
+        return ret_dict
+    except Exception as e:
+        return "Error connecting to Phoenix server. %s" % str(e), 403
+
+@app.route('/phoenix/listtypes', methods=['GET'])
+def phoenix_types():
+    try:
+        ip         = request.args.get('ip')
+        port       = request.args.get('port')
+        db_name    = ''
+        table_name = request.args.get('table_name')
+        
+        ret_dict   = phoenix_list_all_types(table_name, ip, port)
         return ret_dict
     except Exception as e:
         return "Error connecting to Phoenix server. %s" % str(e), 403
