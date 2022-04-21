@@ -228,6 +228,12 @@ def phoenix_list_all_types(table_name, ip='hbase-master', port='8765'):
     for item in res:
         d[item['COLUMN_NAME']] = TYPE_MAP[item['DATA_TYPE']]
     return d
+
+def phoenix_drop_table(table_name, ip='hbase-master', port='8765'):
+    conn = phoenixdb.connect('http://%s:%s' % (ip, port))
+    cursor = conn.cursor(cursor_factory=phoenixdb.cursor.DictCursor)
+    cursor.execute("DROP TABLE {}".format(table_name))
+
 ''' ================ Phoenix ================ '''
 
 
@@ -1100,6 +1106,15 @@ def phoenix_types():
         return ret_dict
     except Exception as e:
         return "Error connecting to Phoenix server. %s" % str(e), 403
+
+@app.route('/phoenix/drop', methods=['GET'])
+def phoenix_drop_table_for_api():
+    try:
+        table_name = request.args.get('table_name')
+        phoenix_drop_table(table_name)
+        return "Successfully dropped table %s from Phoenix server." % table_name
+    except Exception as e:
+        return "Error dropping table from Phoenix server. %s" % str(e)
 
 ''' ----- Excel ----- '''
 @app.route('/excel/listdbs', methods=['GET'])
