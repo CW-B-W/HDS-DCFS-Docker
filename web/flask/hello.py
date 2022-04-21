@@ -1112,7 +1112,7 @@ def phoenix_drop_table_for_api():
     try:
         table_name = request.args.get('table_name')
         phoenix_drop_table(table_name)
-        return "Successfully dropped table %s from Phoenix server." % str(table_name)
+        return "Successfully dropped table %s from Phoenix server." % table_name
     except Exception as e:
         return "Error dropping table from Phoenix server. %s" % str(e)
 
