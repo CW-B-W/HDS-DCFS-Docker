@@ -95,7 +95,7 @@ except Exception as e:
     exit(1)
 
 ts = str(datetime.now().timestamp())
-setup_logging('joined_' + task_id + '_' + ts + '.log');
+setup_logging('joined_' + task_id + '_' + ts + '.log')
 logging.info('Task started. task_id = ' + task_id)
 send_task_status(task_id, TASKSTATUS_PROCESSING, '')
 
@@ -398,6 +398,23 @@ with open(tmp_sql_path, 'w') as wf:
         wf.write(task_info['hds']['sql'])
 
 df_joined.to_csv(tmp_csv_path, index=False, header=False)
+
+''' ========= Store data into HDS without phoenix =========='''
+import requests
+import random
+try:
+    send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing csv file into HDS")
+    logging.info("Start importing csv file into HDS")
+    with open('/dcfs-share/dcfs-run/hds_config.json') as hdsFile :
+        data = json.load(hdsFile)
+    regionserver = random.randint(1, len(data['hbase-regionserver'])-1)
+    url = "http://"+data['hbase-regionserver'][regionserver]['ip']+":"+data['hbase-regionserver'][regionserver]['port']+"/dataservice/v1/access?from=local://"+tmp_csv_path+"&to=hds:///csv/join/"
+    r = requests.post(url)
+    send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing csv file into HDS")
+    logging.info("Finished importing csv file into HDS")
+except Exception as e:
+    logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e) )
 ''' ========== Phoenix ========== '''
 import subprocess
 phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
@@ -435,7 +452,7 @@ else:
 
 if stderr.find("ERROR") == -1:
     logging.error("Job finished")
-    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished")
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished. File path: hds:///csv/join/joined_" + task_id + '_' + ts + '.csv')
 else:
     logging.error("Job finished with error message: \n" + stderr)
     send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr)
