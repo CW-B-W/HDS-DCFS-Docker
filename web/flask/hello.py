@@ -232,7 +232,7 @@ def phoenix_list_all_types(table_name, ip='hbase-master', port='8765'):
 def phoenix_drop_table(table_name, ip='hbase-master', port='8765'):
     conn = phoenixdb.connect('http://%s:%s' % (ip, port))
     cursor = conn.cursor(cursor_factory=phoenixdb.cursor.DictCursor)
-    cursor.execute("DROP TABLE IF EXISTS {}".format(table_name))
+    cursor.execute("DROP TABLE {}".format(table_name))
 
 ''' ================ Phoenix ================ '''
 
