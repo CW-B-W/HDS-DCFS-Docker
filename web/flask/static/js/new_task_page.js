@@ -328,7 +328,7 @@ $(document).ready(function() {
         if (db2_type == 'none') {
             delete task_info['db'].pop();
         }
-
+        is_phoenix = $('#task_to').is(':checked').toString();
         try {
             task_dict = JSON.parse($('#task_info').text());
         }
@@ -338,6 +338,7 @@ $(document).ready(function() {
             $("#sent_task_id").text('task_id = ' + task_id);
             task_dict = {
                 'task_id': task_id,
+                'phoenix': is_phoenix,
                 'task_list': []
             }
 

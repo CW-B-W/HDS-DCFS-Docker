@@ -24,6 +24,7 @@ function send_task_status_req() {
                 task_id = task['task_id'];
                 task_scode = task['status'];
                 task_msg = task['message'];
+                task_link = task['link'];
                 task_status = ''
                 switch (task_scode) {
                 case 1:
@@ -52,6 +53,10 @@ function send_task_status_req() {
                 elem.children().eq(0).children().eq(1).text(task_id);
                 elem.children().eq(1).children().eq(1).text(task_status);
                 elem.children().eq(2).children().eq(1).text(task_msg);
+                elem.children().eq(3).children().eq(1).attr("");
+                if(task_link!=""){
+                    elem.children().eq(3).children().eq(1).attr('href', 'http://'+$("#hds_server").val()+task_link);
+                }
             }
         },
         error: function(jqXHR, JQueryXHR, textStatus) {
