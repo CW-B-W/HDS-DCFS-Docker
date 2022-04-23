@@ -59,7 +59,7 @@ TASKSTATUS_SUCCEEDED  = 3
 TASKSTATUS_FAILED     = 4
 TASKSTATUS_ERROR      = 5
 TASKSTATUS_UNKNOWN    = 6
-def send_task_status(task_id, status, message):
+def send_task_status(task_id, status, message, link):
     credentials = pika.PlainCredentials('guest', 'guest')
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host='rabbitmq', credentials=credentials))
@@ -69,8 +69,9 @@ def send_task_status(task_id, status, message):
 
     payload = {
         'task_id': task_id,
-        'status': status,
-        'message': message
+        'status':  status,
+        'message': message,
+        'link':    link
     }
     body = json.dumps(payload)
 
@@ -91,20 +92,20 @@ except Exception as e:
     with open(taskinfo_filepath, 'r') as rf:
         content = rf.readlines()
     print(str(e), file=sys.stderr)
-    send_task_status(str(-1), TASKSTATUS_UNKNOWN, str(e))
+    send_task_status(str(-1), TASKSTATUS_UNKNOWN, str(e), '')
     exit(1)
 
 ts = str(datetime.now().timestamp())
-setup_logging('joined_' + task_id + '_' + ts + '.log');
+setup_logging('joined_' + task_id + '_' + ts + '.log')
 logging.info('Task started. task_id = ' + task_id)
-send_task_status(task_id, TASKSTATUS_PROCESSING, '')
+send_task_status(task_id, TASKSTATUS_PROCESSING, '', '')
 
 logging.info('Task info:\n' + json.dumps(task_dict))
 
 task_list = task_dict['task_list']
 for task_idx, task_info in enumerate(task_list):
     logging.info(f"Start processing the {task_idx}-th task")
-    send_task_status(task_id, TASKSTATUS_PROCESSING, f"Start processing the {task_idx}-th task")
+    send_task_status(task_id, TASKSTATUS_PROCESSING, f"Start processing the {task_idx}-th task", '')
     for i, d in enumerate(task_info['db']):
         db_type = d['type']
         if db_type == 'mysql':
@@ -117,11 +118,11 @@ for task_idx, task_info in enumerate(task_list):
                 db_url   = 'mysql+pymysql://%s:%s@%s:%s/%s' % (username, password, ip, port, db_name)
                 db_engine          = create_engine(db_url)
                 logging.info("Retrieving data from MySQL")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MySQL")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MySQL", '')
                 locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
             except Exception as e:
                 logging.error("Error in retrieving data from MySQL: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MySQL: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MySQL: " + str(e), '')
                 exit(1)
         elif db_type == 'mssql':
             try:
@@ -133,11 +134,11 @@ for task_idx, task_info in enumerate(task_list):
                 db_url   = 'mssql+pymssql://%s:%s@%s:%s/%s' % (username, password, ip, port, db_name)
                 db_engine          = create_engine(db_url)
                 logging.info("Retrieving data from MSSQL")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MSSQL")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MSSQL", '')
                 locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
             except Exception as e:
                 logging.error("Error in retrieving data from MSSQL: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MSSQL: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MSSQL: " + str(e), '')
                 exit(1)
         elif db_type == 'phoenix':
             try:
@@ -149,11 +150,11 @@ for task_idx, task_info in enumerate(task_list):
                 db_url    = 'phoenix://%s:%s/' % (ip, port)
                 db_engine = create_engine(db_url)
                 logging.info("Retrieving data from Phoenix")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Phoenix")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Phoenix", '')
                 locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
             except Exception as e:
                 logging.error("Error in retrieving data from Phoenix: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Phoenix: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Phoenix: " + str(e), '')
                 exit(1)
         elif db_type == 'oracle':
             try:
@@ -165,11 +166,11 @@ for task_idx, task_info in enumerate(task_list):
                 db_url    = 'oracle+cx_oracle://%s:%s@%s:%s' % (username, password, ip, port_sid)
                 db_engine = create_engine(db_url)
                 logging.info("Retrieving data from OracleDB")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from OracleDB")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from OracleDB", '')
                 locals()['df%d'%i] = pd.read_sql(d['sql'], con=db_engine)
             except Exception as e:
                 logging.error("Error in retrieving data from OracleDB: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from OracleDB: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from OracleDB: " + str(e), '')
                 exit(1)
         elif db_type == 'cassandra':
             try:
@@ -182,11 +183,11 @@ for task_idx, task_info in enumerate(task_list):
                 session = cluster.connect()
                 rows = session.execute(d['sql'])
                 logging.info("Retrieving data from Cassandra")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Cassandra")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Cassandra", '')
                 locals()['df%d'%i] = pd.DataFrame(rows)
             except Exception as e:
                 logging.error("Error in retrieving data from Cassandra: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Cassandra: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Cassandra: " + str(e), '')
                 exit(1)
         elif db_type == 'elasticsearch':
             try:
@@ -249,11 +250,11 @@ for task_idx, task_info in enumerate(task_list):
                     rows.append(tmp_dict)
                 
                 logging.info("Retrieving data from Elasticsearch")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from Elasticsearch", '')
                 locals()['df%d'%i] = pd.DataFrame(rows, columns=keynames)
             except Exception as e:
                 logging.error("Error in retrieving data from Elasticsearch: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Elasticsearch: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from Elasticsearch: " + str(e), '')
                 exit(1)
         elif db_type == 'mongodb':
             try:
@@ -270,12 +271,12 @@ for task_idx, task_info in enumerate(task_list):
                 mongodb_db = mongodb_client[db_name]
                 filterj    = d['sql']
                 logging.info("Retrieving data from MongoDB")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB", '')
                 mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)
                 locals()['df%d'%i] = pd.DataFrame(list(mongodb_cursor))
             except Exception as e:
                 logging.error("Error in retrieving data from MongoDB: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MongoDB: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from MongoDB: " + str(e), '')
                 exit(1)
         elif db_type == 'hbase':
             try:
@@ -287,7 +288,7 @@ for task_idx, task_info in enumerate(task_list):
                 columns  = d['sql']
 
                 logging.info("Retrieving data from HBase")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from HBase")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from HBase", '')
 
                 connection = happybase.Connection(ip, port=int(port))
                 table = happybase.Table(tbl_name, connection)
@@ -300,7 +301,7 @@ for task_idx, task_info in enumerate(task_list):
                 locals()['df%d'%i] = my_data
             except Exception as e:
                 logging.error("Error in retrieving data from HBase: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from HBase: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in retrieving data from HBase: " + str(e), '')
                 exit(1)
         elif db_type == 'excel':
             try:
@@ -310,7 +311,7 @@ for task_idx, task_info in enumerate(task_list):
                 columns  = d['sql']
 
                 logging.info("Reading xls file")
-                send_task_status(task_id, TASKSTATUS_PROCESSING, "Reading xls file")
+                send_task_status(task_id, TASKSTATUS_PROCESSING, "Reading xls file", '')
 
                 my_data = pd.read_excel(filepath)
                 pysqldf = lambda q: sqldf(q, globals())
@@ -319,14 +320,14 @@ for task_idx, task_info in enumerate(task_list):
                 locals()['df%d'%i] = my_data
             except Exception as e:
                 logging.error("Error in opening xls file: " + str(e))
-                send_task_status(task_id, TASKSTATUS_FAILED, "Error in opening xls file: " + str(e))
+                send_task_status(task_id, TASKSTATUS_FAILED, "Error in opening xls file: " + str(e), '')
                 exit(1)
         elif db_type == 'dataframe':
             # keep using df0 as the left table
             pass
         else:
             logging.error("Unsupported DB type " + db_type)
-            send_task_status(task_id, TASKSTATUS_FAILED, "Unsupported DB type " + db_type)
+            send_task_status(task_id, TASKSTATUS_FAILED, "Unsupported DB type " + db_type, '')
             exit(1)
         logging.info(f'Finished retrieving table {i} from {db_type}')
         
@@ -344,7 +345,7 @@ for task_idx, task_info in enumerate(task_list):
             logging.debug(str(locals()['df%d'%i]))
         except Exception as e:
             logging.error("Error in renaming columns: " + str(e))
-            send_task_status(task_id, TASKSTATUS_FAILED, "Error in renaming columns: " + str(e))
+            send_task_status(task_id, TASKSTATUS_FAILED, "Error in renaming columns: " + str(e), '')
             exit(1)
 
     if len(task_info['db']) < 2:
@@ -354,13 +355,13 @@ for task_idx, task_info in enumerate(task_list):
         try:
             pysqldf   = lambda q: sqldf(q, globals())
             logging.info('Start joining two tables')
-            send_task_status(task_id, TASKSTATUS_PROCESSING, "Start joining two tables")
+            send_task_status(task_id, TASKSTATUS_PROCESSING, "Start joining two tables", '')
             df_joined = pysqldf(task_info['join_sql'])
             logging.info('Finished joining two tables')
-            send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished joining two tables")
+            send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished joining two tables", '')
         except Exception as e:
             logging.error("Error in joining the two tables: " + str(e))
-            send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables: " + str(e))
+            send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables: " + str(e), '')
             exit(1)
 
     try:
@@ -370,7 +371,7 @@ for task_idx, task_info in enumerate(task_list):
         logging.debug(str(df_joined))
     except Exception as e:
         logging.error("Error in joining the two tables. Please check if duplicated columns exist: " + str(e))
-        send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables. Please check if duplicated columns exist: " + str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, "Error in joining the two tables. Please check if duplicated columns exist: " + str(e), '')
         exit(1)
 
     df0 = df_joined # reuse df0 if it's a pipeline task
@@ -398,45 +399,66 @@ with open(tmp_sql_path, 'w') as wf:
         wf.write(task_info['hds']['sql'])
 
 df_joined.to_csv(tmp_csv_path, index=False, header=False)
-''' ========== Phoenix ========== '''
+
+''' ========= Store data into HDS without phoenix =========='''
+import requests
+import random
 import subprocess
-phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
-if 'ip' in task_info['hds']:
-    hds_ip = task_info['hds']['ip']
-else:
-    hds_ip = 'zoo1'
-try:
-    logging.info('Start importing table into HDS')
-    send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing table into HDS")
-    cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
-    process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    exit_code = process.wait()
-    stdout = stdout.decode('utf-8')
-    stderr = stderr.decode('utf-8')
-    logging.info('Finished importing table into HDS')
-    send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing table into HDS")
-except Exception as e:
-    logging.error("Failed when importing table into HDS\n" + str(e))
-    send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into HDS\n" + str(e))
-    exit(1)
 
-logging.debug("Phoenix stdout\n" + stdout)
-logging.debug("Phoenix stderr\n" + stderr)
-logging.debug(f"Phoenix exit code: {exit_code}")
-if exit_code != 0:
-    logging.error("Failed to import table into HDS\n" + stderr)
-    send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr)
-    exit(1)
-else:
-    logging.error("Successfully importing table into HDS" + stderr)
-    send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully importing table into HDS")
-''' ========== Phoenix ========== '''
+if task_dict['phoenix']=='false':
+    try:
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing csv file into HDS", '')
+        logging.info("Start importing csv file into HDS")
+        url = "http://hbase-regionserver1:8000/dataservice/v1/access"
+        params = {
+                'from': 'local:///',
+                'to':   'hds:///csv/join/'+'joined_' + task_id + '_' + ts + '.csv'
+        }
+        r = requests.post(url, params=params, data=open(tmp_csv_path, 'rb') , timeout=10)
+        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/joined_' + task_id+'_'+ts +'.csv&to=local:///result.csv&redirectfrom=NULL')
+        logging.info("Finished importing csv file into HDS")
+    except Exception as e:
+        logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e), '')
+    ''' ========== Phoenix ========== '''
+else :
+    phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
+    if 'ip' in task_info['hds']:
+        hds_ip = task_info['hds']['ip']
+    else:
+        hds_ip = 'zoo1'
+    try:
+        logging.info('Start importing table into HDS')
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing table into HDS", '')
+        cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
+        process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        exit_code = process.wait()
+        stdout = stdout.decode('utf-8')
+        stderr = stderr.decode('utf-8')
+        logging.info('Finished importing table into HDS')
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing table into HDS", '')
+    except Exception as e:
+        logging.error("Failed when importing table into HDS\n" + str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into HDS\n" + str(e), '')
+        exit(1)
 
-if stderr.find("ERROR") == -1:
-    logging.error("Job finished")
-    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished")
-else:
-    logging.error("Job finished with error message: \n" + stderr)
-    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr)
+    logging.debug("Phoenix stdout\n" + stdout)
+    logging.debug("Phoenix stderr\n" + stderr)
+    logging.debug(f"Phoenix exit code: {exit_code}")
+    if exit_code != 0:
+        logging.error("Failed to import table into HDS\n" + stderr)
+        send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr, '')
+        exit(1)
+    else:
+        logging.error("Successfully importing table into HDS" + stderr)
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully importing table into HDS", '')
+    ''' ========== Phoenix ========== '''
+
+    if stderr.find("ERROR") == -1:
+        logging.error("Job finished")
+        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished.", '')
+    else:
+        logging.error("Job finished with error message: \n" + stderr)
+        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr, '')
 exit()
