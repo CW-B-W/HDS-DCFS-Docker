@@ -398,7 +398,6 @@ with open(tmp_sql_path, 'w') as wf:
     if task_info['hds']['sql'] != 'AUTOTIMESTAMP__':
         wf.write(task_info['hds']['sql'])
 
-df_joined.to_csv(tmp_csv_path, index=False, header=False)
 
 ''' ========= Store data into HDS without phoenix =========='''
 import requests
@@ -406,6 +405,7 @@ import random
 import subprocess
 
 if task_dict['phoenix']=='false':
+    df_joined.to_csv(tmp_csv_path, index=False, header=True)
     try:
         send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing csv file into HDS", '')
         logging.info("Start importing csv file into HDS")
@@ -422,6 +422,7 @@ if task_dict['phoenix']=='false':
         send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e), '')
     ''' ========== Phoenix ========== '''
 else :
+    df_joined.to_csv(tmp_csv_path, index=False, header=False)
     phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
     if 'ip' in task_info['hds']:
         hds_ip = task_info['hds']['ip']
