@@ -387,6 +387,10 @@ def generate_phoenix_autotimestamp():
 if task_info['hds']['sql'].find('AUTOTIMESTAMP__') >= 0:
     autotimestamp = [generate_phoenix_autotimestamp() for t in range(df_joined.shape[0])]
     df_joined['AUTOTIMESTAMP__'] = autotimestamp
+if df_joined.empty:
+    logging.error("The joined table is empty.")
+    send_task_status(task_id, TASKSTATUS_FAILED, "The joined table is empty.", '')
+    exit(1)
 
 # save to csv
 os.makedirs("/tmp/dcfs", exist_ok=True)
@@ -420,6 +424,7 @@ if task_dict['phoenix']=='false':
     except Exception as e:
         logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
         send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e), '')
+        exit(1)
     ''' ========== Phoenix ========== '''
 else :
     df_joined.to_csv(tmp_csv_path, index=False, header=False)
