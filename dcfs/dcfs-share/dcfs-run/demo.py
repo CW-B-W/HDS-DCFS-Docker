@@ -380,6 +380,11 @@ for task_idx, task_info in enumerate(task_list):
 
 # ========== After all pipeline tasks are finished ==========
 
+if df_joined.empty:
+    logging.error("The joined table is empty.")
+    send_task_status(task_id, TASKSTATUS_FAILED, "The joined table is empty.", '')
+    exit(1)
+
 # auto add primary key if not have one
 def generate_phoenix_autotimestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -387,10 +392,6 @@ def generate_phoenix_autotimestamp():
 if task_info['hds']['sql'].find('AUTOTIMESTAMP__') >= 0:
     autotimestamp = [generate_phoenix_autotimestamp() for t in range(df_joined.shape[0])]
     df_joined['AUTOTIMESTAMP__'] = autotimestamp
-if df_joined.empty:
-    logging.error("The joined table is empty.")
-    send_task_status(task_id, TASKSTATUS_FAILED, "The joined table is empty.", '')
-    exit(1)
 
 # save to csv
 os.makedirs("/tmp/dcfs", exist_ok=True)
