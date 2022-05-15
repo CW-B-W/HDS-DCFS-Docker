@@ -380,6 +380,11 @@ for task_idx, task_info in enumerate(task_list):
 
 # ========== After all pipeline tasks are finished ==========
 
+if df_joined.empty:
+    logging.error("The joined table is empty.")
+    send_task_status(task_id, TASKSTATUS_FAILED, "The joined table is empty.", '')
+    exit(1)
+
 # auto add primary key if not have one
 def generate_phoenix_autotimestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -420,6 +425,7 @@ if task_dict['phoenix']=='false':
     except Exception as e:
         logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
         send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e), '')
+        exit(1)
     ''' ========== Phoenix ========== '''
 else :
     df_joined.to_csv(tmp_csv_path, index=False, header=False)
