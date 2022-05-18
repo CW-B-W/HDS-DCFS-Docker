@@ -98,7 +98,6 @@ $(document).ready(function() {
                         for (key in table_list) {
                             opt_idx = parseInt(key) + 1
                             $(`#db${db_id}_table_list`).append('<option value="' + opt_idx + '">' + table_list[key] + '</option>');
-
                         }
                     },
                     error: function(jqXHR, JQueryXHR, textStatus) {
@@ -152,7 +151,10 @@ $(document).ready(function() {
                         for (key in key_list) {
                             opt_idx = parseInt(key) + 1
                             $(`#db${db_id}_key_list`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
+                            // The drop-down menu shows the column name again, because the selected column is to be used for the time range query
+                            $(`#db${db_id}_key_list_drop_down_menu`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
                         }
+                        
                         $(`#db${db_id}_key_list`).append('<option value="' + (++opt_idx) + '">' + '' + '</option>');
 
                         while (true) {
