@@ -7,7 +7,7 @@ function gen_db_info_none(ip, port, username, password, dbname, tblname, keylist
       'password': '',
       'db': '',
       'sql': '',
-      'namemapping': {},
+      'namemapping': {}
   };
 
   return db;

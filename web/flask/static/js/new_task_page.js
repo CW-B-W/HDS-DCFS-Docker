@@ -146,6 +146,11 @@ $(document).ready(function() {
                         for (i = 0; i < children.length; ++i) {
                             children[i].remove();
                         }
+                        children = $(`#db${db_id}_key_list_drop_down_menu`).children();
+                        for (i = 1; i < children.length; ++i) {
+                            children[i].remove();
+                        }
+                        $(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex = 0;
 
                         key_list = result['key_list'];
                         for (key in key_list) {
