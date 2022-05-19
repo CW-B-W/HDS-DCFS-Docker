@@ -10,7 +10,7 @@ function mssql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     sql += tbl_name;
 
     if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
-        // example: WHERE columnForTimeQuery BETWEEN CONVERT(datetime,'2013-10-17') AND CONVERT(datetime,'2022-05-19 13:00:23')
+        // example: SELECT * FROM timeTest WHERE columnForTimeQuery BETWEEN CONVERT(datetime,'starttime') AND CONVERT(datetime,'endtime')
         sql += ' WHERE ';
         sql += columnForTimeQuery;
         sql += ' BETWEEN CONVERT(datetime,\'';

@@ -9,7 +9,7 @@ function mysql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     sql += tbl_name;
     
     if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
-        // example: where columnForTimeQuery between '2011-04-25 04:00:00' and '2022-05-18 13:00:29'
+        // example: select * from timeTest where columnForTimeQuery between starttime and endtime
         console.log(columnForTimeQuery)
         console.log(starttime)
         console.log(endtime)
