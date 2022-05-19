@@ -1,4 +1,4 @@
-function cassandra_gen_sql(db_name, tbl_name, key_names) {
+function cassandra_gen_sql(db_name, tbl_name, key_names, starttime, endtime, columnForTimeQuery) {
     sql = 'SELECT ';
     for (i in key_names) {
         key_name = key_names[i]
@@ -7,6 +7,19 @@ function cassandra_gen_sql(db_name, tbl_name, key_names) {
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += db_name + '.' + tbl_name;
+    if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
+       // example: SELECT * FROM timeTest WHERE columnForTimeQuery >= 'starttime' AND  DateTest <= 'endtime';
+        sql += ' WHERE ';
+        sql += columnForTimeQuery;
+        sql += ' >= \'';
+        sql += starttime;
+        sql += '\'AND ';
+        sql += columnForTimeQuery;
+        sql += ' <=\'';
+        sql += endtime;
+        sql += '\';';
+        return sql;
+    } 
     sql += ';';
     return sql;
 }

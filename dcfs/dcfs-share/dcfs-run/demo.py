@@ -264,6 +264,9 @@ for task_idx, task_info in enumerate(task_list):
                 port     = d['port']
                 db_name  = d['db']
                 tbl_name = d['collection']
+                starttime    = d['starttime']
+                endtime    = d['endtime']
+                columnForTimeQuery    = d['columnForTimeQuery']
                 if username != '':
                     mongodb_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
                 else:
@@ -272,7 +275,11 @@ for task_idx, task_info in enumerate(task_list):
                 filterj    = d['sql']
                 logging.info("Retrieving data from MongoDB")
                 send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB", '')
-                mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)
+                if columnForTimeQuery != "None" and starttime != "" and endtime != "":
+                    myquery = { columnForTimeQuery: { '$gte': ISODate(starttime),'$lt': ISODate(endtime) } }
+                    mongodb_cursor = mongodb_db[tbl_name].find({myquery}, filterj)
+                else:
+                    mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)
                 locals()['df%d'%i] = pd.DataFrame(list(mongodb_cursor))
             except Exception as e:
                 logging.error("Error in retrieving data from MongoDB: " + str(e))

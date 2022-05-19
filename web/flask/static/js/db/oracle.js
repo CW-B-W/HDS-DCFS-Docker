@@ -1,4 +1,4 @@
-function oracle_gen_sql(db_name, tbl_name, key_names) {
+function oracle_gen_sql(db_name, tbl_name, key_names, starttime, endtime, columnForTimeQuery) {
     sql = 'SELECT ';
     for (i in key_names) {
         key_name = key_names[i]
@@ -9,6 +9,17 @@ function oracle_gen_sql(db_name, tbl_name, key_names) {
     sql += db_name;
     sql += '.'
     sql += tbl_name;
+   if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
+        // example: SELECT * FROM timeTest WHERE columnForTimeQuery BETWEEN TO_DATE ('starttime', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE('endtime', 'YYYY-MM-DD HH24:MI:SS');
+        sql += ' WHERE ';
+        sql += columnForTimeQuery;
+        sql += ' BETWEEN TO_DATE ( \'';
+        sql += starttime;
+        sql += '\', \'YYYY-MM-DD HH24:MI:SS\') AND TO_DATE(\'';
+        sql += endtime;
+        sql += '\', \'YYYY-MM-DD HH24:MI:SS\') ';
+        return sql;
+    }
     // sql += ';'; // DO NOT add ';' for OracleDB
     return sql;
 }
