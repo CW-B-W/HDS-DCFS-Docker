@@ -7,13 +7,14 @@ function mysql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += tbl_name;
-    sql += " WHERE ";
+    // example: where columnForTimeQuery between '2011-04-25 04:00:00' and '2022-05-18 13:00:29'
+    sql += ' WHERE ';
     sql += columnForTimeQuery;
-    sql += " BETWEEN ";
+    sql += ' BETWEEN \'';
     sql += starttime;
-    sql += " AND ";
+    sql += '\' AND \'';
     sql += endtime;
-    sql += ';';
+    sql += '\';';
     return sql;
 }
 

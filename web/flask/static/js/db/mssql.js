@@ -8,14 +8,14 @@ function mssql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += tbl_name;
-    // where example: WHERE columnForTimeQuery BETWEEN CONVERT(datetime,'2013-10-17') AND CONVERT(datetime,'2022-05-19 13:00:23')
-    sql += " WHERE ";
+    // example: WHERE columnForTimeQuery BETWEEN CONVERT(datetime,'2013-10-17') AND CONVERT(datetime,'2022-05-19 13:00:23')
+    sql += ' WHERE ';
     sql += columnForTimeQuery;
-    sql += " BETWEEN CONVERT(datetime,";
+    sql += ' BETWEEN CONVERT(datetime,\'';
     sql += starttime;
-    sql += " AND CONVERT(datetime,";
+    sql += '\' AND CONVERT(datetime,\'';
     sql += endtime;
-    sql += ');';
+    sql += '\');';
     return sql;
 }
 
