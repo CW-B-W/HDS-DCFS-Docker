@@ -457,6 +457,10 @@ function update_db1_info() {
     db1_tblname = $('#db1_table_list').children()
         .eq($('#db1_table_list')[0].selectedIndex)
         .text();
+    // is used for time range queries
+    db1_columnForTimeQuery = $('#db1_key_list_drop_down_menu').children()
+        .eq($('#db1_key_list_drop_down_menu')[0].selectedIndex)
+        .text();
 
     db1_keylist = [];
     join_pairs = get_joining_pairs();
@@ -491,6 +495,10 @@ function update_db2_info() {
         .text();
     db2_tblname = $('#db2_table_list').children()
         .eq($('#db2_table_list')[0].selectedIndex)
+        .text();
+    // is used for time range queries
+    db2_columnForTimeQuery = $('#db2_key_list_drop_down_menu').children()
+        .eq($('#db2_key_list_drop_down_menu')[0].selectedIndex)
         .text();
 
     db2_keylist = [];

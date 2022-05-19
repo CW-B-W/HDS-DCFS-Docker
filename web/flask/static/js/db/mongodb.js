@@ -11,7 +11,7 @@ function mongodb_gen_filter(key_names) {
     return field_filter;
 }
 
-function gen_db_info_mongodb(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
+function gen_db_info_mongodb(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
     db = {
         'type': 'mongodb',
         'ip': ip,
