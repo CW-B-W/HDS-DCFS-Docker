@@ -266,7 +266,7 @@ for task_idx, task_info in enumerate(task_list):
                 tbl_name = d['collection']
                 starttime    = d['starttime']
                 endtime    = d['endtime']
-                columnForTimeQuery    = d['columnForTimeQuery']
+                time_column    = d['time_column']
                 if username != '':
                     mongodb_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
                 else:
@@ -275,8 +275,8 @@ for task_idx, task_info in enumerate(task_list):
                 filterj    = d['sql']
                 logging.info("Retrieving data from MongoDB")
                 send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from MongoDB", '')
-                if columnForTimeQuery != "None" and starttime != "" and endtime != "":
-                    myquery = { columnForTimeQuery: { '$gte': ISODate(starttime),'$lt': ISODate(endtime) } }
+                if time_column != "None" and starttime != "" and endtime != "":
+                    myquery = { time_column: { '$gte': ISODate(starttime),'$lt': ISODate(endtime) } }
                     mongodb_cursor = mongodb_db[tbl_name].find({myquery}, filterj)
                 else:
                     mongodb_cursor = mongodb_db[tbl_name].find({}, filterj)

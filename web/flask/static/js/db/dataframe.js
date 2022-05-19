@@ -1,5 +1,5 @@
 
-function gen_db_info_dataframe(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
+function gen_db_info_dataframe(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
   db = {
       'type': 'dataframe',
   };

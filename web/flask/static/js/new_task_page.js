@@ -316,8 +316,8 @@ $(document).ready(function() {
         db2_namemapping = gen_namemapping(2, join_pairs);
 
         task_info = gen_task_info(
-            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime, db1_columnForTimeQuery,
-            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime, db2_columnForTimeQuery,
+            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime, db1_time_column,
+            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime, db2_time_column,
             join_sql,
             hds_sql, hds_table_name, hds_columns
         );
@@ -458,7 +458,7 @@ function update_db1_info() {
         .eq($('#db1_table_list')[0].selectedIndex)
         .text();
     // is used for time range queries
-    db1_columnForTimeQuery = $('#db1_key_list_drop_down_menu').children()
+    db1_time_column = $('#db1_key_list_drop_down_menu').children()
         .eq($('#db1_key_list_drop_down_menu')[0].selectedIndex)
         .text();
 
@@ -497,7 +497,7 @@ function update_db2_info() {
         .eq($('#db2_table_list')[0].selectedIndex)
         .text();
     // is used for time range queries
-    db2_columnForTimeQuery = $('#db2_key_list_drop_down_menu').children()
+    db2_time_column = $('#db2_key_list_drop_down_menu').children()
         .eq($('#db2_key_list_drop_down_menu')[0].selectedIndex)
         .text();
 

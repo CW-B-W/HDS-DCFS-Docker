@@ -1,4 +1,4 @@
-function mssql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQuery) {
+function mssql_gen_sql(tbl_name, key_names, starttime, endtime, time_column) {
     tbl_name = '[' + tbl_name.substring(0, tbl_name.indexOf('.')) + '].[' + tbl_name.substring(tbl_name.indexOf('.')+1) + ']';
     sql = 'SELECT ';
     for (i in key_names) {
@@ -9,10 +9,10 @@ function mssql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     sql += ' FROM ';
     sql += tbl_name;
 
-    if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
-        // example: SELECT * FROM timeTest WHERE columnForTimeQuery BETWEEN CONVERT(datetime,'starttime') AND CONVERT(datetime,'endtime')
+    if (time_column != "None" && starttime != "" && endtime != "") {
+        // example: SELECT * FROM timeTest WHERE time_column BETWEEN CONVERT(datetime,'starttime') AND CONVERT(datetime,'endtime')
         sql += ' WHERE ';
-        sql += columnForTimeQuery;
+        sql += time_column;
         sql += ' BETWEEN CONVERT(datetime,\'';
         sql += starttime;
         sql += '\') AND CONVERT(datetime,\'';
@@ -25,7 +25,7 @@ function mssql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     }
 }
 
-function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
+function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
   db = {
       'type': 'mssql',
       'ip': ip,
@@ -33,7 +33,7 @@ function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylis
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': mssql_gen_sql(tblname, keylist, starttime, endtime, columnForTimeQuery),
+      'sql': mssql_gen_sql(tblname, keylist, starttime, endtime, time_column),
       'namemapping': namemapping,
       'starttime': starttime,
       'endtime': endtime

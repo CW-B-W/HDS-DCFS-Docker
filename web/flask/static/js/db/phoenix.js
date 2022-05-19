@@ -1,4 +1,4 @@
-function phoenix_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQuery) {
+function phoenix_gen_sql(tbl_name, key_names, starttime, endtime, time_column) {
     sql = 'SELECT ';
     for (i in key_names) {
         key_name = key_names[i]
@@ -7,14 +7,14 @@ function phoenix_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQ
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += tbl_name;
-    if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
-        //example: SELECT * FROM table WHERE columnForTimeQuery>= 'starttime' AND columnForTimeQuery <= 'endtime'
+    if (time_column != "None" && starttime != "" && endtime != "") {
+        //example: SELECT * FROM table WHERE time_column>= 'starttime' AND time_column <= 'endtime'
         sql += ' WHERE ';
-        sql += columnForTimeQuery;
+        sql += time_column;
         sql += ' >= \'';
         sql += starttime;
         sql += '\'AND ';
-        sql += columnForTimeQuery;
+        sql += time_column;
         sql += ' <=\'';
         sql += endtime;
         sql += '\'';
@@ -24,7 +24,7 @@ function phoenix_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQ
     return sql;
 }
 
-function gen_db_info_phoenix(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
+function gen_db_info_phoenix(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
   db = {
       'type': 'phoenix',
       'ip': ip,
@@ -32,7 +32,7 @@ function gen_db_info_phoenix(ip, port, username, password, dbname, tblname, keyl
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': phoenix_gen_sql(tblname, keylist, starttime, endtime, columnForTimeQuery),
+      'sql': phoenix_gen_sql(tblname, keylist, starttime, endtime, time_column),
       'namemapping': namemapping,
       'starttime': starttime,
       'endtime': endtime

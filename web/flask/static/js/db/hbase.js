@@ -2,7 +2,7 @@ function hbase_gen_filter(key_names) {
     return key_names
 }
 
-function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
+function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
     db = {
         'type': 'hbase',
         'ip': ip,

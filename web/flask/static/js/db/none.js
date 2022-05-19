@@ -1,4 +1,4 @@
-function gen_db_info_none(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
+function gen_db_info_none(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
   db = {
       'type': 'none',
       'ip': '',
@@ -8,7 +8,6 @@ function gen_db_info_none(ip, port, username, password, dbname, tblname, keylist
       'db': '',
       'sql': '',
       'namemapping': {},
-      'columnForTimeQuery': ''
   };
 
   return db;
