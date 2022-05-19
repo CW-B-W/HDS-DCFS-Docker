@@ -10,7 +10,7 @@ function oracle_gen_sql(db_name, tbl_name, key_names, starttime, endtime, column
     sql += '.'
     sql += tbl_name;
    if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
-        // example: SELECT * FROM timeTest WHERE columnForTimeQuery BETWEEN TO_DATE ('starttime', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE('endtime', 'YYYY-MM-DD HH24:MI:SS');
+        // example: SELECT * FROM table WHERE columnForTimeQuery BETWEEN TO_DATE ('starttime', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE('endtime', 'YYYY-MM-DD HH24:MI:SS');
         sql += ' WHERE ';
         sql += columnForTimeQuery;
         sql += ' BETWEEN TO_DATE ( \'';
@@ -32,7 +32,7 @@ function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keyli
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': oracle_gen_sql(db_name, tblname, keylist),
+      'sql': oracle_gen_sql(db_name, tblname, keylist, starttime, endtime, columnForTimeQuery),
       'namemapping': namemapping
   };
 
