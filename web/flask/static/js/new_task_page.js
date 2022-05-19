@@ -316,8 +316,8 @@ $(document).ready(function() {
         db2_namemapping = gen_namemapping(2, join_pairs);
 
         task_info = gen_task_info(
-            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime,
-            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime,
+            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime, db1_columnForTimeQuery,
+            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime, db2_columnForTimeQuery,
             join_sql,
             hds_sql, hds_table_name, hds_columns
         );

@@ -7,15 +7,25 @@ function mysql_gen_sql(tbl_name, key_names, starttime, endtime, columnForTimeQue
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += tbl_name;
-    // example: where columnForTimeQuery between '2011-04-25 04:00:00' and '2022-05-18 13:00:29'
-    sql += ' WHERE ';
-    sql += columnForTimeQuery;
-    sql += ' BETWEEN \'';
-    sql += starttime;
-    sql += '\' AND \'';
-    sql += endtime;
-    sql += '\';';
-    return sql;
+    
+    if (columnForTimeQuery != "None" && starttime != "" && endtime != "") {
+        // example: where columnForTimeQuery between '2011-04-25 04:00:00' and '2022-05-18 13:00:29'
+        console.log(columnForTimeQuery)
+        console.log(starttime)
+        console.log(endtime)
+        sql += ' WHERE ';
+        sql += columnForTimeQuery;
+        sql += ' BETWEEN \'';
+        sql += starttime;
+        sql += '\' AND \'';
+        sql += endtime;
+        sql += '\';';
+        return sql;
+    } else {
+        sql += ';';
+        return sql;
+    }
+
 }
 
 function gen_db_info_mysql(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, columnForTimeQuery) {
