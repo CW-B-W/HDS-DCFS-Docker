@@ -10,6 +10,9 @@ function oracle_gen_sql(db_name, tbl_name, key_names, starttime, endtime, time_c
     sql += '.'
     sql += tbl_name;
    if (time_column != "None" && starttime != "" && endtime != "") {
+        // remove T
+        starttime = starttime.replace("T", " ");
+        endtime = endtime.replace("T", " ");
         // example: SELECT * FROM table WHERE time_column BETWEEN TO_DATE ('starttime', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE('endtime', 'YYYY-MM-DD HH24:MI:SS');
         sql += ' WHERE ';
         sql += time_column;

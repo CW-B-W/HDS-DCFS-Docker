@@ -19,10 +19,9 @@ function mssql_gen_sql(tbl_name, key_names, starttime, endtime, time_column) {
         sql += endtime;
         sql += '\');';
         return sql;
-    } else {
-        sql += ';';
-        return sql;
     }
+    sql += ';';
+    return sql;
 }
 
 function gen_db_info_mssql(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {

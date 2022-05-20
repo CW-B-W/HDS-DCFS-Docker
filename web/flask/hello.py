@@ -158,19 +158,19 @@ from pandasql import sqldf
 from sqlalchemy import create_engine
 import cx_Oracle
 from sqlalchemy import *
-#db1_engine = create_engine(r"oracle+cx_oracle://brad:00000000@192.168.103.60:1521/?service_name=XEPDB1")
+#db1_engine = create_engine(r"oracle+cx_oracle://brad:00000000@192.168.103.60:49161/?service_name=XEPDB1")
 
-def oracle_list_all_dbs(username, password, ip, port_sid='1521/sid'):
+def oracle_list_all_dbs(username, password, ip, port_sid='49161/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("select distinct OWNER from user_tab_privs", con=db1_engine)
     return sorted(df1.iloc[:,0].tolist())
 
-def oracle_list_all_tables(db_name, username, password, ip, port_sid='1521/sid'):
+def oracle_list_all_tables(db_name, username, password, ip, port_sid='49161/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("select table_name from user_tab_privs where OWNER = '%s'" % db_name, con=db1_engine)
     return sorted(df1.iloc[:,0].tolist())
 
-def oracle_list_all_keys(db_name, table_name, username, password, ip, port_sid='1521/sid'):
+def oracle_list_all_keys(db_name, table_name, username, password, ip, port_sid='49161/sid'):
     db1_engine = create_engine(r"oracle+cx_oracle://%s:%s@%s:%s" % (username, password, ip, port_sid))
     df1 = pd.read_sql("SELECT column_name FROM all_tab_cols WHERE owner = '%s' and table_name = '%s'" % (db_name, table_name), con=db1_engine);
     return sorted(df1.iloc[:,0].tolist())
