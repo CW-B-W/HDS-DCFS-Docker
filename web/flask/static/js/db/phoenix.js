@@ -8,16 +8,16 @@ function phoenix_gen_sql(tbl_name, key_names, starttime, endtime, time_column) {
     sql += ' FROM ';
     sql += tbl_name;
     if (time_column != "None" && starttime != "" && endtime != "") {
-        //example: SELECT * FROM table WHERE time_column>= 'starttime' AND time_column <= 'endtime'
+        //example: SELECT * FROM table WHERE time_column>= TO_TIMESTAMP('starttime') AND time_column <= TO_TIMESTAMP('endtime')
         sql += ' WHERE ';
         sql += time_column;
-        sql += ' >= \'';
+        sql += ' >= TO_TIMESTAMP(\'';
         sql += starttime;
-        sql += '\'AND ';
+        sql += '\') AND ';
         sql += time_column;
-        sql += ' <=\'';
+        sql += ' <= TO_TIMESTAMP(\'';
         sql += endtime;
-        sql += '\'';
+        sql += '\')';
         return sql;
      }
     //sql += ';'; ==> phoenix dont need ";"
@@ -32,7 +32,7 @@ function gen_db_info_phoenix(ip, port, username, password, dbname, tblname, keyl
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': phoenix_gen_sql(tblname, keylist, starttime, endtime, time_column),
+      'sql': phoenix_gen_sql(tblname, keylist, starttime, endtime, "AUTOTIMESTAMP__"),
       'namemapping': namemapping,
       'starttime': starttime,
       'endtime': endtime

@@ -18,10 +18,10 @@
         "password": ""
     },
     "Oracle": {
-        "ip": "192.168.103.247",
+        "ip": "192.168.103.60",
         "port": "1521/?service_name=XEPDB1",
-        "username": "system",
-        "password": "oracle"
+        "username": "brad",
+        "password": "00000000"
     },
     "Cassandra": {
         "ip": "192.168.103.125",
