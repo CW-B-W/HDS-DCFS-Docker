@@ -282,11 +282,16 @@ $(document).ready(function() {
             key        = l.eq(i).attr('id').substring('typeopt_'.length);
             opt        = l.eq(i).val();
             is_primary = $(`input[id=isprimary_${key.replace(/[:.]/g, "_").replace(/[@]/g, "")}]`).prop('checked')
-            key_info[to_formatted_key(key)] = {
-                'key': to_formatted_key(key),
+            var tmp_key = to_formatted_key(key)
+            while(tmp_key in key_info){
+                tmp_key += '1'
+            }
+            key_info[tmp_key] = {
+                'key': tmp_key,
                 'type': opt,
                 'is_primary': is_primary
             }
+
         }
 
         try {
@@ -565,7 +570,7 @@ function sql_gen_join(join_pairs) {
     /* df1 is the table of db2 */
 
     sql = 'SELECT ';
-
+    var tmp = []
     for (i = 0; i < join_pairs.length; ++i) {
         idx      = join_pairs[i]['idx'];
         leftkey  = to_formatted_key(join_pairs[i]['leftkey']);
@@ -576,13 +581,24 @@ function sql_gen_join(join_pairs) {
             throw "Left key & Right key cannot be both empty";
         }
         else if (leftkey != '' && rightkey == '') {
-            sql += 'df0.' + leftkey + ' as ' + leftkey + ', '
+            sql += 'df0.' + leftkey + ' as ' + leftkey + ', ';
+            tmp.push(leftkey);
         }
-        else if (leftkey == '' && rightkey != '') {
-            sql += 'df1.' + rightkey + ' as ' + rightkey + ', '
-        }
-        else {
+        else if (leftkey != '' && rightkey != ''){
             sql += 'COALESCE(df0.' + leftkey + ', df1.' + leftkey + ') as ' + leftkey + ', ';
+        }
+    }
+    for (i = 0; i < join_pairs.length; ++i) {
+        idx      = join_pairs[i]['idx'];
+        leftkey  = to_formatted_key(join_pairs[i]['leftkey']);
+        rightkey = to_formatted_key(join_pairs[i]['rightkey']);
+        if (leftkey == '' && rightkey != ''){
+            sql += 'df1.' + rightkey + ' as '
+            while(tmp.includes(rightkey)){
+                rightkey += '1'
+            }
+            sql += rightkey + ', ';
+            tmp.push(leftkey);
         }
     }
 
