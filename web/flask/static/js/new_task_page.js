@@ -156,7 +156,7 @@ $(document).ready(function() {
                             .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
                             .text("None");
                         $(`#db${db_id}_key_list_drop_down_menu`).removeAttr('disabled');
-                        // If the database is below these two, only the specified field is displayed, and then the drop-down menu cannot be selected.
+                        // If the database is below these two, only the time column name is displayed, and then the drop-down menu cannot be selected.
                         if (database == 'phoenix'){
                             $(`#db${db_id}_key_list_drop_down_menu`).attr('disabled','disabled');
                             $(`#db${db_id}_key_list_drop_down_menu`).children()
