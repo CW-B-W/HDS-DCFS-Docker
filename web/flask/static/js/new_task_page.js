@@ -134,6 +134,7 @@ $(document).ready(function() {
                 tbl_name = $(this).children().eq(tbl_sel_idx).text();
                 args += '&db_name=' + db_name;
                 args += '&table_name=' + tbl_name;
+                console.log(database)
                 $.ajax({
                     "type": "GET",
                     "dataType": "json",
@@ -151,6 +152,20 @@ $(document).ready(function() {
                             children[i].remove();
                         }
                         $(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex = 0;
+
+                        if (database == 'phoenix'){
+                            $(`#db${db_id}_key_list_drop_down_menu`).attr('disabled','disabled');
+                            $(`#db${db_id}_key_list_drop_down_menu`).children()
+                                .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
+                                .text("AUTOTIMESTAMP__");
+                        }
+
+                        if (database == 'elasticsearch'){
+                            $(`#db${db_id}_key_list_drop_down_menu`).attr('disabled','disabled');
+                            $(`#db${db_id}_key_list_drop_down_menu`).children()
+                                .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
+                                .text("@timestamp")
+                        }
 
                         key_list = result['key_list'];
                         for (key in key_list) {
@@ -466,7 +481,7 @@ function update_db1_info() {
     db1_time_column = $('#db1_key_list_drop_down_menu').children()
         .eq($('#db1_key_list_drop_down_menu')[0].selectedIndex)
         .text();
-
+    
     db1_keylist = [];
     join_pairs = get_joining_pairs();
     for (i = 0; i < join_pairs.length; ++i) {
