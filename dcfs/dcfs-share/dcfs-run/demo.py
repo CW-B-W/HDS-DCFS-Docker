@@ -161,7 +161,7 @@ for task_idx, task_info in enumerate(task_list):
                 username  = d['username']
                 password  = d['password']
                 ip        = d['ip']
-                port_sid  = d['port'] # e.g., 49161/sid
+                port_sid  = d['port'] # e.g., 1521/sid
                 db_name   = d['db'] # no need, replaced with port_sid
                 db_url    = 'oracle+cx_oracle://%s:%s@%s:%s' % (username, password, ip, port_sid)
                 db_engine = create_engine(db_url)

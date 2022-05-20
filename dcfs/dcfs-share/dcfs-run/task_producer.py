@@ -16,7 +16,7 @@ payload = json.dumps({
          "username":"brad",
          "password":"00000000",
          "ip":"192.168.103.60",
-         "port":"49161",
+         "port":"1521",
          "db":"XEPDB1",
          "sql":"SELECT ID, CHINESE, MATH FROM SCORE_1"
       }
