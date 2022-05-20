@@ -134,7 +134,6 @@ $(document).ready(function() {
                 tbl_name = $(this).children().eq(tbl_sel_idx).text();
                 args += '&db_name=' + db_name;
                 args += '&table_name=' + tbl_name;
-                console.log(database)
                 $.ajax({
                     "type": "GET",
                     "dataType": "json",
@@ -151,9 +150,8 @@ $(document).ready(function() {
                         for (i = 1; i < children.length; ++i) {
                             children[i].remove();
                         }
+                        // drop down menu back to default
                         $(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex = 0;
-
-                        
                         $(`#db${db_id}_key_list_drop_down_menu`).children()
                             .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
                             .text("None");
@@ -179,7 +177,6 @@ $(document).ready(function() {
                             // The drop-down menu shows the column name again, because the selected column is to be used for the time range query
                             $(`#db${db_id}_key_list_drop_down_menu`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
                         }
-                        
                         $(`#db${db_id}_key_list`).append('<option value="' + (++opt_idx) + '">' + '' + '</option>');
 
                         while (true) {
@@ -482,7 +479,7 @@ function update_db1_info() {
     db1_tblname = $('#db1_table_list').children()
         .eq($('#db1_table_list')[0].selectedIndex)
         .text();
-    // is used for time range queries
+    // this variable is used for time range queries
     db1_time_column = $('#db1_key_list_drop_down_menu').children()
         .eq($('#db1_key_list_drop_down_menu')[0].selectedIndex)
         .text();
@@ -521,7 +518,7 @@ function update_db2_info() {
     db2_tblname = $('#db2_table_list').children()
         .eq($('#db2_table_list')[0].selectedIndex)
         .text();
-    // is used for time range queries
+    // this variable is used for time range queries
     db2_time_column = $('#db2_key_list_drop_down_menu').children()
         .eq($('#db2_key_list_drop_down_menu')[0].selectedIndex)
         .text();
