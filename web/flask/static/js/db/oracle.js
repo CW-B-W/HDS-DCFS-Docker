@@ -9,18 +9,16 @@ function oracle_gen_sql(db_name, tbl_name, key_names, starttime, endtime, time_c
     sql += db_name;
     sql += '.'
     sql += tbl_name;
-   if (time_column != "None" && starttime != "" && endtime != "") {
-        // remove T
-        starttime = starttime.replace("T", " ");
-        endtime = endtime.replace("T", " ");
-        // example: SELECT * FROM table WHERE time_column BETWEEN TO_DATE ('starttime', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE('endtime', 'YYYY-MM-DD HH24:MI:SS');
+    if (time_column != "None" && starttime != "" && endtime != "") {
+        // example: SELECT * FROM table WHERE time_column BETWEEN TO_DATE ('starttime', 'YYYY-MM-DD"T"HH24:MI:SS') AND TO_DATE('endtime', 'YYYY-MM-DD"T"HH24:MI:SS');
         sql += ' WHERE ';
         sql += time_column;
         sql += ' BETWEEN TO_DATE ( \'';
         sql += starttime;
-        sql += '\', \'YYYY-MM-DD HH24:MI:SS\') AND TO_DATE(\'';
+        sql += '\', \'YYYY-MM-DD"T"HH24:MI:SS\') AND TO_DATE(\'';
         sql += endtime;
-        sql += '\', \'YYYY-MM-DD HH24:MI:SS\') ';
+        sql += '\', \'YYYY-MM-DD"T"HH24:MI:SS\') ';
+        console.log(sql)
         return sql;
     }
     // sql += ';'; // DO NOT add ';' for OracleDB
@@ -35,7 +33,7 @@ function gen_db_info_oracle(ip, port, username, password, dbname, tblname, keyli
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': oracle_gen_sql(db_name, tblname, keylist, starttime, endtime, time_column),
+      'sql': oracle_gen_sql(dbname, tblname, keylist, starttime, endtime, time_column),
       'namemapping': namemapping
   };
 

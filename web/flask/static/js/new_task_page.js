@@ -344,8 +344,8 @@ $(document).ready(function() {
             hds_sql, hds_table_name, hds_columns
         );
 
-        $('#db1_genres').text(JSON.stringify(task_info['db'][0]['sql']));
-        $('#db2_genres').text(JSON.stringify(task_info['db'][1]['sql']));
+        $('#db1_genres').text(task_info['db'][0]['sql']);
+        $('#db2_genres').text(task_info['db'][1]['sql']);
         $('#join_genres').text(join_sql);
         $("#hds_genres").text(hds_sql);
 
