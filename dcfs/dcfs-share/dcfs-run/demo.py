@@ -264,9 +264,9 @@ for task_idx, task_info in enumerate(task_list):
                 port     = d['port']
                 db_name  = d['db']
                 tbl_name = d['collection']
-                starttime    = d['starttime']
-                endtime    = d['endtime']
-                time_column    = d['time_column']
+                starttime = d['starttime']
+                endtime = d['endtime']
+                time_column = d['time_column']
                 if username != '':
                     mongodb_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')
                 else:
