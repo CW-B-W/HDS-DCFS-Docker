@@ -98,7 +98,6 @@ $(document).ready(function() {
                         for (key in table_list) {
                             opt_idx = parseInt(key) + 1
                             $(`#db${db_id}_table_list`).append('<option value="' + opt_idx + '">' + table_list[key] + '</option>');
-
                         }
                     },
                     error: function(jqXHR, JQueryXHR, textStatus) {
@@ -147,11 +146,36 @@ $(document).ready(function() {
                         for (i = 0; i < children.length; ++i) {
                             children[i].remove();
                         }
+                        children = $(`#db${db_id}_key_list_drop_down_menu`).children();
+                        for (i = 1; i < children.length; ++i) {
+                            children[i].remove();
+                        }
+                        // drop down menu back to default
+                        $(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex = 0;
+                        $(`#db${db_id}_key_list_drop_down_menu`).children()
+                            .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
+                            .text("None");
+                        $(`#db${db_id}_key_list_drop_down_menu`).removeAttr('disabled');
+                        // If the database is below these two, only the time column name is displayed, and then the drop-down menu cannot be selected.
+                        if (database == 'phoenix'){
+                            $(`#db${db_id}_key_list_drop_down_menu`).attr('disabled','disabled');
+                            $(`#db${db_id}_key_list_drop_down_menu`).children()
+                                .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
+                                .text("AUTOTIMESTAMP__");
+                        }
+                        if (database == 'elasticsearch'){
+                            $(`#db${db_id}_key_list_drop_down_menu`).attr('disabled','disabled');
+                            $(`#db${db_id}_key_list_drop_down_menu`).children()
+                                .eq($(`#db${db_id}_key_list_drop_down_menu`)[0].selectedIndex)
+                                .text("@timestamp")
+                        }
 
                         key_list = result['key_list'];
                         for (key in key_list) {
                             opt_idx = parseInt(key) + 1
                             $(`#db${db_id}_key_list`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
+                            // The drop-down menu shows the column name again, because the selected column is to be used for the time range query
+                            $(`#db${db_id}_key_list_drop_down_menu`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
                         }
                         $(`#db${db_id}_key_list`).append('<option value="' + (++opt_idx) + '">' + '' + '</option>');
 
@@ -314,14 +338,14 @@ $(document).ready(function() {
         db2_namemapping = gen_namemapping(2, join_pairs);
 
         task_info = gen_task_info(
-            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime,
-            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime,
+            db1_type, db1_ip, db1_port, db1_username, db1_password, db1_dbname, db1_tblname, db1_keylist, db1_namemapping, db1_starttime, db1_endtime, db1_time_column,
+            db2_type, db2_ip, db2_port, db2_username, db2_password, db2_dbname, db2_tblname, db2_keylist, db2_namemapping, db2_starttime, db2_endtime, db2_time_column,
             join_sql,
             hds_sql, hds_table_name, hds_columns
         );
 
-        $('#db1_genres').text(JSON.stringify(task_info['db'][0]['sql']));
-        $('#db2_genres').text(JSON.stringify(task_info['db'][1]['sql']));
+        $('#db1_genres').text(task_info['db'][0]['sql']);
+        $('#db2_genres').text(task_info['db'][1]['sql']);
         $('#join_genres').text(join_sql);
         $("#hds_genres").text(hds_sql);
 
@@ -455,7 +479,11 @@ function update_db1_info() {
     db1_tblname = $('#db1_table_list').children()
         .eq($('#db1_table_list')[0].selectedIndex)
         .text();
-
+    // this variable is used for time range queries
+    db1_time_column = $('#db1_key_list_drop_down_menu').children()
+        .eq($('#db1_key_list_drop_down_menu')[0].selectedIndex)
+        .text();
+    
     db1_keylist = [];
     join_pairs = get_joining_pairs();
     for (i = 0; i < join_pairs.length; ++i) {
@@ -489,6 +517,10 @@ function update_db2_info() {
         .text();
     db2_tblname = $('#db2_table_list').children()
         .eq($('#db2_table_list')[0].selectedIndex)
+        .text();
+    // this variable is used for time range queries
+    db2_time_column = $('#db2_key_list_drop_down_menu').children()
+        .eq($('#db2_key_list_drop_down_menu')[0].selectedIndex)
         .text();
 
     db2_keylist = [];

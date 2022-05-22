@@ -1,4 +1,4 @@
-function cassandra_gen_sql(db_name, tbl_name, key_names) {
+function cassandra_gen_sql(db_name, tbl_name, key_names, starttime, endtime, time_column) {
     sql = 'SELECT ';
     for (i in key_names) {
         key_name = key_names[i]
@@ -7,11 +7,16 @@ function cassandra_gen_sql(db_name, tbl_name, key_names) {
     sql = sql.substring(0, sql.length - 2);
     sql += ' FROM ';
     sql += db_name + '.' + tbl_name;
+    if (time_column != "None" && starttime != "" && endtime != "") {
+        // example: SELECT * FROM table WHERE time_column >= 'starttime' AND  time_column <= 'endtime';
+        sql += ` WHERE ${time_column} >= '${starttime}' AND ${time_column} <= '${endtime}';`;
+        return sql;
+    } 
     sql += ';';
     return sql;
 }
 
-function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
+function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
   db = {
       'type': 'cassandra',
       'ip': ip,
@@ -19,7 +24,7 @@ function gen_db_info_cassandra(ip, port, username, password, dbname, tblname, ke
       'username': username,
       'password': password,
       'db': dbname,
-      'sql': cassandra_gen_sql(dbname, tblname, keylist),
+      'sql': cassandra_gen_sql(dbname, tblname, keylist, starttime, endtime, time_column),
       'namemapping': namemapping
   };
 

@@ -11,7 +11,7 @@ function excel_gen_sql(tbl_name, key_names) {
     return sql;
 }
 
-function gen_db_info_excel(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime) {
+function gen_db_info_excel(ip, port, username, password, dbname, tblname, keylist, namemapping, starttime, endtime, time_column) {
   db = {
       'type': 'excel',
       'ip': ip,
