@@ -258,14 +258,14 @@ for task_idx, task_info in enumerate(task_list):
                 exit(1)
         elif db_type == 'mongodb':
             try:
-                username = d['username']
-                password = d['password']
-                ip       = d['ip']
-                port     = d['port']
-                db_name  = d['db']
-                tbl_name = d['collection']
-                starttime = d['starttime']
-                endtime = d['endtime']
+                username    = d['username']
+                password    = d['password']
+                ip          = d['ip']
+                port        = d['port']
+                db_name     = d['db']
+                tbl_name    = d['collection']
+                starttime   = d['starttime']
+                endtime     = d['endtime']
                 time_column = d['time_column']
                 if username != '':
                     mongodb_client = MongoClient(f'mongodb://{username}:{password}@{ip}:{port}/')

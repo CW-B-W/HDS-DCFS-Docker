@@ -10,16 +10,7 @@ function mysql_gen_sql(tbl_name, key_names, starttime, endtime, time_column) {
     
     if (time_column != "None" && starttime != "" && endtime != "") {
         // example: select * from table where time_column between 'starttime' and 'endtime';
-        console.log(time_column)
-        console.log(starttime)
-        console.log(endtime)
-        sql += ' WHERE ';
-        sql += time_column;
-        sql += ' BETWEEN \'';
-        sql += starttime;
-        sql += '\' AND \'';
-        sql += endtime;
-        sql += '\';';
+        sql += ` WHERE ${time_column} BETWEEN '${starttime}' AND '${endtime}';`;
         return sql;
     }
     sql += ';';
