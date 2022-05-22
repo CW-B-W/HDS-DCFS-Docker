@@ -576,7 +576,7 @@ function sql_gen_join(join_pairs) {
     /* df1 is the table of db2 */
 
     sql = 'SELECT ';
-    var key_array = []
+    var key_array = [];
     for (i = 0; i < join_pairs.length; ++i) {
         idx      = join_pairs[i]['idx'];
         leftkey  = to_formatted_key(join_pairs[i]['leftkey']);
@@ -586,34 +586,31 @@ function sql_gen_join(join_pairs) {
             alert("Left key & Right key cannot be both empty");
             throw "Left key & Right key cannot be both empty";
         }
-        else if (leftkey != '' && rightkey == '') {
-            sql += 'df0.' + leftkey + ' as ' ;
+        else {
+            var key;
+            if (leftkey != '' && rightkey == '') {
+                key = leftkey;
+                sql += 'df0.' + leftkey  + ' as ';
+            }
+            else if(leftkey == '' && rightkey != ''){
+                key = rightkey;
+                sql += 'df1.' + rightkey + ' as ';
+            }
+            else{
+                key = leftkey;
+                sql += 'COALESCE(df0.' + leftkey + ', df1.' + rightkey + ') as ' ;
+            }
+
             var new_key = '';
-            new_key = to_formatted_key(leftkey)
-            if(key_array.includes(new_key)){
+            new_key = to_formatted_key(key);
+            if (key_array.includes(new_key)) {
                 var inc = 1;
-                while(key_array.includes(new_key = to_formatted_key(leftkey) + inc.toString())){
+                while (key_array.includes(new_key = to_formatted_key(key) + inc.toString())){
                     inc += 1;
                 }
             }
             sql += new_key + ', ';
-            key_array.push(leftkey);
-        }
-        else if (leftkey == '' && rightkey != ''){
-            sql += 'df1.' + rightkey + ' as '
-            var new_key = '';
-            new_key = to_formatted_key(rightkey)
-            if(key_array.includes(new_key)){
-                var inc = 1;
-                while(key_array.includes(new_key = to_formatted_key(rightkey) + inc.toString())){
-                    inc += 1;
-                }
-            }
-            sql += new_key + ', ';
-            key_array.push(rightkey);
-        }
-        else if (leftkey != '' && rightkey != ''){
-            sql += 'COALESCE(df0.' + leftkey + ', df1.' + leftkey + ') as ' + leftkey + ', ';
+            key_array.push(new_key);
         }
     }
 
