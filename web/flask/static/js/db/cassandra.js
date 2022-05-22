@@ -8,7 +8,7 @@ function cassandra_gen_sql(db_name, tbl_name, key_names, starttime, endtime, tim
     sql += ' FROM ';
     sql += db_name + '.' + tbl_name;
     if (time_column != "None" && starttime != "" && endtime != "") {
-       // example: SELECT * FROM table WHERE time_column >= 'starttime' AND  time_column <= 'endtime';
+        // example: SELECT * FROM table WHERE time_column >= 'starttime' AND  time_column <= 'endtime';
         sql += ` WHERE ${time_column} >= '${starttime}' AND ${time_column} <= '${endtime}';`;
         return sql;
     } 

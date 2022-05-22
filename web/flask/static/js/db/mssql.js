@@ -11,7 +11,7 @@ function mssql_gen_sql(tbl_name, key_names, starttime, endtime, time_column) {
 
     if (time_column != "None" && starttime != "" && endtime != "") {
         // example: SELECT * FROM table WHERE time_column BETWEEN CONVERT(datetime,'starttime') AND CONVERT(datetime,'endtime')
-        sql += ` WHERE ${time_column} BETWEEN CONVERT(datetime, '${starttime}') AND CONVERT(datetime, '${endtime}')`;
+        sql += ` WHERE ${time_column} BETWEEN CONVERT(datetime,'${starttime}') AND CONVERT(datetime,'${endtime}')`;
         return sql;
     }
     sql += ';';
