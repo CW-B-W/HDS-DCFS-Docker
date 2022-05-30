@@ -364,7 +364,7 @@ import io
 def csv_from_hds(table_name, column_names):
     url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table_name}.csv&to=local:///'
     if len(column_names) == 0:
-        return pd.read_csv(url).to_json()
+        return pd.read_csv(url).to_json(orient = "records")
     df = pd.read_csv(url)
     query = f'SELECT * FROM df'
     query += ' where '
@@ -373,7 +373,7 @@ def csv_from_hds(table_name, column_names):
             query += f'{key} = {value} and '
         else:
             query += f'{key} = {value} '
-    return sqldf(query).to_json()
+    return sqldf(query).to_json(orient = "records")
 ''' ================ CSV ================ '''
 
 ''' ================ Flask ================ '''
