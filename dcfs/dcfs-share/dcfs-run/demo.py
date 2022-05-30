@@ -411,30 +411,29 @@ with open(tmp_sql_path, 'w') as wf:
         wf.write(task_info['hds']['sql'])
 
 
-''' ========= Store data into HDS without phoenix =========='''
+''' ========= Store data into HDS =========='''
 import requests
 import random
 import subprocess
 
-if task_dict['phoenix']=='false':
-    df_joined.to_csv(tmp_csv_path, index=False, header=True)
-    try:
-        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing csv file into HDS", '')
-        logging.info("Start importing csv file into HDS")
-        url = "http://hbase-regionserver1:8000/dataservice/v1/access"
-        params = {
-                'from': 'local:///',
-                'to':   'hds:///csv/join/'+'joined_' + task_id + '_' + ts + '.csv'
-        }
-        r = requests.post(url, params=params, data=open(tmp_csv_path, 'rb') , timeout=10)
-        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/joined_' + task_id+'_'+ts +'.csv&to=local:///result.csv&redirectfrom=NULL')
-        logging.info("Finished importing csv file into HDS")
-    except Exception as e:
-        logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
-        send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e), '')
-        exit(1)
+df_joined.to_csv(tmp_csv_path, index=False, header=True)
+try:
+    send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing csv file into HDS", '')
+    logging.info("Start importing csv file into HDS")
+    url = "http://hbase-regionserver1:8000/dataservice/v1/access"
+    params = {
+            'from': 'local:///',
+            'to':   'hds:///csv/join/'+ table_name.upper() +  '.csv'
+    }
+    r = requests.post(url, params=params, data=open(tmp_csv_path, 'rb') , timeout=10)
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/joined_' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
+    logging.info("Finished importing csv file into HDS")
+except Exception as e:
+    logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
+    send_task_status(task_id, TASKSTATUS_FAILED, "Error importing csv file into HDS. Please check HDS regionserver: "  + str(e), '')
+    exit(1)
     ''' ========== Phoenix ========== '''
-else :
+if task_dict['phoenix']=='true':
     df_joined.to_csv(tmp_csv_path, index=False, header=False)
     phoenix_home = "/opt/phoenix-hbase-2.3-5.1.2-bin"
     if 'ip' in task_info['hds']:

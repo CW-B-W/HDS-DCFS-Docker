@@ -357,6 +357,20 @@ def excel_list_all_keys(dir='/dcfs-share/dcfs-tmp', filename='score.xlsx'):
     return sorted(list(df.columns))
 ''' ================ Excel ================ '''
 
+''' ================ CSV ================ '''
+def csv_from_hds(table_name, column_names):
+    url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table_name}.csv&to=local:///'
+    table = pd.read_csv(url)
+    query = f'SELECT * FROM {table_name}'
+    if len(column_names) != 0:
+        query += ' where '
+        for index, (key, value) in enumerate(column_names.items()):
+            if index == 1 and len(column_names) > 0:
+                query += f'{key} = {value} and '
+            else:
+                query += f'{key} = {value} '
+    return sqldf(query)
+''' ================ CSV ================ '''
 
 ''' ================ Flask ================ '''
 from flask import Flask, request, render_template
@@ -1149,6 +1163,22 @@ def excel_keys():
         return ret_dict 
     except Exception as e:
         return "Error accessing excel file. %s" % str(e), 403
+
+''' ----- CSV ----- '''
+# example: http://localhost:5000/data?table_name={table_name}&{column_name1}={a}&{column_name2}={b}
+@app.route('/data', methods=['GET'])
+def csv_from_hds_for_api():
+    try:
+        table_name  = ""
+        column_names = {}
+        for key, value in request.args.items():
+            if key == 'table_name':
+                table_name = value.upper()
+            else:
+                column_names[key] = value
+        return csv_from_hds(table_name, column_names)
+    except Exception as e:
+        return "Error download csv file from hds. %s" % str(e), 403
 
 ''' ----- TaskStatus ----- '''
 @app.route('/taskstatus', methods=['GET'])
