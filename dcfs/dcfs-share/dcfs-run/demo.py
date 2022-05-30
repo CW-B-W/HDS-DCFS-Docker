@@ -470,7 +470,7 @@ if task_dict['phoenix']=='true':
 
     if stderr.find("ERROR") == -1:
         logging.error("Job finished")
-        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished.", '')
+        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished.", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
     else:
         logging.error("Job finished with error message: \n" + stderr)
         send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr, '')
