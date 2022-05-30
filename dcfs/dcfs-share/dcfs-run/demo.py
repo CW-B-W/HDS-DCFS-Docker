@@ -426,7 +426,7 @@ try:
             'to':   'hds:///csv/join/'+ table_name.upper() +  '.csv'
     }
     r = requests.post(url, params=params, data=open(tmp_csv_path, 'rb') , timeout=10)
-    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/joined_' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
+    send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
     logging.info("Finished importing csv file into HDS")
 except Exception as e:
     logging.error("Error importing csv file into HDS. Please check HDS regionserver: " + str(e))
