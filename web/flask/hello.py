@@ -358,19 +358,22 @@ def excel_list_all_keys(dir='/dcfs-share/dcfs-tmp', filename='score.xlsx'):
 ''' ================ Excel ================ '''
 
 ''' ================ CSV ================ '''
+import requests
+import csv
+import io
 def csv_from_hds(table_name, column_names):
     url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table_name}.csv&to=local:///'
-    table = pd.read_csv(url)
-    pysqldf = lambda q: sqldf(q, globals())
-    query = f'SELECT * FROM {table_name}'
-    if len(column_names) != 0:
-        query += ' where '
-        for index, (key, value) in enumerate(column_names.items()):
-            if index == 0 and len(column_names) > 0:
-                query += f'{key} = {value} and '
-            else:
-                query += f'{key} = {value} '
-    return pysqldf(query)
+    if len(column_names) == 0:
+        return pd.read_csv(url).to_json()
+    df = pd.read_csv(url)
+    query = f'SELECT * FROM df'
+    query += ' where '
+    for index, (key, value) in enumerate(column_names.items()):
+        if index == 0 and len(column_names) > 1:
+            query += f'{key} = {value} and '
+        else:
+            query += f'{key} = {value} '
+    return sqldf(query).to_json()
 ''' ================ CSV ================ '''
 
 ''' ================ Flask ================ '''
