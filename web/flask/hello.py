@@ -368,14 +368,14 @@ def csv_from_hds(table, choose_columns, where_columns):
         df = df[[x.upper() for x in choose_columns]]
     if len(where_columns) == 0:
         return df.to_json(orient = "records")
-    for index, (key, value) in enumerate(where_columns.items()):
+    for key, value in where_columns.items():
         key = key.upper()
         original_type = df.dtypes[key]
         # It needs to be converted to string, otherwise the type will be wrong
-        df = df.astype({key.upper(): str})
-        df = df[df[key.upper()] == value]
+        df = df.astype({key: str})
+        df = df[df[key] == value]
         # Change back to the original data type
-        df = df.astype({key.upper(): original_type})
+        df = df.astype({key: original_type})
     return df.to_json(orient = "records")
 ''' ================ CSV ================ '''
 
@@ -1172,7 +1172,7 @@ def excel_keys():
         return "Error accessing excel file. %s" % str(e), 403
 
 ''' ----- CSV ----- '''
-# example: http://localhost:5000/data?table_name={table_name}&{column_name1}={a}&{column_name2}={b}
+# example: http://localhost:5000/data?table={table}&col={column_name1}&{column_name1}={a}
 @app.route('/data', methods=['GET'])
 def csv_from_hds_for_api():
     try:
