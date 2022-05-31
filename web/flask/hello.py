@@ -357,6 +357,27 @@ def excel_list_all_keys(dir='/dcfs-share/dcfs-tmp', filename='score.xlsx'):
     return sorted(list(df.columns))
 ''' ================ Excel ================ '''
 
+''' ================ CSV ================ '''
+import requests
+import csv
+import io
+def csv_from_hds(table, choose_columns, where_columns):
+    url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table.upper()}.csv&to=local:///'
+    df = pd.read_csv(url)
+    if len(choose_columns) > 0:
+        df = df[[x.upper() for x in choose_columns]]
+    if len(where_columns) == 0:
+        return df.to_json(orient = "records")
+    for key, value in where_columns.items():
+        key = key.upper()
+        original_type = df.dtypes[key]
+        # It needs to be converted to string, otherwise the type will be wrong
+        df = df.astype({key: str})
+        df = df[df[key] == value]
+        # Change back to the original data type
+        df = df.astype({key: original_type})
+    return df.to_json(orient = "records")
+''' ================ CSV ================ '''
 
 ''' ================ Flask ================ '''
 from flask import Flask, request, render_template
@@ -1149,6 +1170,23 @@ def excel_keys():
         return ret_dict 
     except Exception as e:
         return "Error accessing excel file. %s" % str(e), 403
+
+''' ----- CSV ----- '''
+# example: http://localhost:5000/data?table={table}&col={column_name1}&{column_name1}={a}
+@app.route('/data', methods=['GET'])
+def csv_from_hds_for_api():
+    try:
+        table = ""
+        choose_columns = request.args.getlist('col')
+        where_columns = {}
+        for key, value in request.args.items():
+            if key == 'table':
+                table = value
+            elif key != 'col':
+                where_columns[key] = value
+        return csv_from_hds(table, choose_columns, where_columns)
+    except Exception as e:
+        return "Error download csv file from hds. %s" % str(e), 403
 
 ''' ----- TaskStatus ----- '''
 @app.route('/taskstatus', methods=['GET'])
