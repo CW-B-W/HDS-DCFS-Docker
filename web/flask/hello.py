@@ -361,19 +361,22 @@ def excel_list_all_keys(dir='/dcfs-share/dcfs-tmp', filename='score.xlsx'):
 import requests
 import csv
 import io
-def csv_from_hds(table_name, column_names):
-    url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table_name}.csv&to=local:///'
-    if len(column_names) == 0:
-        return pd.read_csv(url).to_json(orient = "records")
+def csv_from_hds(table, choose_columns, where_columns):
+    url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table.upper()}.csv&to=local:///'
     df = pd.read_csv(url)
-    query = f'SELECT * FROM df'
-    query += ' where '
-    for index, (key, value) in enumerate(column_names.items()):
-        if index == 0 and len(column_names) > 1:
-            query += f'{key} = {value} and '
-        else:
-            query += f'{key} = {value} '
-    return sqldf(query).to_json(orient = "records")
+    if len(choose_columns) > 0:
+        df = df[[x.upper() for x in choose_columns]]
+    if len(where_columns) == 0:
+        return df.to_json(orient = "records")
+    for index, (key, value) in enumerate(where_columns.items()):
+        key = key.upper()
+        original_type = df.dtypes[key]
+        # It needs to be converted to string, otherwise the type will be wrong
+        df = df.astype({key.upper(): str})
+        df = df[df[key.upper()] == value]
+        # Change back to the original data type
+        df = df.astype({key.upper(): original_type})
+    return df.to_json(orient = "records")
 ''' ================ CSV ================ '''
 
 ''' ================ Flask ================ '''
@@ -1173,14 +1176,15 @@ def excel_keys():
 @app.route('/data', methods=['GET'])
 def csv_from_hds_for_api():
     try:
-        table_name  = ""
-        column_names = {}
+        table = ""
+        choose_columns = request.args.getlist('col')
+        where_columns = {}
         for key, value in request.args.items():
-            if key == 'table_name':
-                table_name = value
-            else:
-                column_names[key] = value
-        return csv_from_hds(table_name, column_names)
+            if key == 'table':
+                table = value
+            elif key != 'col':
+                where_columns[key] = value
+        return csv_from_hds(table, choose_columns, where_columns)
     except Exception as e:
         return "Error download csv file from hds. %s" % str(e), 403
 
