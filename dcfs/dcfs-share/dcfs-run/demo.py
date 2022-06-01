@@ -464,12 +464,13 @@ if task_dict['phoenix']=='true':
         logging.error("Failed to import table into HDS\n" + stderr)
         send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr, '')
         exit(1)
+    elif stderr.find("ERROR") != -1:
+        logging.error("Job finished with error message: \n" + stderr)
+        send_task_status(task_id, TASKSTATUS_FAILED, "Job finished with error message: \n" + stderr, '')
+        exit(1)
     else:
         logging.error("Successfully importing table into HDS" + stderr)
         send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully importing table into HDS", '')
-    if not stderr.find("ERROR") == -1:
-        logging.error("Job finished with error message: \n" + stderr)
-        send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished with error message: \n" + stderr, '')
 ''' ========== Phoenix ========== '''
 
 logging.error("Job finished")
