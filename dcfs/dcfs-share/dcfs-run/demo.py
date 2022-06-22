@@ -309,7 +309,6 @@ for task_idx, task_info in enumerate(task_list):
                     family_qualifier = time_column.split(":")
                     query = f"SingleColumnValueFilter('{family_qualifier[0]}', '{family_qualifier[1]}', >=, 'binary:{starttime}') AND SingleColumnValueFilter('{family_qualifier[0]}', '{family_qualifier[1]}', <=, 'binary:{endtime}')"
                     data = table.scan(columns = b_columns, filter = query)
-                    send_task_status(task_id, TASKSTATUS_FAILED, query,  '')
                 else:
                     data = table.scan(columns = b_columns)
 

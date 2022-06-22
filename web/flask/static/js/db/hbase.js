@@ -15,7 +15,7 @@ function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylis
         'namemapping': namemapping,
         'starttime': starttime,
         'endtime': endtime,
-        'time_column': time_column,
+        'time_column': time_column
     };
 
     return db;
