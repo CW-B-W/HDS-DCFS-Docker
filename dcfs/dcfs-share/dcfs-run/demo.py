@@ -293,6 +293,9 @@ for task_idx, task_info in enumerate(task_list):
                 port     = d['port']
                 tbl_name = d['tblname']
                 columns  = d['sql']
+                starttime   = d['starttime']
+                endtime     = d['endtime']
+                time_column = d['time_column']
 
                 logging.info("Retrieving data from HBase")
                 send_task_status(task_id, TASKSTATUS_PROCESSING, "Retrieving data from HBase", '')
@@ -300,7 +303,15 @@ for task_idx, task_info in enumerate(task_list):
                 connection = happybase.Connection(ip, port=int(port))
                 table = happybase.Table(tbl_name, connection)
                 b_columns = [str.encode(s) for s in columns]
-                data = table.scan(columns = b_columns)
+
+                data = ()
+                if time_column != "None" and starttime != "" and endtime != "":
+                    family_qualifier = time_column.split(":")
+                    query = f"SingleColumnValueFilter('{family_qualifier[0]}', '{family_qualifier[1]}', >=, 'binary:{starttime}') AND SingleColumnValueFilter('{family_qualifier[0]}', '{family_qualifier[1]}', <=, 'binary:{endtime}')"
+                    data = table.scan(columns = b_columns, filter = query)
+                    send_task_status(task_id, TASKSTATUS_FAILED, query,  '')
+                else:
+                    data = table.scan(columns = b_columns)
 
                 my_generator = ((tuple([d[col].decode('utf-8') for col in b_columns])) for k, d in data)
                 my_list = list(my_generator)

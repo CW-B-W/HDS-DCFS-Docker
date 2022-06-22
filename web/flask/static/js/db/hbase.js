@@ -12,7 +12,10 @@ function gen_db_info_hbase(ip, port, username, password, dbname, tblname, keylis
         'db': dbname,
         'tblname': tblname,
         'sql': hbase_gen_filter(keylist),
-        'namemapping': namemapping
+        'namemapping': namemapping,
+        'starttime': starttime,
+        'endtime': endtime,
+        'time_column': time_column,
     };
 
     return db;
