@@ -437,7 +437,7 @@ try:
             'redirectfrom': 'NULL'
     }
     with open(tmp_csv_path, 'rb') as fp:
-        requests.post(url, params=params, data=fp , timeout=10)
+        requests.post(url, params=params, data=fp)
     send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
     logging.info("Finished importing csv file into HDS")
 except Exception as e:
