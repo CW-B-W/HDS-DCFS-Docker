@@ -453,19 +453,19 @@ if task_dict['phoenix']=='true':
     else:
         hds_ip = 'zoo1'
     try:
-        logging.info('Start importing table into HDS')
-        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing table into HDS", '')
+        logging.info('Start importing table into Phoenix')
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing table into Phoenix", '')
         cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
         process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         stdout, stderr = process.communicate()
         exit_code = process.wait()
         stdout = stdout.decode('utf-8')
         stderr = stderr.decode('utf-8')
-        logging.info('Finished importing table into HDS')
-        send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing table into HDS", '')
+        logging.info('Finished importing table into Phoenix')
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing table into Phoenix", '')
     except Exception as e:
-        logging.error("Failed when importing table into HDS\n" + str(e))
-        send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into HDS\n" + str(e), '')
+        logging.error("Failed when importing table into Phoenix\n" + str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into Phoenix\n" + str(e), '')
         exit(1)
 
     logging.debug("Phoenix stdout\n" + stdout)
