@@ -433,10 +433,11 @@ try:
     url = "http://hbase-regionserver1:8000/dataservice/v1/access"
     params = {
             'from': 'local:///',
-            'to':   'hds:///csv/join/'+ table_name.upper() +  '.csv'
+            'to': 'hds:///csv/join/'+ table_name.upper() +  '.csv',
+            'redirectfrom': 'NULL'
     }
     with open(tmp_csv_path, 'rb') as fp:
-        requests.post(url, params=params, data=fp , timeout=10)
+        requests.post(url, params=params, data=fp)
     send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
     logging.info("Finished importing csv file into HDS")
 except Exception as e:
@@ -452,37 +453,34 @@ if task_dict['phoenix']=='true':
     else:
         hds_ip = 'zoo1'
     try:
-        logging.info('Start importing table into HDS')
-        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing table into HDS", '')
+        logging.info('Start importing table into Phoenix')
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing table into Phoenix", '')
         cmd = phoenix_home+"/bin/psql.py %s -t \"%s\" %s %s" % (hds_ip, table_name.upper(), tmp_sql_path, tmp_csv_path)
         process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         stdout, stderr = process.communicate()
         exit_code = process.wait()
         stdout = stdout.decode('utf-8')
         stderr = stderr.decode('utf-8')
-        logging.info('Finished importing table into HDS')
-        send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing table into HDS", '')
+        logging.info('Finished importing table into Phoenix')
+        send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing table into Phoenix", '')
     except Exception as e:
-        logging.error("Failed when importing table into HDS\n" + str(e))
-        send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into HDS\n" + str(e), '')
+        logging.error("Failed when importing table into Phoenix\n" + str(e))
+        send_task_status(task_id, TASKSTATUS_FAILED, "Failed when importing table into Phoenix\n" + str(e), '')
         exit(1)
 
     logging.debug("Phoenix stdout\n" + stdout)
     logging.debug("Phoenix stderr\n" + stderr)
     logging.debug(f"Phoenix exit code: {exit_code}")
     if exit_code != 0:
-        logging.error("Failed to import table into HDS\n" + stderr)
-        send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into HDS\n" + stderr, '')
+        logging.error("Failed to import table into Phoenix\n" + stderr)
+        send_task_status(task_id, TASKSTATUS_FAILED, "Failed to import table into Phoenix\n" + stderr, '')
         exit(1)
     elif stderr.find("ERROR") != -1:
         logging.error("Job finished with error message: \n" + stderr)
         send_task_status(task_id, TASKSTATUS_FAILED, "Job finished with error message: \n" + stderr, '')
         exit(1)
-    else:
-        logging.error("Successfully importing table into HDS" + stderr)
-        send_task_status(task_id, TASKSTATUS_PROCESSING, "Successfully importing table into HDS", '')
 ''' ========== Phoenix ========== '''
 
-logging.error("Job finished")
+logging.info("Job finished")
 send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished.", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
 exit()
