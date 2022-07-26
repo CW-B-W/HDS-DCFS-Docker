@@ -430,7 +430,7 @@ df_joined.to_csv(tmp_csv_path, index=False, header=True)
 try:
     send_task_status(task_id, TASKSTATUS_PROCESSING, "Start importing csv file into HDS")
     logging.info("Start importing csv file into HDS")
-    cmd = 'curl -d "@'+tmp_csv_path+'" -L --max-redirs 5  -X POST "http://hbase-regionserver1:8000/dataservice/v1/access?from=local:///&to=hds:///csv/join/'+table_name.upper() +'.csv"'
+    cmd = 'curl --data-binary "@'+tmp_csv_path+'" -L --max-redirs 5  -X POST "http://hbase-regionserver1:8000/dataservice/v1/access?from=local:///&to=hds:///csv/join/'+table_name.upper() +'.csv"'
     process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     stdout, stderr = process.communicate()
     exit_code = process.wait()
