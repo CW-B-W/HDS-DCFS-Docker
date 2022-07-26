@@ -364,10 +364,6 @@ import io
 def csv_from_hds(table, choose_columns, where_columns):
     url = f'http://hbase-regionserver1:8000/dataservice/v1/access?from=hds:///csv/join/{table.upper()}.csv&to=local:///'
     df = pd.read_csv(url)
-    if len(choose_columns) > 0:
-        df = df[[x.upper() for x in choose_columns]]
-    if len(where_columns) == 0:
-        return df.to_json(orient = "records")
     for key, value in where_columns.items():
         key = key.upper()
         original_type = df.dtypes[key]
@@ -376,7 +372,9 @@ def csv_from_hds(table, choose_columns, where_columns):
         df = df[df[key] == value]
         # Change back to the original data type
         df = df.astype({key: original_type})
-    return df.to_json(orient = "records")
+    if len(choose_columns) > 0:
+        df = df[[x.upper() for x in choose_columns]]
+    return df.to_json(orient = "records", force_ascii=False)
 ''' ================ CSV ================ '''
 
 ''' ================ Flask ================ '''
