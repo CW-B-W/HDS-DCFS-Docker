@@ -175,7 +175,7 @@ $(document).ready(function() {
                             $(`#db${db_id}_key_list`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
                             // The drop-down menu shows the column name again, because the selected column is to be used for the time range query
                             // If it is elasticsearch, skip the repeated @timestamp
-                            if (key_list[key] == "@timestamp" && database == 'elasticsearch')
+                            if (database == 'elasticsearch' && key_list[key] == "@timestamp")
                                 continue;
                             $(`#db${db_id}_key_list_drop_down_menu`).append('<option value="' + opt_idx + '">' + key_list[key] + '</option>');
                         }
