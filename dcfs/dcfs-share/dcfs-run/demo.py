@@ -202,6 +202,8 @@ for task_idx, task_info in enumerate(task_list):
 
                 time_from = d['starttime']
                 time_end  = d['endtime']
+                time_column  = d['time_column']
+
                 es = Elasticsearch(hosts=ip, port=port, http_auth=(username, password))
                 if filter_js != '':
                     es_result = helpers.scan(
@@ -219,7 +221,7 @@ for task_idx, task_info in enumerate(task_list):
                             "query" : {
                                 "bool": {
                                     "filter":[
-                                        {"range": {"@timestamp": {"gte": time_from, "lte": time_end}}}
+                                        {"range": {time_column: {"gte": time_from, "lte": time_end}}}
                                     ]
                                 }
                             },
@@ -441,7 +443,7 @@ try:
         logging.error("Error importing csv file into HDS. Error message : " + str(stdout))
         send_task_status(task_id, TASKSTATUS_ERROR,"Error importing csv file into HDS. Error message : "  + str(stdout))
         exit(1)
-    send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
+    send_task_status(task_id, TASKSTATUS_PROCESSING, "Finished importing csv file into HDS", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///' + table_name + '.csv&redirectfrom=NULL')
     logging.info("Finished importing csv file into HDS")
 except Exception as e:
     logging.error("Error importing csv file into HDS. Error message : " + str(e))
@@ -485,5 +487,5 @@ if task_dict['phoenix']=='true':
 ''' ========== Phoenix ========== '''
 
 logging.info("Job finished")
-send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished.", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///result.csv&redirectfrom=NULL')
+send_task_status(task_id, TASKSTATUS_SUCCEEDED, "Job finished.", '/dataservice/v1/access?from=hds:///csv/join/' + table_name.upper() + '.csv&to=local:///' + table_name + '.csv&redirectfrom=NULL')
 exit()

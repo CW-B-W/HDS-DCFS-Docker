@@ -15,7 +15,8 @@ function gen_db_info_elasticsearch(ip, port, username, password, dbname, tblname
       'namemapping': namemapping,
       'starttime': starttime,
       'endtime': endtime,
-      'filter':''
+      'filter':'',
+      'time_column': time_column
   };
 
   return db;
