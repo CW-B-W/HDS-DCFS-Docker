@@ -55,6 +55,8 @@ function send_task_status_req() {
                 elem.children().eq(2).children().eq(1).text(task_msg);
                 elem.children().eq(3).children().eq(1).attr("");
                 if(task_link!=""){
+                    // If the table name contains -, it should be "-" in the name, so all the " characters should be removed in the link.
+                    task_link = task_link.split('"').join('');
                     elem.children().eq(3).children().eq(1).attr('href', 'http://' + $("#hds_server").val() + task_link);
                     // Get table name from task_link
                     index_of_local = task_link.indexOf("local:///");
