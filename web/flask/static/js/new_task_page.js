@@ -632,7 +632,7 @@ function sql_gen_join(join_pairs) {
             }
             else{
                 key = leftkey;
-                sql += 'COALESCE(df0.' + leftkey + ', df1.' + rightkey + ') as ' ;
+                sql += 'COALESCE(df0.' + leftkey + ', df1.' + leftkey + ') as ' ;
             }
 
             var new_key = '';
